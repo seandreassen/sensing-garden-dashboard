@@ -3,5 +3,10 @@
   "experimentalSortImports": {},
   "experimentalSortPackageJson": {
     "sortScripts": true
-  }
+  },
+  "experimentalTailwindcss": {
+    "stylesheet": "./src/index.css",
+    "attributes": ["className"]
+  },
+  "ignorePatterns": ["index.html"]
 }
