@@ -10,6 +10,7 @@
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
+    "prepare": "simple-git-hooks",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,14 +22,28 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
+    "lint-staged": "^16.2.7",
     "oxfmt": "^0.32.0",
     "oxlint": "^1.47.0",
+    "simple-git-hooks": "^2.13.1",
     "typescript": "~5.9.3",
     "vite": "^8.0.0-beta.14"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": [
+      "oxlint --fix --deny-warnings",
+      "oxfmt"
+    ]
   },
   "pnpm": {
     "overrides": {
       "vite": "^8.0.0-beta.14"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "simple-git-hooks"
+    ]
   }
 }
