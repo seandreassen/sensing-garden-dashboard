@@ -5,7 +5,7 @@ Web app visualizing data from the Sensing Garden project.
 ## Project structure
 
 - `public/`: Static assets
-  - `src/`: Source code
+- `src/`: Source code
 - `index.html`: Entry point
 - Configuration files
 
