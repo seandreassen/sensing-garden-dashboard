@@ -72,5 +72,6 @@
         "import/no-default-export": "off"
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["src/routeTree.gen.ts"]
 }
