@@ -8,5 +8,5 @@
     "stylesheet": "./src/index.css",
     "attributes": ["className"]
   },
-  "ignorePatterns": ["index.html"]
+  "ignorePatterns": ["index.html", "src/routeTree.gen.ts"]
 }

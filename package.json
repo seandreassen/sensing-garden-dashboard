@@ -14,17 +14,27 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@base-ui/react": "^1.2.0",
+    "@tanstack/react-query": "^5.90.0",
+    "@tanstack/react-router": "^1.161.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.574.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query-devtools": "^5.90.0",
+    "@tanstack/react-router-devtools": "^1.161.1",
+    "@tanstack/router-plugin": "^1.161.1",
     "@types/node": "^25.2.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
     "lint-staged": "^16.2.7",
-    "oxfmt": "^0.32.0",
+    "oxfmt": "^0.33.0",
     "oxlint": "^1.47.0",
     "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.1.18",
@@ -45,6 +55,7 @@
       "vite": "^8.0.0-beta.14"
     },
     "onlyBuiltDependencies": [
+      "esbuild",
       "simple-git-hooks"
     ]
   }
