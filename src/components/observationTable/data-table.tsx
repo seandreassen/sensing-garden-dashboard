@@ -35,8 +35,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageIndex: 0, //custom initial page index
-        pageSize: 10, //custom default page size
+        pageIndex: 0,
+        pageSize: 8,
       },
     },
     onSortingChange: setSorting,
@@ -55,7 +55,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
     total,
   );
-
+  {
+    /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
+  }
   const pagination: JSX.Element = (
     <div className="flex items-center justify-start space-x-2 px-3 py-4">
       <Button
@@ -82,7 +84,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   return (
     <div className="overflow-hidden rounded-md border">
       {pagination}
-      <Table className="">
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -118,7 +120,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           )}
         </TableBody>
       </Table>
-      {/*Pagination below. Shows what rows are shown and total rows. eg. 1-10 of 100 */}
       {pagination}
     </div>
   );

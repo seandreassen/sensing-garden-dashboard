@@ -33,17 +33,27 @@ export const columns: ColumnDef<Observation>[] = [
     header: "Image",
     cell: (info) =>
       failedImagesCache.has(info.getValue<string>()) ? (
-        "observation"
+        <div
+          className="flex items-center justify-center text-wrap"
+          style={{ height: 60, width: 80 }}
+        >
+          observation
+        </div>
       ) : (
         <img
+          className="text-align center text-wrap"
           src={info.getValue<string>()}
           onError={() => failedImagesCache.add(info.getValue<string>())}
           alt="observation"
           aria-label="image of observation"
           loading="lazy"
-          style={{ height: 80 }}
+          style={{ height: 60, width: 80 }}
         />
       ),
+  },
+  {
+    accessorKey: "device_id",
+    header: "Hub",
   },
   {
     accessorKey: "family",
@@ -121,6 +131,7 @@ export const columns: ColumnDef<Observation>[] = [
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
+        second: "2-digit",
       });
     },
   },
