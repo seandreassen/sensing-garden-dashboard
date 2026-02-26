@@ -9,8 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as ObservationTableRouteImport } from "./routes/observationTable";
 import { Route as IndexRouteImport } from "./routes/index";
 
+const ObservationTableRoute = ObservationTableRouteImport.update({
+  id: "/observationTable",
+  path: "/observationTable",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -19,28 +25,39 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
+  fullPaths: "/" | "/observationTable";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
+  to: "/" | "/observationTable";
+  id: "__root__" | "/" | "/observationTable";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  ObservationTableRoute: typeof ObservationTableRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/observationTable": {
+      id: "/observationTable";
+      path: "/observationTable";
+      fullPath: "/observationTable";
+      preLoaderRoute: typeof ObservationTableRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
       id: "/";
       path: "/";
@@ -53,6 +70,7 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ObservationTableRoute: ObservationTableRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
