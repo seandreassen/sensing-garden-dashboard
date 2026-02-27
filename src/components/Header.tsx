@@ -18,7 +18,7 @@ export function Header() {
           <div>
             <span>Welcome to the Sensing City Lab</span>
           </div>
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-4 md:flex">
             <DeviceDropdown />
             <Button variant="outline" size="sm">
               Sign In

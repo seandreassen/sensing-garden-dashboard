@@ -3,7 +3,9 @@ import { useNavigate } from "@tanstack/react-router";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
@@ -22,15 +24,22 @@ export function DeviceDropdown({ value }: DeviceIdProps) {
 
   return (
     <Select onValueChange={handleDeviceChange} disabled={isLoading} value={value}>
-      <SelectTrigger className="w-1/2">
+      <SelectTrigger className="w-full max-w-64">
         <SelectValue placeholder={isLoading ? "Loading..." : "Choose hub"} />
       </SelectTrigger>
-      <SelectContent className="max-h-60 overflow-y-auto">
-        {deviceIds?.map((id) => (
-          <SelectItem key={id} value={id}>
-            {id}
-          </SelectItem>
-        ))}
+      <SelectContent
+        alignItemWithTrigger={false}
+        align="start"
+        className="max-h-60 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <SelectGroup>
+          <SelectLabel>Choose hub</SelectLabel>
+          {deviceIds?.map((id) => (
+            <SelectItem key={id} value={id}>
+              {id}
+            </SelectItem>
+          ))}
+        </SelectGroup>
       </SelectContent>
     </Select>
   );

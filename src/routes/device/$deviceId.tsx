@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { useDeviceIds } from "@/lib/hooks/useDeviceIds";
-// import { useClassifications } from "@/hooks/useClassifications";
 
 export const Route = createFileRoute("/device/$deviceId")({
   component: RouteComponent,
