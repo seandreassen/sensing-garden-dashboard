@@ -23,7 +23,7 @@ export function DeviceDropdown({ value }: DeviceIdProps) {
   return (
     <Select onValueChange={handleDeviceChange} disabled={isLoading} value={value}>
       <SelectTrigger className="w-1/2">
-        <SelectValue placeholder={isLoading ? "Laster..." : "Velg enhet"} />
+        <SelectValue placeholder={isLoading ? "Loading..." : "Choose hub"} />
       </SelectTrigger>
       <SelectContent className="max-h-60 overflow-y-auto">
         {deviceIds?.map((id) => (
