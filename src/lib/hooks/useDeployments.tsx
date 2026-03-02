@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-export interface Deployment {
-  deploymentId: string;
-  active: boolean;
-}
+import type { Deployment } from "@/lib/types/api";
 
 // Bytt ut med ekte API-kall når backend er klar, dette er bare for å mocke dataen, jeg antar at deployments kommer til å ha en active field i databasen
 const mockDeployments: Deployment[] = [
@@ -19,9 +16,11 @@ const mockDeployments: Deployment[] = [
   { deploymentId: "deploy-kappa-010", active: false },
 ];
 
-export function useDeployments() {
+function useDeployments() {
   return useQuery({
     queryKey: ["deployments"],
     queryFn: async () => mockDeployments,
   });
 }
+
+export { useDeployments };

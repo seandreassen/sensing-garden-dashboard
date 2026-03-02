@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import { useHubIds } from "@/lib/hooks/useHubIds";
+import { useHubs } from "@/lib/hooks/useHubs";
 
 function HubDropdown() {
-  const { data: hubIds, isLoading } = useHubIds();
+  const { data: hubIds, isLoading } = useHubs();
   const navigate = useNavigate();
   const params = useParams({ from: "/hub/$hubId", shouldThrow: false });
   const hubId = params?.hubId;

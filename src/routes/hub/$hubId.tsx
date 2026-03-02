@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useHubIds } from "@/lib/hooks/useHubIds";
+import { useHubs } from "@/lib/hooks/useHubs";
 
 export const Route = createFileRoute("/hub/$hubId")({
   component: RouteComponent,
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/hub/$hubId")({
 function RouteComponent() {
   const { hubId } = Route.useParams();
 
-  const { isLoading, isError } = useHubIds();
+  const { isLoading, isError } = useHubs();
 
   return (
     <div>

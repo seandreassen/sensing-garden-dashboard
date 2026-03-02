@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
-export function useHubIds() {
+function useHubs() {
   return useQuery({
     queryKey: ["hubIds"],
     queryFn: async () => {
@@ -15,3 +15,4 @@ export function useHubIds() {
     },
   });
 }
+export { useHubs };
