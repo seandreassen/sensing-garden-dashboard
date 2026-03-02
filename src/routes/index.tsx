@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DeploymentCard } from "@/components/landingPage/DeploymentCard";
-import { DeviceDropdown } from "@/components/landingPage/deviceDropDown";
+import { DeviceDropdown } from "@/components/landingPage/DeviceDropdown";
 import { useDeployments } from "@/lib/hooks/useDeployments";
 
 export const Route = createFileRoute("/")({
