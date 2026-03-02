@@ -1,4 +1,4 @@
-import { useMatch, useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 
 import {
   Select,
@@ -9,26 +9,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import { useDeviceIds } from "@/lib/hooks/useDeviceIds";
+import { useHubIds } from "@/lib/hooks/useHubIds";
 
-export function DeviceDropdown() {
-  const { data: deviceIds, isLoading } = useDeviceIds();
+function HubDropdown() {
+  const { data: hubIds, isLoading } = useHubIds();
   const navigate = useNavigate();
-  const match = useMatch({ from: "/device/$deviceId", shouldThrow: false });
-  const deviceId = match?.params.deviceId;
+  const params = useParams({ from: "/hub/$hubId", shouldThrow: false });
+  const hubId = params?.hubId;
 
-  const handleDeviceChange = (selectedDeviceId: string | null) => {
-    if (!selectedDeviceId) {
+  const handleHubChange = (selectedHubId: string | null) => {
+    if (!selectedHubId) {
       return;
     }
     navigate({
-      to: "/device/$deviceId",
-      params: { deviceId: selectedDeviceId },
+      to: "/hub/$hubId",
+      params: { hubId: selectedHubId },
     });
   };
 
   return (
-    <Select onValueChange={handleDeviceChange} disabled={isLoading} value={deviceId || ""}>
+    <Select onValueChange={handleHubChange} disabled={isLoading} value={hubId || ""}>
       <SelectTrigger className="w-full max-w-64">
         <SelectValue placeholder={isLoading ? "Loading..." : "Choose hub"} />
       </SelectTrigger>
@@ -39,7 +39,7 @@ export function DeviceDropdown() {
       >
         <SelectGroup>
           <SelectLabel>Choose hub</SelectLabel>
-          {deviceIds?.map((id) => (
+          {hubIds?.map((id) => (
             <SelectItem key={id} value={id}>
               {id}
             </SelectItem>
@@ -49,3 +49,5 @@ export function DeviceDropdown() {
     </Select>
   );
 }
+
+export { HubDropdown };

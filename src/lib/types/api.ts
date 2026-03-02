@@ -43,6 +43,6 @@ export interface PostClassificationBody {
   bounding_box?: [number, number, number, number];
 }
 
-export interface DeviceIdProps {
+export interface HubIdProps {
   value?: string;
 }

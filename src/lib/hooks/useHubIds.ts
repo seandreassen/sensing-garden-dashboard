@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
-export function useDeviceIds() {
+export function useHubIds() {
   return useQuery({
-    queryKey: ["deviceIds"],
+    queryKey: ["hubIds"],
     queryFn: async () => {
       const res = await fetch(`${BASE_URL}/devices?limit=100`);
       const data = await res.json();

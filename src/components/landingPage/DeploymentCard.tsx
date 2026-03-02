@@ -20,7 +20,7 @@ export function DeploymentCard({ active, deploymentId }: DeploymentCardProps) {
   const featureName = "Deployment Name";
 
   const handleCardClicked = () => {
-    navigate({ to: "/deployments/$deploymentId", params: { deploymentId } });
+    navigate({ to: "/deployment/$deploymentId", params: { deploymentId } });
   };
 
   return (

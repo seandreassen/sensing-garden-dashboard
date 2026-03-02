@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DeploymentCard } from "@/components/landingPage/DeploymentCard";
-import { DeviceDropdown } from "@/components/landingPage/DeviceDropdown";
+import { HubDropdown } from "@/components/landingPage/HubDropdown";
 import { useDeployments } from "@/lib/hooks/useDeployments";
 
 export const Route = createFileRoute("/")({
@@ -16,7 +16,7 @@ function RouteComponent() {
 
   return (
     <main className="flex min-h-screen flex-col items-center gap-6 p-6 pt-16">
-      <DeviceDropdown />
+      <HubDropdown />
       {isLoading ? (
         <span className="text-white/40">Loading deployments...</span>
       ) : (
