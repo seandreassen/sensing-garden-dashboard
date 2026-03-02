@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { DeviceDropdown } from "@/components/landingPage/deviceDropDown";
+
 export const Route = createFileRoute("/")({
   component: RouteComponent,
 });
@@ -7,7 +9,7 @@ export const Route = createFileRoute("/")({
 function RouteComponent() {
   return (
     <main className="flex h-screen w-screen items-center justify-center">
-      <p>This page is not finished yet</p>
+      <DeviceDropdown />
     </main>
   );
 }
