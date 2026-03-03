@@ -36,8 +36,10 @@ function RouteComponent() {
           <div className="w-full max-w-7xl px-6 lg:px-12">
             <div className="h-px w-full bg-white/20" />
           </div>
+          <span className="w-full max-w-7xl self-start px-6 underline underline-offset-4 lg:px-12">
+            Inactive Deployments
+          </span>
           <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-6 sm:grid-cols-2 lg:grid-cols-3 lg:px-12 xl:grid-cols-4">
-            <span className="col-span-4 underline underline-offset-4">Inactive Deployments</span>
             {inactiveDeployments.map(({ deploymentId, active, name, date, location }) => (
               <DeploymentCard
                 key={deploymentId}
