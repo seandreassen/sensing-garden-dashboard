@@ -11,6 +11,17 @@ import {
 } from "@/components/ui/Card";
 import type { Deployment } from "@/lib/types/api";
 
+function StatusIndicator({ active }: { active: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className={`h-2.5 w-2.5 rounded-full ${active ? "bg-green-500" : "bg-red-500"}`} />
+      <span className={`text-sm font-medium ${active ? "text-green-600" : "text-red-600"}`}>
+        {active ? "Active" : "Inactive"}
+      </span>
+    </div>
+  );
+}
+
 function DeploymentCard({ active, deploymentId, location, date, name }: Deployment) {
   const navigate = useNavigate();
   const deploymentDate =
@@ -24,11 +35,14 @@ function DeploymentCard({ active, deploymentId, location, date, name }: Deployme
   return (
     <Card
       size="sm"
-      className="mx-auto w-full max-w-xs cursor-pointer rounded-sm"
+      className="relative mx-auto w-full max-w-xs cursor-pointer rounded-sm"
       onClick={handleCardClicked}
     >
       <CardHeader>
         <CardTitle>{name}</CardTitle>
+        <div className="absolute top-3 right-3">
+          <StatusIndicator active={active} />
+        </div>
         <CardDescription>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat quaerat dolorem
           quibusdam officia cum harum animi repellendus accusantium perferendis natus sequi pariatur
