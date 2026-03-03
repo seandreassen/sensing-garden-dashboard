@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/Card";
 import type { Deployment } from "@/lib/types/api";
 
-function DeploymentCard({ active, deploymentId }: Deployment) {
+function DeploymentCard({ active, deploymentId, location, date, name }: Deployment) {
   const navigate = useNavigate();
-  const featureName = "Deployment Name";
-
+  const deploymentDate =
+    date instanceof Date
+      ? new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium" }).format(date)
+      : String(date);
   const handleCardClicked = () => {
     navigate({ to: "/deployment/$deploymentId", params: { deploymentId } });
   };
@@ -23,19 +25,31 @@ function DeploymentCard({ active, deploymentId }: Deployment) {
     <Card
       size="sm"
       className="mx-auto w-full max-w-xs cursor-pointer rounded-sm"
-      onClick={handleCardClicked} // ← riktig navn
+      onClick={handleCardClicked}
     >
       <CardHeader>
-        <CardTitle>{featureName}</CardTitle>
+        <CardTitle>{name}</CardTitle>
         <CardDescription>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat quaerat dolorem
           quibusdam officia cum harum animi repellendus accusantium perferendis natus sequi pariatur
           consequuntur explicabo, deleniti dolorum velit adipisci praesentium aspernatur!
         </CardDescription>
       </CardHeader>
+      <CardContent>Start Date : {deploymentDate}</CardContent>
+      <CardContent>Location : {location}</CardContent>
       <CardContent>Deployment ({active ? "Active" : "Inactive"})</CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button size="sm" className="w-full">
+        <Button
+          size="sm"
+          className="w-full"
+          onClick={(e) => {
+            e.stopPropagation(); // hindrer at card-navigasjon trigges
+            navigate({
+              to: "/deployment/$deploymentId/edit",
+              params: { deploymentId },
+            });
+          }}
+        >
           Edit deployment
         </Button>
       </CardFooter>

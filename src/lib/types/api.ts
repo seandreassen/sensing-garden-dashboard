@@ -28,7 +28,10 @@ interface ClassificationData {
 
 interface Deployment {
   deploymentId: string;
+  name: string;
   active: boolean;
+  date: Date;
+  location: string;
 }
 
 export type { Location, EnvironmentData, ClassificationData, Deployment };
