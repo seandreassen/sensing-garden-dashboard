@@ -4,26 +4,13 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import type { Observation } from "@/lib/types/api";
 
 //Maybe later an observation status will be added to allow confirmation of observations.
 
-export type Observation = {
-  species: string;
-  genus: string;
-  family: string;
-  species_confidence: number;
-  genus_confidence: number;
-  family_confidence: number;
-  timestamp: string;
-  device_id: string;
-  model_id: string;
-  image_url: string;
-  image_bucket: string;
-  image_key: string;
-};
-
 export type ObservationsResponse = {
   items: Observation[];
+  nextToken: string | null;
 };
 
 const failedImagesCache = new Set<string>();
@@ -88,7 +75,7 @@ export const columns: ColumnDef<Observation>[] = [
     header: "Species",
     cell: (info) => {
       const species = info.getValue<string>();
-      const species_confidence = info.row.original.family_confidence;
+      const species_confidence = info.row.original.species_confidence;
       return (
         <div className="flex flex-col">
           <span>{species}</span>
@@ -99,6 +86,7 @@ export const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "timestamp",
+    enableSorting: true,
     header: ({ column }) => {
       return (
         <Button

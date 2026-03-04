@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import type { SortingState, OnChangeFn } from "@tanstack/react-table";
+import { useState } from "react";
 
-import { columns, type Observation } from "@/components/observationTable/columns";
+import { columns } from "@/components/observationTable/columns";
 import { DataTable } from "@/components/observationTable/data-table";
+import { useObservations } from "@/lib/hooks/useObservations";
 export const Route = createFileRoute("/observationTable")({
   component: DemoPage,
 });
@@ -13,63 +14,46 @@ export const Route = createFileRoute("/observationTable")({
   Made with shadcn components using tanstack table functionality. 
   Customized shadcn components in @/components/observationsTable*/
 }
-async function getData(): Promise<Observation[]> {
-  const res = await fetch("https://api.sensinggarden.com/v1/classifications", {
-    headers: {
-      "X-API-Key": "your-api-key",
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch observations");
-  }
-
-  const json = await res.json();
-
-  return json.items.map(
-    (item: Observation): Observation => ({
-      image_url: item.image_url,
-      image_bucket: item.image_bucket,
-      image_key: item.image_key,
-
-      species: item.species,
-      genus: item.genus,
-      family: item.family,
-      species_confidence: Number(item.species_confidence),
-      genus_confidence: Number(item.genus_confidence),
-      family_confidence: Number(item.family_confidence),
-      timestamp: item.timestamp,
-      device_id: item.device_id,
-      model_id: item.model_id,
-    }),
-  );
-}
 
 function DemoPage() {
-  const {
-    data = [],
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["observations"],
-    queryFn: getData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
-  });
-  const memoizedData = useMemo(() => data, [data]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
+  const [deviceFilter] = useState<string>();
+  const [nextToken, setNextToken] = useState<string>();
 
+  const { data, error, isLoading, isFetching, isError } = useObservations({
+    sortBy: sorting[0]?.id,
+    sortDesc: sorting[0]?.desc,
+    deviceFilter,
+    nextToken,
+    limit: 10,
+  });
+
+  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
+    const newSorting = typeof updater === "function" ? updater(sorting) : updater;
+    setSorting(newSorting);
+    setNextToken(undefined); // reset cursor
+  };
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (isError) {
     return <div>Error loading data{(error as Error).message}</div>;
   }
+  if (!data) {
+    return null;
+  }
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={memoizedData} />
+      {}
+      <DataTable
+        columns={columns}
+        data={data?.items}
+        nextToken={data?.nextToken}
+        isLoading={isLoading || isFetching}
+        sorting={sorting}
+        onLoadMore={(token) => setNextToken(token)}
+        onSortingChange={handleSortingChange}
+      />
     </div>
   );
 }
