@@ -143,35 +143,47 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
               <XAxis
                 dataKey="date"
                 stroke="#e0e0e0"
-                fontSize={10}
+                fontSize={12}
                 tickLine={false}
                 tick={{ fill: "#e0e0e0" }}
               />
               <YAxis
                 yAxisId="left"
                 stroke="#e0e0e0"
-                fontSize={10}
+                fontSize={12}
                 tickLine={false}
                 tick={{ fill: "#e0e0e0" }}
+                label={{
+                  value: "Temperature (°C)",
+                  angle: -90,
+                  position: "insideLeft",
+                  style: { fontSize: 12, fill: "#e0e0e0" },
+                }}
               />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 stroke="#e0e0e0"
-                fontSize={10}
+                fontSize={12}
                 tickLine={false}
                 tick={{ fill: "#e0e0e0" }}
+                label={{
+                  value: "Humidity (%)",
+                  angle: -270,
+                  position: "insideRight",
+                  style: { fontSize: 12, fill: "#e0e0e0" },
+                }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "var(--surface-primary)",
-                  border: "1px solid var(--border-color)",
+                  backgroundColor: "#1f1f1f",
+                  border: "1px solid #444",
                   borderRadius: "6px",
-                  fontSize: "11px",
+                  fontSize: "13px",
                 }}
                 labelStyle={{ color: "var(--text-primary)", marginBottom: "4px" }}
               />
-              <Legend wrapperStyle={{ fontSize: "11px" }} iconType="line" />
+              <Legend wrapperStyle={{ fontSize: "13px" }} iconType="line" />
               {activeMetrics.map((metric, index) => (
                 <Line
                   key={metric.key}

@@ -105,20 +105,20 @@ export function AirQualityIndicesChart({ filters }: AirQualityIndicesChartProps)
               <XAxis
                 dataKey="date"
                 stroke="#e0e0e0"
-                fontSize={10}
+                fontSize={12}
                 tickLine={false}
                 tick={{ fill: "#e0e0e0" }}
               />
               <YAxis
                 stroke="#e0e0e0"
-                fontSize={10}
+                fontSize={12}
                 tickLine={false}
                 tick={{ fill: "#e0e0e0" }}
                 label={{
                   value: "Index",
                   angle: -90,
                   position: "insideLeft",
-                  style: { fontSize: 10, fill: "#e0e0e0" },
+                  style: { fontSize: 12, fill: "#e0e0e0" },
                 }}
               />
               <Tooltip
@@ -126,12 +126,12 @@ export function AirQualityIndicesChart({ filters }: AirQualityIndicesChartProps)
                   backgroundColor: "#1f1f1f",
                   border: "1px solid #444",
                   borderRadius: "6px",
-                  fontSize: "11px",
+                  fontSize: "13px",
                   color: "#e0e0e0",
                 }}
                 labelStyle={{ color: "#e0e0e0", marginBottom: "4px" }}
               />
-              <Legend wrapperStyle={{ fontSize: "11px", color: "#e0e0e0" }} iconType="line" />
+              <Legend wrapperStyle={{ fontSize: "13px", color: "#e0e0e0" }} iconType="line" />
               {activeIndices.map((index) => (
                 <Line
                   key={index.key}
