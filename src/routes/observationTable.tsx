@@ -6,16 +6,23 @@ import { columns } from "@/components/observationTable/columns";
 import { DataTable } from "@/components/observationTable/data-table";
 import { useObservations } from "@/lib/hooks/useObservations";
 export const Route = createFileRoute("/observationTable")({
-  component: DemoPage,
+  component: ObservationTable,
 });
 
-{
-  /*Component showing table of observation. Sorting by timestamp and pagination is as of now done client side
-  Made with shadcn components using tanstack table functionality. 
-  Customized shadcn components in @/components/observationsTable*/
-}
+/*
+  Component with observationTable. Calls to hook useObservations
+   with the optional search parameters:
+    sortBy,
+    sortDesc,
+    deviceFilter,
+    nextToken,
+    limit
 
-function DemoPage() {
+  Customized shadcn components in @/components/observationsTable
+  
+  */
+
+function ObservationTable() {
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
   const [deviceFilter] = useState<string>();
   const [nextToken, setNextToken] = useState<string>();

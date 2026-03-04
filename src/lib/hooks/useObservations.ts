@@ -2,12 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { ObservationsResponse } from "@/components/observationTable/columns";
 
-/*Api call to observations which have been classified
-Can be called with or without search params.
-Call 
-*/
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
+/*
+Calls api to gather list of observations. 
+The hook supports the parameters below.
+Unsure whether time and device-filters function in tandem.
+Sorting does seem to sort only after limit is put on api result. 
+I think this limitation lies in backend. 
+*/
 interface SearchParams {
   deviceFilter?: string;
   startTime?: string;
@@ -27,18 +30,20 @@ export function useObservations(searchParams?: SearchParams) {
         params.set("device_id", searchParams.deviceFilter);
       }
       if (searchParams?.startTime) {
-        params.set("start_time", searchParams?.startTime);
+        params.set("start_time", searchParams.startTime);
       }
       if (searchParams?.endTime) {
-        params.set("end_time", searchParams?.endTime);
+        params.set("end_time", searchParams.endTime);
       }
       if (searchParams?.sortBy) {
         params.set("sort_by", searchParams?.sortBy);
       }
-      if (searchParams?.sortDesc) {
-        params.set("sort_desc", String(searchParams?.sortDesc));
-      }
-      params.set("limit", String(searchParams?.limit ?? 10));
+
+      params.set("sort_desc", String(searchParams?.sortDesc ?? false));
+
+      params.set("limit", String(searchParams?.limit));
+
+      //Token pagination not implemented.
       if (searchParams?.nextToken) {
         params.set("next_token", searchParams.nextToken);
       }

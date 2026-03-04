@@ -6,41 +6,39 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import type { Observation } from "@/lib/types/api";
 
-//Maybe later an observation status will be added to allow confirmation of observations.
-
+/*
+Columns: Image, Hub, Family, Genus, Species and timestamp.
+  Should allow sort by timestamp.
+  Maybe later an observation status will be added to allow confirmation of observations.
+  */
 export type ObservationsResponse = {
+  //Consider moving to lib/types
   items: Observation[];
   nextToken: string | null;
 };
 
-const failedImagesCache = new Set<string>();
 export const columns: ColumnDef<Observation>[] = [
   {
+    //Maybe cache images.
     accessorKey: "image_url",
     header: "Image",
-    cell: (info) =>
-      failedImagesCache.has(info.getValue<string>()) ? (
-        <div
-          className="flex items-center justify-center text-wrap"
-          style={{ height: 60, width: 80 }}
-        >
-          observation
-        </div>
-      ) : (
-        <img
-          className="text-align center text-wrap"
-          src={info.getValue<string>()}
-          onError={() => failedImagesCache.add(info.getValue<string>())}
-          alt="observation"
-          aria-label="image of observation"
-          loading="lazy"
-          style={{ height: 60, width: 80 }}
-        />
-      ),
+    cell: (info) => (
+      <img
+        className="text-align center text-wrap"
+        src={info.getValue<string>()}
+        aria-label="image of observation"
+        loading="lazy"
+        style={{ height: 80, width: 100 }}
+      />
+    ),
   },
   {
     accessorKey: "device_id",
     header: "Hub",
+    cell: (info) => {
+      const hub = info.row.original.device_id;
+      return <div className="flex max-w-40 flex-col text-wrap">{hub}</div>;
+    },
   },
   {
     accessorKey: "family",
@@ -77,7 +75,7 @@ export const columns: ColumnDef<Observation>[] = [
       const species = info.getValue<string>();
       const species_confidence = info.row.original.species_confidence;
       return (
-        <div className="flex flex-col">
+        <div className="flex max-w-40 flex-col text-wrap">
           <span>{species}</span>
           <span className="text-xs text-gray-500">Confidence: {species_confidence.toFixed(4)}</span>
         </div>
@@ -86,7 +84,6 @@ export const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "timestamp",
-    enableSorting: true,
     header: ({ column }) => {
       return (
         <Button

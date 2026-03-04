@@ -24,24 +24,21 @@ interface DataTableProps<TData, TValue> {
   isLoading?: boolean;
   sorting: SortingState;
   onSortingChange: OnChangeFn<SortingState>;
-  onLoadMore?: (nextToken: string) => void;
+  onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  //nextToken,
-  //isLoading,
   sorting,
   onSortingChange,
-  //onLoadMore,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true, // server-side
-    manualSorting: true, // sorting should also be server-side if used
+    manualPagination: true, //Shows that filtering, sorting and pagination will not be client side.
+    manualSorting: true,
     manualFiltering: true,
     onSortingChange,
     state: { sorting },
@@ -85,17 +82,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      {/* {data.nextToken && onLoadMore && (
-        <div className="flex justify-center p-4">
-          <Button
-            variant="outline"
-            onClick={() => onLoadMore(data.nextToken!)}
-            disabled={isFetchingNextPage}
-          >
-            {isFetchingNextPage ? "Loading..." : "Load More"}
-          </Button>
-        </div>
-      )}*/}
     </div>
   );
 }
