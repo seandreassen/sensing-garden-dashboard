@@ -11,7 +11,8 @@
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as ObservationTableRouteImport } from "./routes/observationTable";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as DeviceDeviceIdRouteImport } from "./routes/device/$deviceId";
+import { Route as HubHubIdRouteImport } from "./routes/hub/$hubId";
+import { Route as DeploymentDeploymentIdRouteImport } from "./routes/deployment/$deploymentId";
 
 const ObservationTableRoute = ObservationTableRouteImport.update({
   id: "/observationTable",
@@ -23,40 +24,58 @@ const IndexRoute = IndexRouteImport.update({
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any);
-const DeviceDeviceIdRoute = DeviceDeviceIdRouteImport.update({
-  id: "/device/$deviceId",
-  path: "/device/$deviceId",
+const HubHubIdRoute = HubHubIdRouteImport.update({
+  id: "/hub/$hubId",
+  path: "/hub/$hubId",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const DeploymentDeploymentIdRoute = DeploymentDeploymentIdRouteImport.update({
+  id: "/deployment/$deploymentId",
+  path: "/deployment/$deploymentId",
   getParentRoute: () => rootRouteImport,
 } as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/device/$deviceId": typeof DeviceDeviceIdRoute;
+  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
+  "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/device/$deviceId": typeof DeviceDeviceIdRoute;
+  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
+  "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/device/$deviceId": typeof DeviceDeviceIdRoute;
+  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
+  "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/observationTable" | "/device/$deviceId";
+  fullPaths:
+    | "/"
+    | "/observationTable"
+    | "/deployment/$deploymentId"
+    | "/hub/$hubId";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/observationTable" | "/device/$deviceId";
-  id: "__root__" | "/" | "/observationTable" | "/device/$deviceId";
+  to: "/" | "/observationTable" | "/deployment/$deploymentId" | "/hub/$hubId";
+  id:
+    | "__root__"
+    | "/"
+    | "/observationTable"
+    | "/deployment/$deploymentId"
+    | "/hub/$hubId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   ObservationTableRoute: typeof ObservationTableRoute;
-  DeviceDeviceIdRoute: typeof DeviceDeviceIdRoute;
+  DeploymentDeploymentIdRoute: typeof DeploymentDeploymentIdRoute;
+  HubHubIdRoute: typeof HubHubIdRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -75,11 +94,18 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/device/$deviceId": {
-      id: "/device/$deviceId";
-      path: "/device/$deviceId";
-      fullPath: "/device/$deviceId";
-      preLoaderRoute: typeof DeviceDeviceIdRouteImport;
+    "/hub/$hubId": {
+      id: "/hub/$hubId";
+      path: "/hub/$hubId";
+      fullPath: "/hub/$hubId";
+      preLoaderRoute: typeof HubHubIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/deployment/$deploymentId": {
+      id: "/deployment/$deploymentId";
+      path: "/deployment/$deploymentId";
+      fullPath: "/deployment/$deploymentId";
+      preLoaderRoute: typeof DeploymentDeploymentIdRouteImport;
       parentRoute: typeof rootRouteImport;
     };
   }
@@ -88,7 +114,8 @@ declare module "@tanstack/react-router" {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ObservationTableRoute: ObservationTableRoute,
-  DeviceDeviceIdRoute: DeviceDeviceIdRoute,
+  DeploymentDeploymentIdRoute: DeploymentDeploymentIdRoute,
+  HubHubIdRoute: HubHubIdRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
