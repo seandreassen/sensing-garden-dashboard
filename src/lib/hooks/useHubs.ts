@@ -1,18 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 
-const BASE_URL = "https://api.sensinggarden.com/v1";
+import { apiFetch } from "@/lib/api";
+
+interface Device {
+  device_id: string;
+  created: string;
+}
+
+interface DevicesResponse {
+  items: Device[];
+  next_token?: string;
+}
 
 function useHubs() {
   return useQuery({
     queryKey: ["hubIds"],
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/devices?limit=100`);
-      const data = await res.json();
-      const unique = [
-        ...new Set<string>(data.items.map((item: { device_id: string }) => item.device_id)),
-      ];
-      return unique;
-    },
+    queryFn: () => apiFetch<DevicesResponse>("/devices", { limit: 100 }),
+    select: (data) => data.items.map((item) => item.device_id),
   });
 }
+
 export { useHubs };
