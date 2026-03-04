@@ -1,50 +1,47 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { MOCK_CLASSIFICATIONS } from "@/lib/mockData";
-import type { Classification } from "@/lib/types/api";
+import { apiFetch } from "@/lib/api";
+import type { Classification, PaginatedResponse } from "@/lib/types/api";
 
-// Switch to real API when backend is ready — replace mock filter with apiFetch call
 interface UseClassificationsParams {
   deviceId?: string;
   startTime?: string;
   endTime?: string;
   limit?: number;
-}
-
-function filterMockData(params: UseClassificationsParams): Classification[] {
-  let data = MOCK_CLASSIFICATIONS;
-
-  if (params.deviceId) {
-    data = data.filter((c) => c.device_id === params.deviceId);
-  }
-  if (params.startTime) {
-    const start = params.startTime;
-    data = data.filter((c) => c.timestamp >= start);
-  }
-  if (params.endTime) {
-    const end = params.endTime;
-    data = data.filter((c) => c.timestamp <= end);
-  }
-  if (params.limit) {
-    data = data.slice(0, params.limit);
-  }
-
-  return data;
+  sortDesc?: boolean;
 }
 
 function useClassifications(params: UseClassificationsParams = {}) {
+  const { deviceId, startTime, endTime, limit = 500, sortDesc = true } = params;
+
   return useQuery({
-    queryKey: ["classifications", params],
-    queryFn: async () => filterMockData(params),
+    queryKey: ["classifications", { deviceId, startTime, endTime, limit, sortDesc }],
+    queryFn: () =>
+      apiFetch<PaginatedResponse<Classification>>("/classifications", {
+        device_id: deviceId,
+        start_time: startTime,
+        end_time: endTime,
+        limit,
+        sort_desc: sortDesc,
+      }),
+    select: (data) => data.items,
   });
 }
 
 function useClassificationsCount(
   params: { deviceId?: string; startTime?: string; endTime?: string } = {},
 ) {
+  const { deviceId, startTime, endTime } = params;
+
   return useQuery({
-    queryKey: ["classifications-count", params],
-    queryFn: async () => filterMockData(params).length,
+    queryKey: ["classifications-count", { deviceId, startTime, endTime }],
+    queryFn: () =>
+      apiFetch<{ count: number }>("/classifications/count", {
+        device_id: deviceId,
+        start_time: startTime,
+        end_time: endTime,
+      }),
+    select: (data) => data.count,
   });
 }
 
