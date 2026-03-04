@@ -67,16 +67,19 @@ export function AirPollutionChart({ filters }: AirPollutionChartProps) {
   }, [filters.dateRange, filters.startDate, filters.endDate]);
 
   const pollutants = [
-    { key: "pm1" as const, label: "PM1.0", color: "#b4faff", enabled: enabledPollutants.pm1 },
-    { key: "pm25" as const, label: "PM2.5", color: "#7ac7ff", enabled: enabledPollutants.pm25 },
-    { key: "pm4" as const, label: "PM4.0", color: "#4f8af6", enabled: enabledPollutants.pm4 },
-    { key: "pm10" as const, label: "PM10", color: "#2e3de0", enabled: enabledPollutants.pm10 },
+    { key: "pm1" as const, label: "PM1.0", color: "#8becff", enabled: enabledPollutants.pm1 },
+    { key: "pm25" as const, label: "PM2.5", color: "#44c1ff", enabled: enabledPollutants.pm25 },
+    { key: "pm4" as const, label: "PM4.0", color: "#226fff", enabled: enabledPollutants.pm4 },
+    { key: "pm10" as const, label: "PM10", color: "#000ea3", enabled: enabledPollutants.pm10 },
   ];
 
   const activePollutants = pollutants.filter((p) => p.enabled);
 
   return (
-    <div className="bg-surface-primary space-y-6 rounded border border-border p-6">
+    <div
+      className="space-y-6 rounded border border-border p-6"
+      style={{ backgroundColor: "#1a1a1a" }}
+    >
       <div className="flex items-center justify-between">
         <div>
           <h4 className="mb-1 font-bold tracking-tight uppercase">Air Pollution</h4>
@@ -96,7 +99,7 @@ export function AirPollutionChart({ filters }: AirPollutionChartProps) {
             onClick={() => togglePollutant(pollutant.key)}
             className={`flex items-center gap-2 rounded border px-3 py-2.5 transition-all ${
               pollutant.enabled
-                ? "border-primary/30 bg-primary/10 text-primary"
+                ? "border-green-200/30 bg-green-300/35 text-green-100"
                 : "bg-surface-secondary border-border text-muted-foreground hover:border-primary/20"
             } `}
           >
@@ -108,7 +111,7 @@ export function AirPollutionChart({ filters }: AirPollutionChartProps) {
 
       {/* Chart */}
       {activePollutants.length > 0 ? (
-        <div className="rounded border border-border bg-gray-800 p-4">
+        <div className="rounded border border-border p-4" style={{ backgroundColor: "#1a1a1a" }}>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={environmentalData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" strokeOpacity={0.3} />

@@ -98,7 +98,10 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
   const activeMetrics = metrics.filter((m) => m.enabled);
 
   return (
-    <div className="bg-surface-primary space-y-6 rounded border border-border p-6">
+    <div
+      className="bg-surface-primary space-y-6 rounded border border-border p-6"
+      style={{ backgroundColor: "#1a1a1a" }}
+    >
       <div className="flex items-center justify-between">
         <div>
           <h4 className="mb-1 font-bold tracking-tight uppercase">Environmental Conditions</h4>
@@ -120,7 +123,7 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
               onClick={() => toggleMetric(metric.key)}
               className={`flex items-center gap-2 rounded border px-3 py-2.5 transition-all ${
                 metric.enabled
-                  ? "border-primary/30 bg-primary/10 text-primary"
+                  ? "border-green-200/30 bg-green-300/35 text-green-100"
                   : "bg-surface-secondary border-border text-muted-foreground hover:border-primary/20"
               } `}
             >
@@ -133,7 +136,7 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
 
       {/* Chart */}
       {activeMetrics.length > 0 ? (
-        <div className="rounded border border-border bg-gray-800 p-4">
+        <div className="rounded border border-border p-4" style={{ backgroundColor: "#1a1a1a" }}>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={environmentalData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" strokeOpacity={0.3} />
