@@ -13,15 +13,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import type { EnvironmentalItem } from "@/api/environment";
+
 interface AirQualityIndicesChartProps {
-  filters: {
-    dateRange: string;
-    startDate?: string;
-    endDate?: string;
-  };
+  rawData: EnvironmentalItem[];
 }
 
-export function AirQualityIndicesChart({ filters }: AirQualityIndicesChartProps) {
+export function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
   const [enabledIndices, setEnabledIndices] = useState({
     voc: true,
     nox: true,
@@ -31,27 +29,15 @@ export function AirQualityIndicesChart({ filters }: AirQualityIndicesChartProps)
     setEnabledIndices((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  // Generate dummy data
-  const environmentalData = useMemo(() => {
-    const data = [];
-    const now = new Date();
-    const points = filters.dateRange === "Last 24 Hours" ? 24 : 7;
-
-    for (let i = points - 1; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const dateStr =
-        filters.dateRange === "Last 24 Hours"
-          ? d.getHours() + ":00"
-          : d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-
-      data.push({
-        date: dateStr,
-        voc: Math.floor(Math.random() * 200),
-        nox: Math.floor(Math.random() * 150),
-      });
-    }
-    return data;
-  }, [filters.dateRange]);
+  const environmentalData = useMemo(
+    () =>
+      rawData.map((item) => ({
+        date: new Date(item.timestamp).toLocaleString(),
+        voc: item.voc_index,
+        nox: item.nox_index,
+      })),
+    [rawData],
+  );
 
   const indices = [
     { key: "voc" as const, label: "VOC Index", color: "#51cf66", enabled: enabledIndices.voc },

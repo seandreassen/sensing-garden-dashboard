@@ -1,5 +1,5 @@
 import { Thermometer, Droplet } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   LineChart,
   Line,
@@ -11,15 +11,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import type { EnvironmentalItem } from "@/api/environment";
+
 interface EnvironmentalConditionsChartProps {
-  filters: {
-    dateRange: string;
-    startDate?: string;
-    endDate?: string;
-  };
+  rawData: EnvironmentalItem[];
 }
 
-export function EnvironmentalConditionsChart({ filters }: EnvironmentalConditionsChartProps) {
+export function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartProps) {
   const [enabledMetrics, setEnabledMetrics] = useState({
     temperature: true,
     humidity: true,
@@ -29,52 +27,15 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
     setEnabledMetrics((prev) => ({ ...prev, [metric]: !prev[metric] }));
   };
 
-  // Generate data based on date range
-  const environmentalData = useMemo(() => {
-    const data = [];
-    const now = new Date();
-    const points = filters.dateRange === "Last 24 Hours" ? 24 : 7;
-    const interval = filters.dateRange === "Last 24 Hours" ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
-
-    const seed = (filters.dateRange + (filters.startDate || "") + (filters.endDate || "")).length;
-    const rng = (offset: number) => {
-      const x = Math.sin(seed + offset) * 10000;
-      return x - Math.floor(x);
-    };
-
-    for (let i = points - 1; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * interval);
-      const dateStr =
-        filters.dateRange === "Last 24 Hours"
-          ? d.getHours() + ":00"
-          : d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-
-      const hourOfDay = d.getHours();
-      const dayOfYear = Math.floor(
-        (d.getTime() - new Date(d.getFullYear(), 0, 0).getTime()) / (24 * 60 * 60 * 1000),
-      );
-
-      const month = d.getMonth();
-      const isWinter = month === 11 || month === 0 || month === 1;
-      const isSummer = month === 5 || month === 6 || month === 7;
-
-      const tempBase = isWinter ? -2 : isSummer ? 25 : 15;
-      const seasonalVariation = Math.sin((dayOfYear / 365) * Math.PI * 2) * 10;
-      const tempDailyVariation = Math.sin((hourOfDay / 24) * Math.PI * 2 - Math.PI / 2) * 6;
-      const temperature = parseFloat(
-        (tempBase + seasonalVariation + tempDailyVariation + (rng(i) - 0.5) * 5).toFixed(1),
-      );
-
-      const humidityBase = 60 - temperature * 0.8;
-      const humidity = parseFloat(
-        Math.max(30, Math.min(90, humidityBase + (rng(i + 100) - 0.5) * 15)).toFixed(1),
-      );
-
-      data.push({ date: dateStr, temperature, humidity });
-    }
-
-    return data;
-  }, [filters.dateRange, filters.startDate, filters.endDate]);
+  const environmentalData = useMemo(
+    () =>
+      rawData.map((item) => ({
+        date: new Date(item.timestamp).toLocaleString(),
+        temperature: item.ambient_temperature,
+        humidity: item.ambient_humidity,
+      })),
+    [rawData],
+  );
 
   const metrics = [
     {
@@ -184,10 +145,10 @@ export function EnvironmentalConditionsChart({ filters }: EnvironmentalCondition
                 labelStyle={{ color: "var(--text-primary)", marginBottom: "4px" }}
               />
               <Legend wrapperStyle={{ fontSize: "13px" }} iconType="line" />
-              {activeMetrics.map((metric, index) => (
+              {activeMetrics.map((metric) => (
                 <Line
                   key={metric.key}
-                  yAxisId={index === 0 ? "left" : "right"}
+                  yAxisId={metric.key === "temperature" ? "left" : "right"}
                   type="monotone"
                   dataKey={metric.key}
                   stroke={metric.color}

@@ -1,9 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
-import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
-import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
+import { AnalyticsData } from "@/components/analytics/AnalyticsData";
 
 export const Route = createFileRoute("/deployments/$deploymentId")({
   component: DeploymentPage,
@@ -70,7 +68,7 @@ function DeploymentPage() {
 
       <div className="mt-6 w-full">
         {activeTab === "overview" && <OverviewData />}
-        {activeTab === "analytics" && <AnalyticsData />}
+        {activeTab === "analytics" && <AnalyticsData deploymentId={deploymentId} />}
         {activeTab === "observations" && <ObservationsData />}
       </div>
     </main>
@@ -79,32 +77,6 @@ function DeploymentPage() {
 
 function OverviewData() {
   return <div>Overview data</div>;
-}
-
-function AnalyticsData() {
-  const filters = {
-    dateRange: "Last 24 Hours",
-    startDate: undefined,
-    endDate: undefined,
-  };
-
-  return (
-    <div className="flex flex-col border">
-      <h2 className="p-2 text-xl font-semibold">Environmental Data</h2>
-
-      <div className="rounded p-4">
-        <EnvironmentalConditionsChart filters={filters} />
-      </div>
-
-      <div className="rounded p-4">
-        <AirPollutionChart filters={filters} />
-      </div>
-
-      <div className="rounded p-4">
-        <AirQualityIndicesChart filters={filters} />
-      </div>
-    </div>
-  );
 }
 
 function ObservationsData() {
