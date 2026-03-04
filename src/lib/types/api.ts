@@ -1,4 +1,4 @@
-/*interface Location {
+interface Location {
   lat: number;
   long: number;
   alt?: number;
@@ -30,12 +30,12 @@ interface Deployment {
   deploymentId: string;
   active: boolean;
 }
-*/
-export interface DeviceIdProps {
+
+interface DeviceIdProps {
   value?: string;
 }
 
-export interface Observation {
+interface Observation {
   species: string;
   genus: string;
   family: string;
@@ -49,3 +49,12 @@ export interface Observation {
   image_bucket: string;
   image_key: string;
 }
+
+export type {
+  Location,
+  EnvironmentData,
+  ClassificationData,
+  Deployment,
+  DeviceIdProps,
+  Observation,
+};
