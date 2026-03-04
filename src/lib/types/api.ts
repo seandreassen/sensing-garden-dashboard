@@ -26,9 +26,50 @@ interface ClassificationData {
   species?: ClassificationCandidate[];
 }
 
+interface Classification {
+  device_id: string;
+  timestamp: string;
+  model_id: string;
+  family: string;
+  genus: string;
+  species: string;
+  family_confidence: number;
+  genus_confidence: number;
+  species_confidence: number;
+  classification_data?: ClassificationData;
+  image_url?: string;
+  image_key?: string;
+  image_bucket?: string;
+  location?: Location;
+  environment?: EnvironmentData;
+}
+
+interface PaginatedResponse<T> {
+  items: T[];
+  count: number;
+  next_token?: string;
+}
+
 interface Deployment {
   deploymentId: string;
   active: boolean;
 }
 
-export type { Location, EnvironmentData, ClassificationData, Deployment };
+type TaxonomyLevel = "family" | "genus" | "species";
+
+type DatePreset = "24h" | "7d" | "30d" | "custom";
+
+type WorkspaceTab = "overview" | "analytics" | "observations";
+
+export type {
+  Location,
+  EnvironmentData,
+  ClassificationCandidate,
+  ClassificationData,
+  Classification,
+  PaginatedResponse,
+  Deployment,
+  TaxonomyLevel,
+  DatePreset,
+  WorkspaceTab,
+};
