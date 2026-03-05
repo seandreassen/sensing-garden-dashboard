@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { ObservationsResponse } from "@/components/observationTable/columns";
+import type { ObservationsResponse } from "@/lib/types/api";
 
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
@@ -21,7 +21,7 @@ interface SearchParams {
   nextToken?: string;
 }
 
-export function useObservations(searchParams?: SearchParams) {
+function useObservations(searchParams?: SearchParams) {
   return useQuery<ObservationsResponse, Error>({
     queryKey: ["observations", searchParams],
     queryFn: async () => {
@@ -58,3 +58,4 @@ export function useObservations(searchParams?: SearchParams) {
     },
   });
 }
+export { useObservations };

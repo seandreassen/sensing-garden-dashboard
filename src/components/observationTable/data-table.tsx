@@ -1,4 +1,3 @@
-"use client";
 import {
   type ColumnDef,
   type SortingState,
@@ -27,7 +26,7 @@ interface DataTableProps<TData, TValue> {
   onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
-export function DataTable<TData, TValue>({
+function DataTable<TData, TValue>({
   columns,
   data,
   sorting,
@@ -85,3 +84,4 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+export { DataTable };
