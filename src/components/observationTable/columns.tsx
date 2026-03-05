@@ -12,7 +12,6 @@ Columns: Image, Hub, Family, Genus, Species and timestamp.
 
 const columns: ColumnDef<Observation>[] = [
   {
-    accessorKey: "image_url",
     header: "Image",
     cell: ({ row }) => (
       <img
@@ -24,7 +23,6 @@ const columns: ColumnDef<Observation>[] = [
     ),
   },
   {
-    accessorKey: "device_id",
     header: "Hub",
     cell: ({ row }) => {
       const hub = row.original.device_id;
@@ -32,7 +30,6 @@ const columns: ColumnDef<Observation>[] = [
     },
   },
   {
-    accessorKey: "family",
     header: "Family",
     cell: ({ row }) => {
       const family = row.original.family ?? "-";
@@ -48,7 +45,6 @@ const columns: ColumnDef<Observation>[] = [
     },
   },
   {
-    accessorKey: "genus",
     header: "Genus",
     cell: ({ row }) => {
       const genus = row.original.genus ?? "-";
@@ -62,7 +58,6 @@ const columns: ColumnDef<Observation>[] = [
     },
   },
   {
-    accessorKey: "species",
     header: "Species",
     cell: ({ row }) => {
       const species = row.original.species;
