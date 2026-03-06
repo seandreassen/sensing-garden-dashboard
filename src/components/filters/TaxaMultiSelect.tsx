@@ -1,6 +1,7 @@
 import { CheckIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { filterFieldClass, filterLabelTextOnlyClass } from "@/components/filters/filterStyles";
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useClassifications } from "@/lib/hooks/useClassifications";
 
@@ -36,11 +37,8 @@ function TaxaMultiSelect() {
         : "species";
 
   return (
-    <div className="relative flex flex-col gap-1.5">
-      <label
-        htmlFor="filter-taxa"
-        className="text-[11px] font-medium tracking-wider text-muted-foreground uppercase"
-      >
+    <div className={`relative ${filterFieldClass}`}>
+      <label htmlFor="filter-taxa" className={filterLabelTextOnlyClass}>
         Filter {levelLabel}
       </label>
 

@@ -1,5 +1,6 @@
 import { ShieldCheckIcon } from "lucide-react";
 
+import { filterFieldClass, filterLabelClass } from "@/components/filters/filterStyles";
 import { useFilterContext } from "@/lib/filters/filterState";
 
 const PRESETS = [
@@ -14,11 +15,8 @@ function ConfidenceFilter() {
   const displayValue = Math.round(filters.minConfidence * 100);
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <label
-        htmlFor="filter-confidence"
-        className="flex items-center gap-1.5 text-[11px] font-medium tracking-wider text-muted-foreground uppercase"
-      >
+    <div className={filterFieldClass}>
+      <label htmlFor="filter-confidence" className={filterLabelClass}>
         <ShieldCheckIcon className="h-3 w-3" />
         Minimum Confidence (0–100)
       </label>
