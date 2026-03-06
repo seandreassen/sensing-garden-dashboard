@@ -9,18 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
+import type { Deployment } from "@/lib/types/api";
 
-interface DeploymentCardProps {
-  active: boolean;
-  deploymentId: string;
-}
-
-export function DeploymentCard({ active, deploymentId }: DeploymentCardProps) {
+function DeploymentCard({ active, deploymentId }: Deployment) {
   const navigate = useNavigate();
   const featureName = "Deployment Name";
 
   const handleCardClicked = () => {
-    navigate({ to: "/deployments/$deploymentId", params: { deploymentId } });
+    navigate({ to: "/deployment/$deploymentId", params: { deploymentId } });
   };
 
   return (
@@ -46,3 +42,5 @@ export function DeploymentCard({ active, deploymentId }: DeploymentCardProps) {
     </Card>
   );
 }
+
+export { DeploymentCard };

@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { AnalyticsData } from "@/components/analytics/AnalyticsData";
 
-export const Route = createFileRoute("/deployments/$deploymentId")({
+export const Route = createFileRoute("/deployment/$deploymentId")({
   component: DeploymentPage,
 });
 
