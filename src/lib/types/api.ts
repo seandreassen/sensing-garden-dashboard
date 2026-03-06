@@ -30,8 +30,10 @@ interface Deployment {
   deploymentId: string;
   name: string;
   active: boolean;
-  date: Date;
+  startDate: Date;
+  endDate: Date | null;
   location: string;
+  modelId: string;
 }
 
 export type { Location, EnvironmentData, ClassificationData, Deployment };

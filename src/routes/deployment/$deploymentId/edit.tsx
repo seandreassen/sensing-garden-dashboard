@@ -5,5 +5,5 @@ export const Route = createFileRoute("/deployment/$deploymentId/edit")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/deployment/$deploymentId/edit"!</div>;
+  return <div className="font-bold">Hello "/deployment/$deploymentId/edit"!</div>;
 }

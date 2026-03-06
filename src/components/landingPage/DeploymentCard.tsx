@@ -22,12 +22,17 @@ function StatusIndicator({ active }: { active: boolean }) {
   );
 }
 
-function DeploymentCard({ active, deploymentId, location, date, name }: Deployment) {
+type DeploymentCardProps = Pick<
+  Deployment,
+  "deploymentId" | "name" | "active" | "startDate" | "location"
+>;
+
+function DeploymentCard({ active, deploymentId, location, startDate, name }: DeploymentCardProps) {
   const navigate = useNavigate();
   const deploymentDate =
-    date instanceof Date
-      ? new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium" }).format(date)
-      : String(date);
+    startDate instanceof Date
+      ? new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium" }).format(startDate)
+      : String(startDate);
   const handleCardClicked = () => {
     navigate({ to: "/deployment/$deploymentId", params: { deploymentId } });
   };

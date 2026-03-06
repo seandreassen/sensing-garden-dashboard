@@ -22,13 +22,13 @@ function RouteComponent() {
       ) : (
         <>
           <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-6 sm:grid-cols-2 lg:grid-cols-3 lg:px-12 xl:grid-cols-4">
-            {activeDeployments.map(({ deploymentId, active, name, date, location }) => (
+            {activeDeployments.map(({ deploymentId, active, name, startDate, location }) => (
               <DeploymentCard
                 key={deploymentId}
                 deploymentId={deploymentId}
                 active={active}
                 name={name}
-                date={date}
+                startDate={startDate}
                 location={location}
               />
             ))}
@@ -40,13 +40,13 @@ function RouteComponent() {
             Inactive Deployments
           </span>
           <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-6 sm:grid-cols-2 lg:grid-cols-3 lg:px-12 xl:grid-cols-4">
-            {inactiveDeployments.map(({ deploymentId, active, name, date, location }) => (
+            {inactiveDeployments.map(({ deploymentId, active, name, startDate, location }) => (
               <DeploymentCard
                 key={deploymentId}
                 deploymentId={deploymentId}
                 active={active}
                 name={name}
-                date={date}
+                startDate={startDate}
                 location={location}
               />
             ))}
