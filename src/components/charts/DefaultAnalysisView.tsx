@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { aggregateByTime } from "@/lib/aggregation";
-import { useClassifications } from "@/lib/hooks/useClassifications";
+import { useObservations } from "@/lib/hooks/useObservations";
 
 interface DefaultAnalysisViewProps {
   deviceId?: string;
@@ -20,18 +20,18 @@ function getDefaultDateRange() {
 function DefaultAnalysisView({ deviceId }: DefaultAnalysisViewProps) {
   const { startTime, endTime } = useMemo(getDefaultDateRange, []);
 
-  const { data: classifications, isLoading } = useClassifications({
-    deviceId,
+  const { data: classifications, isLoading } = useObservations({
+    deviceFilter: deviceId,
     startTime,
     endTime,
   });
 
   const chartData = useMemo(
-    () => aggregateByTime(classifications ?? [], startTime, endTime, "day"),
+    () => aggregateByTime(classifications?.items ?? [], startTime, endTime, "day"),
     [classifications, startTime, endTime],
   );
 
-  const totalCount = classifications?.length ?? 0;
+  const totalCount = classifications?.items.length ?? 0;
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">

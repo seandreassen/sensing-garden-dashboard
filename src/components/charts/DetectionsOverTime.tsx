@@ -76,11 +76,12 @@ function DetectionsOverTime({ data, isLoading }: DetectionsOverTimeProps) {
             color: "var(--color-foreground)",
             fontSize: "13px",
           }}
-          labelFormatter={(label: string) => {
-            if (label.includes("T")) {
-              return label.replace("T", " ");
+          labelFormatter={(label) => {
+            const str = String(label);
+            if (str.includes("T")) {
+              return str.replace("T", " ");
             }
-            return label;
+            return str;
           }}
         />
         <Area

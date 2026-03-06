@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as ObservationTableRouteImport } from "./routes/observationTable";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as HubHubIdRouteImport } from "./routes/hub/$hubId";
 import { Route as DeploymentDeploymentIdRouteImport } from "./routes/deployment/$deploymentId";
 
+const ObservationTableRoute = ObservationTableRouteImport.update({
+  id: "/observationTable",
+  path: "/observationTable",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -31,36 +37,56 @@ const DeploymentDeploymentIdRoute = DeploymentDeploymentIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/observationTable": typeof ObservationTableRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/deployment/$deploymentId" | "/hub/$hubId";
+  fullPaths:
+    | "/"
+    | "/observationTable"
+    | "/deployment/$deploymentId"
+    | "/hub/$hubId";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/deployment/$deploymentId" | "/hub/$hubId";
-  id: "__root__" | "/" | "/deployment/$deploymentId" | "/hub/$hubId";
+  to: "/" | "/observationTable" | "/deployment/$deploymentId" | "/hub/$hubId";
+  id:
+    | "__root__"
+    | "/"
+    | "/observationTable"
+    | "/deployment/$deploymentId"
+    | "/hub/$hubId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  ObservationTableRoute: typeof ObservationTableRoute;
   DeploymentDeploymentIdRoute: typeof DeploymentDeploymentIdRoute;
   HubHubIdRoute: typeof HubHubIdRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/observationTable": {
+      id: "/observationTable";
+      path: "/observationTable";
+      fullPath: "/observationTable";
+      preLoaderRoute: typeof ObservationTableRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
       id: "/";
       path: "/";
@@ -87,6 +113,7 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ObservationTableRoute: ObservationTableRoute,
   DeploymentDeploymentIdRoute: DeploymentDeploymentIdRoute,
   HubHubIdRoute: HubHubIdRoute,
 };

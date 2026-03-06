@@ -26,16 +26,19 @@ interface ClassificationData {
   species?: ClassificationCandidate[];
 }
 
+//Left device_id and timestamp required.
 interface Classification {
+  //Classification object always contains these.
   device_id: string;
   timestamp: string;
-  model_id: string;
-  family: string;
-  genus: string;
-  species: string;
-  family_confidence: number;
-  genus_confidence: number;
-  species_confidence: number;
+  model_id?: string;
+  family?: string;
+  genus?: string;
+  species?: string;
+  family_confidence?: number;
+  genus_confidence?: number;
+  species_confidence?: number;
+  //Classifiation object may include these.
   classification_data?: ClassificationData;
   image_url?: string;
   image_key?: string;
@@ -43,7 +46,11 @@ interface Classification {
   location?: Location;
   environment?: EnvironmentData;
 }
-
+interface ClassificationResponse {
+  items: Classification[];
+  count?: number;
+  nextToken?: string | null;
+}
 interface PaginatedResponse<T> {
   items: T[];
   count: number;
@@ -55,6 +62,10 @@ interface Deployment {
   active: boolean;
 }
 
+interface DeviceIdProps {
+  value?: string;
+}
+
 type TaxonomyLevel = "family" | "genus" | "species";
 
 export type {
@@ -63,7 +74,9 @@ export type {
   ClassificationCandidate,
   ClassificationData,
   Classification,
+  ClassificationResponse,
   PaginatedResponse,
   Deployment,
   TaxonomyLevel,
+  DeviceIdProps,
 };
