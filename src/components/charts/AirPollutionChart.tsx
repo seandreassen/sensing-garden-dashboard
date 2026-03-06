@@ -11,10 +11,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import type { EnvironmentalItem } from "@/api/environment";
+import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
 interface AirPollutionChartProps {
-  rawData: EnvironmentalItem[];
+  rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
 export function AirPollutionChart({ rawData }: AirPollutionChartProps) {
@@ -30,13 +30,23 @@ export function AirPollutionChart({ rawData }: AirPollutionChartProps) {
   };
 
   const environmentalData = useMemo(() => {
-    return rawData.map((item) => ({
-      date: new Date(item.timestamp).toLocaleString(),
-      pm1: item.pm1p0,
-      pm25: item.pm2p5,
-      pm4: item.pm4p0,
-      pm10: item.pm10p0,
-    }));
+    const seen = new Set<string>();
+    return rawData
+      .filter((item) => {
+        const dateKey = new Date(item.timestamp).toLocaleString();
+        if (seen.has(dateKey)) {
+          return false;
+        }
+        seen.add(dateKey);
+        return true;
+      })
+      .map((item) => ({
+        date: new Date(item.timestamp).toLocaleString(),
+        pm1: item.pm1p0,
+        pm25: item.pm2p5,
+        pm4: item.pm4p0,
+        pm10: item.pm10p0,
+      }));
   }, [rawData]);
 
   const pollutants = [

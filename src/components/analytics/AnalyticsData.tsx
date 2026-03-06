@@ -1,56 +1,16 @@
-import { useEffect, useState } from "react";
-
-import { fetchEnvironmentData } from "@/api/environment";
-import type { EnvironmentalItem } from "@/api/environment";
 import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
+import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-interface AnalyticsDataProps {
-  deploymentId: string;
-}
-
-export function AnalyticsData({ deploymentId }: AnalyticsDataProps) {
-  const [data, setData] = useState<EnvironmentalItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      try {
-        const items = await fetchEnvironmentData();
-
-        const seen = new Set<string>();
-        const uniqueItems = items.filter((item) => {
-          const key = item.timestamp;
-          if (seen.has(key)) {
-            return false;
-          }
-          seen.add(key);
-          return true;
-        });
-
-        setData(uniqueItems);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, [deploymentId]);
+export function AnalyticsData() {
+  const { data, loading, error } = useEnvironmentData();
 
   if (loading) {
     return <div>Loading environmental data...</div>;
   }
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message}</div>;
   }
 
   return (

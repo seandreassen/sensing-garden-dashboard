@@ -11,10 +11,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import type { EnvironmentalItem } from "@/api/environment";
+import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
 interface EnvironmentalConditionsChartProps {
-  rawData: EnvironmentalItem[];
+  rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
 export function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartProps) {
@@ -27,15 +27,23 @@ export function EnvironmentalConditionsChart({ rawData }: EnvironmentalCondition
     setEnabledMetrics((prev) => ({ ...prev, [metric]: !prev[metric] }));
   };
 
-  const environmentalData = useMemo(
-    () =>
-      rawData.map((item) => ({
+  const environmentalData = useMemo(() => {
+    const seen = new Set<string>();
+    return rawData
+      .filter((item) => {
+        const dateKey = new Date(item.timestamp).toLocaleString();
+        if (seen.has(dateKey)) {
+          return false;
+        }
+        seen.add(dateKey);
+        return true;
+      })
+      .map((item) => ({
         date: new Date(item.timestamp).toLocaleString(),
         temperature: item.ambient_temperature,
         humidity: item.ambient_humidity,
-      })),
-    [rawData],
-  );
+      }));
+  }, [rawData]);
 
   const metrics = [
     {

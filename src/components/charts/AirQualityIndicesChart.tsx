@@ -13,10 +13,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import type { EnvironmentalItem } from "@/api/environment";
+import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
 interface AirQualityIndicesChartProps {
-  rawData: EnvironmentalItem[];
+  rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
 export function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
@@ -29,15 +29,23 @@ export function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps)
     setEnabledIndices((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  const environmentalData = useMemo(
-    () =>
-      rawData.map((item) => ({
+  const environmentalData = useMemo(() => {
+    const seen = new Set<string>();
+    return rawData
+      .filter((item) => {
+        const dateKey = new Date(item.timestamp).toLocaleString();
+        if (seen.has(dateKey)) {
+          return false;
+        }
+        seen.add(dateKey);
+        return true;
+      })
+      .map((item) => ({
         date: new Date(item.timestamp).toLocaleString(),
         voc: item.voc_index,
         nox: item.nox_index,
-      })),
-    [rawData],
-  );
+      }));
+  }, [rawData]);
 
   const indices = [
     { key: "voc" as const, label: "VOC Index", color: "#51cf66", enabled: enabledIndices.voc },
