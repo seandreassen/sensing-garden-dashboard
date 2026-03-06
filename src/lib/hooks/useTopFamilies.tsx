@@ -120,15 +120,18 @@ export function useTopFamilies(limit = 5): UseTopFamiliesResult {
       counts.set(family, (counts.get(family) ?? 0) + 1);
     }
 
-    const totalDetections = Array.from(counts.values()).reduce((sum, value) => sum + value, 0);
+    const totalDetections = Array.from(counts.values()).reduce(
+      (sum: number, value: number) => sum + value,
+      0,
+    );
 
-    const sorted = Array.from(counts.entries())
-      .toSorted((a, b) => b[1] - a[1])
+    const sorted: [string, number][] = Array.from(counts.entries())
+      .toSorted((a: [string, number], b: [string, number]) => b[1] - a[1])
       .slice(0, limit);
 
     const max = sorted[0]?.[1] ?? 0;
 
-    const rows: TopFamilyRow[] = sorted.map(([family, count], index) => ({
+    const rows: TopFamilyRow[] = sorted.map(([family, count]: [string, number], index: number) => ({
       rank: index + 1,
       family,
       count,
