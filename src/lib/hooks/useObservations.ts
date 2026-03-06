@@ -38,7 +38,6 @@ function useObservations(searchParams?: SearchParams) {
       if (searchParams?.sortBy) {
         params.set("sort_by", searchParams?.sortBy);
       }
-
       params.set("sort_desc", String(searchParams?.sortDesc ?? false));
 
       params.set("limit", String(searchParams?.limit ?? 100));
@@ -58,4 +57,29 @@ function useObservations(searchParams?: SearchParams) {
     },
   });
 }
-export { useObservations };
+function useClassificationsCount(searchParams?: SearchParams) {
+  return useQuery<number, Error>({
+    queryKey: ["classifications-count", searchParams],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (searchParams?.deviceFilter) {
+        params.set("device_id", searchParams.deviceFilter);
+      }
+      if (searchParams?.startTime) {
+        params.set("start_time", searchParams.startTime);
+      }
+      if (searchParams?.endTime) {
+        params.set("end_time", searchParams.endTime);
+      }
+
+      const res = await fetch(`${BASE_URL}/classifications?${params.toString()}`);
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch observations: ${res.status}`);
+      }
+
+      return res.json();
+    },
+  });
+}
+export { useObservations, useClassificationsCount };
