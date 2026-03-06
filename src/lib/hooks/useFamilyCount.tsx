@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 type UseFamilyCountResult = {
   count: number | null;
@@ -57,64 +57,37 @@ function getFamily(item: unknown): string | null {
   );
 }
 
+async function fetchFamilyCount(): Promise<number> {
+  const res = await fetch("https://api.sensinggarden.com/v1/classifications");
+
+  if (!res.ok) {
+    throw new Error(`Request failed (${res.status})`);
+  }
+
+  const json: unknown = await res.json();
+  const arr = asArray(json);
+  const set = new Set<string>();
+
+  for (const item of arr) {
+    const family = getFamily(item);
+
+    if (family) {
+      set.add(family);
+    }
+  }
+
+  return set.size;
+}
+
 export function useFamilyCount(): UseFamilyCountResult {
-  const [raw, setRaw] = useState<unknown>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["family-count"],
+    queryFn: fetchFamilyCount,
+  });
 
-  useEffect(() => {
-    let alive = true;
-
-    async function fetchFamilies() {
-      try {
-        const res = await fetch("https://api.sensinggarden.com/v1/classifications");
-
-        if (!res.ok) {
-          throw new Error(`Request failed (${res.status})`);
-        }
-
-        const json: unknown = await res.json();
-
-        if (alive) {
-          setRaw(json);
-          setError(null);
-        }
-      } catch (e) {
-        if (alive) {
-          setError(e instanceof Error ? e.message : "Unknown error");
-        }
-      }
-
-      if (alive) {
-        setIsLoading(false);
-      }
-    }
-
-    fetchFamilies();
-
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  const count = useMemo(() => {
-    if (raw === null) {
-      return null;
-    }
-
-    const arr = asArray(raw);
-    const set = new Set<string>();
-
-    for (const item of arr) {
-      const family = getFamily(item);
-
-      if (family) {
-        set.add(family);
-      }
-    }
-
-    return set.size;
-  }, [raw]);
-
-  return { count, isLoading, error };
+  return {
+    count: data ?? null,
+    isLoading,
+    error: error instanceof Error ? error.message : null,
+  };
 }

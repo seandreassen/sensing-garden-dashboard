@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export type TopFamilyRow = {
   rank: number;
@@ -66,86 +66,62 @@ function getFamily(item: unknown): string | null {
   );
 }
 
+async function fetchTopFamilies(limit: number): Promise<{
+  rows: TopFamilyRow[];
+  totalDetections: number;
+}> {
+  const res = await fetch("https://api.sensinggarden.com/v1/classifications");
+
+  if (!res.ok) {
+    throw new Error(`Request failed (${res.status})`);
+  }
+
+  const json: unknown = await res.json();
+  const arr = asArray(json);
+  const counts = new Map<string, number>();
+
+  for (const item of arr) {
+    const family = getFamily(item);
+
+    if (!family) {
+      continue;
+    }
+
+    counts.set(family, (counts.get(family) ?? 0) + 1);
+  }
+
+  const totalDetections = Array.from(counts.values()).reduce(
+    (sum: number, value: number) => sum + value,
+    0,
+  );
+
+  const sorted: [string, number][] = Array.from(counts.entries())
+    .toSorted((a: [string, number], b: [string, number]) => b[1] - a[1])
+    .slice(0, limit);
+
+  const max = sorted[0]?.[1] ?? 0;
+
+  const rows: TopFamilyRow[] = sorted.map(([family, count]: [string, number], index: number) => ({
+    rank: index + 1,
+    family,
+    count,
+    pct: totalDetections > 0 ? (count / totalDetections) * 100 : 0,
+    barPct: max > 0 ? (count / max) * 100 : 0,
+  }));
+
+  return { rows, totalDetections };
+}
+
 export function useTopFamilies(limit = 5): UseTopFamiliesResult {
-  const [raw, setRaw] = useState<unknown>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-
-    async function fetchTopFamilies() {
-      try {
-        const res = await fetch("https://api.sensinggarden.com/v1/classifications");
-
-        if (!res.ok) {
-          throw new Error(`Request failed (${res.status})`);
-        }
-
-        const json: unknown = await res.json();
-
-        if (alive) {
-          setRaw(json);
-          setError(null);
-        }
-      } catch (e) {
-        if (alive) {
-          setError(e instanceof Error ? e.message : "Unknown error");
-        }
-      }
-
-      if (alive) {
-        setIsLoading(false);
-      }
-    }
-
-    fetchTopFamilies();
-
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  const computed = useMemo(() => {
-    const arr = asArray(raw);
-    const counts = new Map<string, number>();
-
-    for (const item of arr) {
-      const family = getFamily(item);
-
-      if (!family) {
-        continue;
-      }
-
-      counts.set(family, (counts.get(family) ?? 0) + 1);
-    }
-
-    const totalDetections = Array.from(counts.values()).reduce(
-      (sum: number, value: number) => sum + value,
-      0,
-    );
-
-    const sorted: [string, number][] = Array.from(counts.entries())
-      .toSorted((a: [string, number], b: [string, number]) => b[1] - a[1])
-      .slice(0, limit);
-
-    const max = sorted[0]?.[1] ?? 0;
-
-    const rows: TopFamilyRow[] = sorted.map(([family, count]: [string, number], index: number) => ({
-      rank: index + 1,
-      family,
-      count,
-      pct: totalDetections > 0 ? (count / totalDetections) * 100 : 0,
-      barPct: max > 0 ? (count / max) * 100 : 0,
-    }));
-
-    return { rows, totalDetections };
-  }, [raw, limit]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["top-families", limit],
+    queryFn: () => fetchTopFamilies(limit),
+  });
 
   return {
-    rows: computed.rows,
-    totalDetections: computed.totalDetections,
+    rows: data?.rows ?? [],
+    totalDetections: data?.totalDetections ?? 0,
     isLoading,
-    error,
+    error: error instanceof Error ? error.message : null,
   };
 }

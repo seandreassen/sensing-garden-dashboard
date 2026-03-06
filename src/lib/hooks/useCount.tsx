@@ -1,59 +1,49 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+type CountResponse = number | { count: number };
 
 type UseCountResult = {
   count: number | null;
   loading: boolean;
+  error: string | null;
 };
 
+async function fetchCount(): Promise<number> {
+  const res = await fetch("https://api.sensinggarden.com/v1/classifications/count");
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  const text = await res.text();
+  const trimmed = text.trim();
+
+  if (/^\d+$/.test(trimmed)) {
+    return Number(trimmed);
+  }
+
+  const parsed = JSON.parse(trimmed) as CountResponse;
+
+  if (typeof parsed === "number") {
+    return parsed;
+  }
+
+  if (typeof parsed === "object" && parsed !== null && "count" in parsed) {
+    return parsed.count;
+  }
+
+  throw new Error("Unknown count response format");
+}
+
 export function useCount(): UseCountResult {
-  const [count, setCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["classifications-count"],
+    queryFn: fetchCount,
+  });
 
-  useEffect(() => {
-    let alive = true;
-
-    async function fetchCount() {
-      try {
-        const res = await fetch("https://api.sensinggarden.com/v1/classifications/count");
-        const data: unknown = await res.json();
-
-        if (!alive) {
-          return;
-        }
-
-        if (typeof data === "number") {
-          setCount(data);
-          return;
-        }
-
-        if (
-          typeof data === "object" &&
-          data !== null &&
-          "count" in data &&
-          typeof data.count === "number"
-        ) {
-          setCount(data.count);
-          return;
-        }
-
-        setCount(0);
-      } catch {
-        if (alive) {
-          setCount(0);
-        }
-      }
-
-      if (alive) {
-        setLoading(false);
-      }
-    }
-
-    fetchCount();
-
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  return { count, loading };
+  return {
+    count: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? error.message : null,
+  };
 }
