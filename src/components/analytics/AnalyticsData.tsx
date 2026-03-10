@@ -3,13 +3,13 @@ import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesCha
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-export function AnalyticsData() {
-  const { data, loading, error } = useEnvironmentData();
+function AnalyticsData() {
+  const { isLoading, isError, error } = useEnvironmentData();
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading environmental data...</div>;
   }
-  if (error) {
+  if (isError && error) {
     return <div>Error: {error.message}</div>;
   }
 
@@ -18,16 +18,18 @@ export function AnalyticsData() {
       <h2 className="p-2 text-xl font-semibold">Environmental Data</h2>
 
       <div className="rounded p-4">
-        <EnvironmentalConditionsChart rawData={data} />
+        <EnvironmentalConditionsChart />
       </div>
 
       <div className="rounded p-4">
-        <AirPollutionChart rawData={data} />
+        <AirPollutionChart />
       </div>
 
       <div className="rounded p-4">
-        <AirQualityIndicesChart rawData={data} />
+        <AirQualityIndicesChart />
       </div>
     </div>
   );
 }
+
+export { AnalyticsData };

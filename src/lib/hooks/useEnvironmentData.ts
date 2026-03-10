@@ -1,43 +1,27 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import type { EnvironmentData } from "@/lib/types/api";
 
-interface UseEnvironment {
-  data: EnvironmentData[];
-  loading: boolean;
-  error: Error | null;
-}
+const API_URL = "https://api.sensinggarden.com/v1/environment";
 
-export function useEnvironmentData(): UseEnvironment {
-  const [data, setData] = useState<EnvironmentData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+export function useEnvironmentData() {
+  return useQuery<EnvironmentData[], Error>({
+    queryKey: ["environmentData"],
+    queryFn: async () => {
+      const res = await fetch(API_URL, {
+        headers: {
+          "X-API-Key": import.meta.env.VITE_API_KEY,
+        },
+      });
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("https://api.sensinggarden.com/v1/environment", {
-          headers: {
-            "X-API-Key": import.meta.env.VITE_API_KEY,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch environment data");
-        }
-
-        const json = await res.json();
-
-        setData(json.items ?? json);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error("Failed to fetch environment data");
       }
-    }
 
-    fetchData();
-  }, []);
-
-  return { data, loading, error };
+      const json = await res.json();
+      return json.items ?? json;
+    },
+    staleTime: 1000 * 60, // 1 minute
+    refetchInterval: 1000 * 60, // auto-refetch every minute if needed
+  });
 }

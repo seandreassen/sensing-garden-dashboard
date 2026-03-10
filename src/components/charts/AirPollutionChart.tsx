@@ -13,11 +13,9 @@ import {
 
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-interface AirPollutionChartProps {
-  rawData: ReturnType<typeof useEnvironmentData>["data"];
-}
+function AirPollutionChart() {
+  const { data: rawData = [], isError, isLoading, error } = useEnvironmentData();
 
-function AirPollutionChart({ rawData }: AirPollutionChartProps) {
   const [enabledPollutants, setEnabledPollutants] = useState({
     pm1: true,
     pm25: true,
@@ -48,6 +46,13 @@ function AirPollutionChart({ rawData }: AirPollutionChartProps) {
         pm10: item.pm10p0,
       }));
   }, [rawData]);
+
+  if (isLoading) {
+    return <div>Loading environmental data...</div>;
+  }
+  if (isError && error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const pollutants = [
     { key: "pm1" as const, label: "PM1.0", color: "#8becff", enabled: enabledPollutants.pm1 },

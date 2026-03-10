@@ -68,7 +68,7 @@ function DeploymentPage() {
 
       <div className="mt-6 w-full">
         {activeTab === "overview" && <OverviewData />}
-        {activeTab === "analytics" && <AnalyticsData deploymentId={deploymentId} />}
+        {activeTab === "analytics" && <AnalyticsData />}
         {activeTab === "observations" && <ObservationsData />}
       </div>
     </main>

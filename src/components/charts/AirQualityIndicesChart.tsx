@@ -13,11 +13,9 @@ import {
 
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-interface AirQualityIndicesChartProps {
-  rawData: ReturnType<typeof useEnvironmentData>["data"];
-}
+function AirQualityIndicesChart() {
+  const { data: rawData = [], isError, isLoading, error } = useEnvironmentData();
 
-function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
   const [enabledIndices, setEnabledIndices] = useState({
     voc: true,
     nox: true,
@@ -44,6 +42,13 @@ function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
         nox: item.nox_index,
       }));
   }, [rawData]);
+
+  if (isLoading) {
+    return <div>Loading environmental data...</div>;
+  }
+  if (isError && error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const indices = [
     { key: "voc" as const, label: "VOC Index", color: "#51cf66", enabled: enabledIndices.voc },

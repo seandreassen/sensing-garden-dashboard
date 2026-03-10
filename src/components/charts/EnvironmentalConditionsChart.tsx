@@ -13,11 +13,9 @@ import {
 
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-interface EnvironmentalConditionsChartProps {
-  rawData: ReturnType<typeof useEnvironmentData>["data"];
-}
+function EnvironmentalConditionsChart() {
+  const { data: rawData = [], isError, isLoading, error } = useEnvironmentData();
 
-function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartProps) {
   const [enabledMetrics, setEnabledMetrics] = useState({
     temperature: true,
     humidity: true,
@@ -44,6 +42,13 @@ function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartP
         humidity: item.ambient_humidity,
       }));
   }, [rawData]);
+
+  if (isLoading) {
+    return <div>Loading environmental data...</div>;
+  }
+  if (isError && error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const metrics = [
     {
