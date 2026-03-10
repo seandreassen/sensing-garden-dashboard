@@ -17,7 +17,7 @@ interface AirPollutionChartProps {
   rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
-export function AirPollutionChart({ rawData }: AirPollutionChartProps) {
+function AirPollutionChart({ rawData }: AirPollutionChartProps) {
   const [enabledPollutants, setEnabledPollutants] = useState({
     pm1: true,
     pm25: true,
@@ -150,3 +150,5 @@ export function AirPollutionChart({ rawData }: AirPollutionChartProps) {
     </div>
   );
 }
+
+export { AirPollutionChart };

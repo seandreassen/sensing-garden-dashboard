@@ -1,5 +1,3 @@
-"use client";
-
 import { Activity } from "lucide-react";
 import { useState, useMemo } from "react";
 import {
@@ -19,7 +17,7 @@ interface AirQualityIndicesChartProps {
   rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
-export function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
+function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps) {
   const [enabledIndices, setEnabledIndices] = useState({
     voc: true,
     nox: true,
@@ -149,3 +147,5 @@ export function AirQualityIndicesChart({ rawData }: AirQualityIndicesChartProps)
     </div>
   );
 }
+
+export { AirQualityIndicesChart };

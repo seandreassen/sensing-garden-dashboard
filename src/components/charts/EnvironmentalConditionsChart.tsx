@@ -17,7 +17,7 @@ interface EnvironmentalConditionsChartProps {
   rawData: ReturnType<typeof useEnvironmentData>["data"];
 }
 
-export function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartProps) {
+function EnvironmentalConditionsChart({ rawData }: EnvironmentalConditionsChartProps) {
   const [enabledMetrics, setEnabledMetrics] = useState({
     temperature: true,
     humidity: true,
@@ -177,3 +177,5 @@ export function EnvironmentalConditionsChart({ rawData }: EnvironmentalCondition
     </div>
   );
 }
+
+export { EnvironmentalConditionsChart };
