@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon } from "lucide-react";
 
+import { AnalyticsData } from "@/components/analytics/AnalyticsData";
 import { FilterHeader } from "@/components/filters/FilterHeader";
 import { Button } from "@/components/ui/Button";
 import { FilterProvider } from "@/lib/filters/FilterContext";
@@ -24,6 +25,19 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
   const navigate = useNavigate();
   const { filters } = useFilterContext();
 
+  const renderTabContent = () => {
+    switch (filters.activeTab) {
+      case "overview":
+        return <div>Overview content goes here</div>;
+      case "analytics":
+        return <AnalyticsData />;
+      case "observations":
+        return <div>Observations content goes here</div>;
+      default:
+        return <div>Select a tab</div>;
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col pt-14">
       {/* Deployment header */}
@@ -44,15 +58,8 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
       {/* Filter header */}
       <FilterHeader deploymentId={deploymentId} />
 
-      {/* Tab content placeholder */}
-      <div className="px-6 py-6">
-        <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border">
-          <span className="text-sm text-muted-foreground">
-            {filters.activeTab.charAt(0).toUpperCase() + filters.activeTab.slice(1)} content goes
-            here
-          </span>
-        </div>
-      </div>
+      {/* Tab content */}
+      <div className="px-6 py-6">{renderTabContent()}</div>
     </main>
   );
 }
