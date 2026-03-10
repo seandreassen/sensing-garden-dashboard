@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { useFilterContext } from "@/lib/filters/filterState";
-import { useClassifications } from "@/lib/hooks/useClassifications";
+import { useObservations } from "@/lib/hooks/useObservations";
 
 import { filterFieldClass, filterLabelTextOnlyClass } from "./filterStyles";
 
@@ -11,25 +11,25 @@ function TaxaMultiSelect() {
   const { filters, actions } = useFilterContext();
   const [open, setOpen] = useState(false);
 
-  const { data: classifications } = useClassifications({
+  const { data } = useObservations({
     startTime: filters.startTime,
     endTime: filters.endTime,
-    deviceId: filters.deviceId,
+    deviceFilter: filters.deviceId,
   });
 
   const availableTaxa = useMemo(() => {
-    if (!classifications) {
+    if (!data?.items) {
       return [];
     }
     const names = new Set<string>();
-    for (const c of classifications) {
-      const name = c[filters.taxonomyLevel];
+    for (const obs of data.items) {
+      const name = obs[filters.taxonomyLevel];
       if (name) {
         names.add(name);
       }
     }
     return Array.from(names).toSorted();
-  }, [classifications, filters.taxonomyLevel]);
+  }, [data, filters.taxonomyLevel]);
 
   const levelLabel =
     filters.taxonomyLevel === "family"
