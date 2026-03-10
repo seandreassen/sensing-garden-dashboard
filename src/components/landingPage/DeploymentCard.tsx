@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/Card";
 import type { Deployment } from "@/lib/types/api";
 
-function DeploymentCard({ active, deploymentId }: Deployment) {
+function DeploymentCard({ active, id }: Deployment) {
   const navigate = useNavigate();
   const featureName = "Deployment Name";
 
   const handleCardClicked = () => {
-    navigate({ to: "/deployment/$deploymentId", params: { deploymentId } });
+    navigate({ to: "/deployment/$deploymentId", params: { deploymentId: id } });
   };
 
   return (

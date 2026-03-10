@@ -54,7 +54,7 @@ interface PaginatedResponse<T> {
 }
 
 interface Deployment {
-  deploymentId: string;
+  id: string;
   active: boolean;
 }
 
