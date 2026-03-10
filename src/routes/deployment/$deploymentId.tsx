@@ -83,13 +83,28 @@ function OverviewTab({ deviceId }: { deviceId?: string }) {
   const bucket = pickBucket(filters.datePreset);
 
   const timeData = useMemo(
-    () => aggregateByTime(items ?? [], filters.startTime, filters.endTime, bucket),
-    [items, filters.startTime, filters.endTime, bucket],
+    () =>
+      aggregateByTime(
+        items ?? [],
+        filters.startTime,
+        filters.endTime,
+        bucket,
+        filters.minConfidence,
+        filters.taxonomyLevel,
+      ),
+    [
+      items,
+      filters.startTime,
+      filters.endTime,
+      bucket,
+      filters.minConfidence,
+      filters.taxonomyLevel,
+    ],
   );
 
   const taxaData = useMemo(
-    () => aggregateByTaxonomy(items ?? [], filters.taxonomyLevel),
-    [items, filters.taxonomyLevel],
+    () => aggregateByTaxonomy(items ?? [], filters.taxonomyLevel, filters.minConfidence),
+    [items, filters.taxonomyLevel, filters.minConfidence],
   );
 
   return (
