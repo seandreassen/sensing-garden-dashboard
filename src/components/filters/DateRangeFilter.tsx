@@ -9,6 +9,7 @@ import { useFilterContext } from "@/lib/filters/filterState";
 import type { DatePreset } from "@/lib/types/api";
 
 const PRESETS: { value: DatePreset; label: string }[] = [
+  { value: "all", label: "All Time" },
   { value: "24h", label: "Last 24 Hours" },
   { value: "7d", label: "Last 7 Days" },
   { value: "30d", label: "Last 30 Days" },

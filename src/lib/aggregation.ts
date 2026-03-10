@@ -17,6 +17,8 @@ function pickBucket(preset: string): TimeBucket {
       return "day";
     case "30d":
       return "day";
+    case "all":
+      return "week";
     default:
       return "day";
   }
@@ -77,6 +79,24 @@ function generateEmptyBuckets(
   return buckets;
 }
 
+function deriveRange(observations: Observation[]): { startTime: string; endTime: string } {
+  if (observations.length === 0) {
+    const now = new Date();
+    return { startTime: now.toISOString(), endTime: now.toISOString() };
+  }
+  let min = observations[0].timestamp;
+  let max = observations[0].timestamp;
+  for (const obs of observations) {
+    if (obs.timestamp < min) {
+      min = obs.timestamp;
+    }
+    if (obs.timestamp > max) {
+      max = obs.timestamp;
+    }
+  }
+  return { startTime: new Date(min).toISOString(), endTime: new Date(max).toISOString() };
+}
+
 function aggregateByTime(
   observations: Observation[],
   startTime: string,
@@ -85,7 +105,9 @@ function aggregateByTime(
   minConfidence: number = 0,
   taxonomyLevel: TaxonomyLevel = "family",
 ): TimePoint[] {
-  const buckets = generateEmptyBuckets(startTime, endTime, bucket);
+  const effectiveStart = startTime || deriveRange(observations).startTime;
+  const effectiveEnd = endTime || deriveRange(observations).endTime;
+  const buckets = generateEmptyBuckets(effectiveStart, effectiveEnd, bucket);
   const confKey = `${taxonomyLevel}_confidence` as keyof Observation;
 
   for (const obs of observations) {
