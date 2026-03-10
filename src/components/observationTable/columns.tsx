@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import type { Classification } from "@/lib/types/api";
+import type { Observation } from "@/lib/types/api";
 
 /*
 Columns: Image, Hub, Family, Genus, Species and timestamp.
@@ -10,7 +10,7 @@ Columns: Image, Hub, Family, Genus, Species and timestamp.
   Maybe later an observation status will be added to allow confirmation of observations.
   */
 
-const columns: ColumnDef<Classification>[] = [
+const columns: ColumnDef<Observation>[] = [
   {
     header: "Image",
     cell: ({ row }) => (

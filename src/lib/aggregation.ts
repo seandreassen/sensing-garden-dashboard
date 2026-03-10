@@ -1,4 +1,4 @@
-import type { Classification, TaxonomyLevel } from "@/lib/types/api";
+import type { Observation, TaxonomyLevel } from "@/lib/types/api";
 
 // --- Time aggregation ---
 
@@ -78,7 +78,7 @@ function generateEmptyBuckets(
 }
 
 function aggregateByTime(
-  classifications: Classification[],
+  observations: Observation[],
   startTime: string,
   endTime: string,
   bucket: TimeBucket,
@@ -86,15 +86,15 @@ function aggregateByTime(
   taxonomyLevel: TaxonomyLevel = "family",
 ): TimePoint[] {
   const buckets = generateEmptyBuckets(startTime, endTime, bucket);
-  const confKey = `${taxonomyLevel}_confidence` as keyof Classification;
+  const confKey = `${taxonomyLevel}_confidence` as keyof Observation;
 
-  for (const c of classifications) {
-    const confidence = c[confKey] as number;
+  for (const obs of observations) {
+    const confidence = (obs[confKey] as number | undefined) ?? 0;
     if (confidence < minConfidence) {
       continue;
     }
 
-    const date = new Date(c.timestamp);
+    const date = new Date(obs.timestamp);
     const key = bucketKey(date, bucket);
     if (buckets.has(key)) {
       buckets.set(key, (buckets.get(key) ?? 0) + 1);
@@ -114,21 +114,21 @@ interface TaxonCount {
 }
 
 function aggregateByTaxonomy(
-  classifications: Classification[],
+  observations: Observation[],
   taxonomyLevel: TaxonomyLevel,
   minConfidence: number = 0,
   topN: number = 10,
 ): TaxonCount[] {
-  const confKey = `${taxonomyLevel}_confidence` as keyof Classification;
+  const confKey = `${taxonomyLevel}_confidence` as keyof Observation;
   const counts = new Map<string, number>();
 
-  for (const c of classifications) {
-    const confidence = c[confKey] as number;
+  for (const obs of observations) {
+    const confidence = (obs[confKey] as number | undefined) ?? 0;
     if (confidence < minConfidence) {
       continue;
     }
 
-    const name = c[taxonomyLevel];
+    const name = obs[taxonomyLevel];
     if (!name) {
       continue;
     }

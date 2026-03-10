@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { ClassificationResponse } from "@/lib/types/api";
+import type { ObservationsResponse } from "@/lib/types/api";
 
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
@@ -22,7 +22,7 @@ interface SearchParams {
 }
 
 function useObservations(searchParams?: SearchParams) {
-  return useQuery<ClassificationResponse, Error>({
+  return useQuery<ObservationsResponse, Error>({
     queryKey: ["observations", searchParams],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -38,9 +38,10 @@ function useObservations(searchParams?: SearchParams) {
       if (searchParams?.sortBy) {
         params.set("sort_by", searchParams?.sortBy);
       }
+
       params.set("sort_desc", String(searchParams?.sortDesc ?? false));
 
-      params.set("limit", String(searchParams?.limit ?? 100));
+      params.set("limit", String(searchParams?.limit));
 
       //Token pagination not implemented.
       if (searchParams?.nextToken) {
@@ -57,29 +58,4 @@ function useObservations(searchParams?: SearchParams) {
     },
   });
 }
-function useClassificationsCount(searchParams?: SearchParams) {
-  return useQuery<number, Error>({
-    queryKey: ["classifications-count", searchParams],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (searchParams?.deviceFilter) {
-        params.set("device_id", searchParams.deviceFilter);
-      }
-      if (searchParams?.startTime) {
-        params.set("start_time", searchParams.startTime);
-      }
-      if (searchParams?.endTime) {
-        params.set("end_time", searchParams.endTime);
-      }
-
-      const res = await fetch(`${BASE_URL}/classifications?${params.toString()}`);
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch observations: ${res.status}`);
-      }
-
-      return res.json();
-    },
-  });
-}
-export { useObservations, useClassificationsCount };
+export { useObservations };
