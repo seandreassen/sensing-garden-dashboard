@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon } from "lucide-react";
 import { useMemo } from "react";
 
+import { AnalyticsData } from "@/components/analytics/AnalyticsData";
 import { DefaultAnalysisView } from "@/components/charts/DefaultAnalysisView";
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
@@ -30,6 +31,19 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
   const navigate = useNavigate();
   const { filters } = useFilterContext();
 
+  const renderTabContent = () => {
+    switch (filters.activeTab) {
+      case "overview":
+        return <OverviewTab deviceId={filters.deviceId} />;
+      case "analytics":
+        return <AnalyticsData />;
+      case "observations":
+        return <div>Observations content goes here</div>;
+      default:
+        return <div>Select a tab</div>;
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col pt-14">
       {/* Deployment header */}
@@ -51,17 +65,7 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
       <FilterHeader deploymentId={deploymentId} />
 
       {/* Tab content */}
-      <div className="px-6 py-6">
-        {filters.activeTab === "overview" && <OverviewTab deviceId={filters.deviceId} />}
-        {filters.activeTab !== "overview" && (
-          <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border">
-            <span className="text-sm text-muted-foreground">
-              {filters.activeTab.charAt(0).toUpperCase() + filters.activeTab.slice(1)} content goes
-              here
-            </span>
-          </div>
-        )}
-      </div>
+      <div className="px-6 py-6">{renderTabContent()}</div>
     </main>
   );
 }

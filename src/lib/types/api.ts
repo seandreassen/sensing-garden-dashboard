@@ -13,6 +13,9 @@ interface EnvironmentData {
   ambient_temperature?: number;
   voc_index?: number;
   nox_index?: number;
+  timestamp: string;
+  device_id: string;
+  location?: { lat?: number; long?: number; alt?: number };
 }
 
 interface ClassificationCandidate {
