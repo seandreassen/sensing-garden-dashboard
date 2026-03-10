@@ -24,9 +24,9 @@ function Header() {
               Sign In
             </Button>
           </div>
-          <button className="md:hidden">
+          <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-6 w-6 text-zinc-400" />
-          </button>
+          </Button>
         </div>
       </div>
     </nav>
