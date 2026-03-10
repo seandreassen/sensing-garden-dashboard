@@ -1,10 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon } from "lucide-react";
+import { useMemo } from "react";
 
+import { DefaultAnalysisView } from "@/components/charts/DefaultAnalysisView";
+import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
+import { TopTaxa } from "@/components/charts/TopTaxa";
 import { FilterHeader } from "@/components/filters/FilterHeader";
 import { Button } from "@/components/ui/Button";
+import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { FilterProvider } from "@/lib/filters/FilterContext";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId")({
   component: DeploymentPage,
@@ -44,15 +50,59 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
       {/* Filter header */}
       <FilterHeader deploymentId={deploymentId} />
 
-      {/* Tab content placeholder */}
+      {/* Tab content */}
       <div className="px-6 py-6">
-        <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border">
-          <span className="text-sm text-muted-foreground">
-            {filters.activeTab.charAt(0).toUpperCase() + filters.activeTab.slice(1)} content goes
-            here
-          </span>
-        </div>
+        {filters.activeTab === "overview" && <OverviewTab deviceId={filters.deviceId} />}
+        {filters.activeTab !== "overview" && (
+          <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border">
+            <span className="text-sm text-muted-foreground">
+              {filters.activeTab.charAt(0).toUpperCase() + filters.activeTab.slice(1)} content goes
+              here
+            </span>
+          </div>
+        )}
       </div>
     </main>
+  );
+}
+
+function OverviewTab({ deviceId }: { deviceId?: string }) {
+  const { filters } = useFilterContext();
+
+  const { data, isLoading } = useObservations({
+    deviceFilter: deviceId,
+    startTime: filters.startTime,
+    endTime: filters.endTime,
+    limit: 500,
+  });
+
+  const items = data?.items;
+  const bucket = pickBucket(filters.datePreset);
+
+  const timeData = useMemo(
+    () => aggregateByTime(items ?? [], filters.startTime, filters.endTime, bucket),
+    [items, filters.startTime, filters.endTime, bucket],
+  );
+
+  const taxaData = useMemo(
+    () => aggregateByTaxonomy(items ?? [], filters.taxonomyLevel),
+    [items, filters.taxonomyLevel],
+  );
+
+  return (
+    <div className="flex flex-col gap-6">
+      <DefaultAnalysisView deviceId={deviceId} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
+            Detections over time (filtered)
+          </h3>
+          <DetectionsOverTime data={timeData} isLoading={isLoading} />
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
+        </div>
+      </div>
+    </div>
   );
 }
