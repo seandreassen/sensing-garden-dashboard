@@ -55,6 +55,31 @@ interface Deployment {
   active: boolean;
 }
 
+interface DeviceIdProps {
+  value?: string;
+}
+
+// Left timestamp and device id required.
+interface Observation {
+  species?: string;
+  genus?: string;
+  family?: string;
+  species_confidence?: number;
+  genus_confidence?: number;
+  family_confidence?: number;
+  timestamp: string;
+  device_id: string;
+  model_id?: string;
+  image_url?: string;
+  image_bucket?: string;
+  image_key?: string;
+}
+
+interface ObservationsResponse {
+  items: Observation[];
+  nextToken: string | null;
+}
+
 type TaxonomyLevel = "family" | "genus" | "species";
 
 type DatePreset = "24h" | "7d" | "30d" | "custom";
@@ -64,11 +89,13 @@ type WorkspaceTab = "overview" | "analytics" | "observations";
 export type {
   Location,
   EnvironmentData,
-  ClassificationCandidate,
   ClassificationData,
   Classification,
   PaginatedResponse,
   Deployment,
+  DeviceIdProps,
+  Observation,
+  ObservationsResponse,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,
