@@ -4,7 +4,7 @@ import type { EnvironmentData } from "@/lib/types/api";
 
 const API_URL = "https://api.sensinggarden.com/v1/environment";
 
-export function useEnvironmentData() {
+function useEnvironmentData() {
   return useQuery<EnvironmentData[], Error>({
     queryKey: ["environmentData"],
     queryFn: async () => {
@@ -25,3 +25,5 @@ export function useEnvironmentData() {
     refetchInterval: 1000 * 60, // auto-refetch every minute if needed
   });
 }
+
+export { useEnvironmentData };
