@@ -3,9 +3,18 @@ import { useNavigate } from "@tanstack/react-router";
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useDeployments } from "@/lib/hooks/useDeployments";
 import type { WorkspaceTab } from "@/lib/types/api";
+import { cn } from "@/lib/utils";
 
 import { ConfidenceFilter } from "./ConfidenceFilter";
 import { DateRangeFilter } from "./DateRangeFilter";
+import {
+  filterDeploymentTabActiveClass,
+  filterDeploymentTabClass,
+  filterDeploymentTabInactiveClass,
+  filterWorkspaceTabActiveClass,
+  filterWorkspaceTabClass,
+  filterWorkspaceTabInactiveClass,
+} from "./filterStyles";
 import { HubFilter } from "./HubFilter";
 import { TaxonomyFilter } from "./TaxonomyFilter";
 
@@ -39,11 +48,12 @@ function FilterHeader({ deploymentId }: FilterHeaderProps) {
                 params: { deploymentId: d.deploymentId },
               })
             }
-            className={`border-b-2 px-4 py-2.5 text-xs font-semibold tracking-wide uppercase transition-colors ${
+            className={cn(
+              filterDeploymentTabClass,
               d.deploymentId === deploymentId
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
+                ? filterDeploymentTabActiveClass
+                : filterDeploymentTabInactiveClass,
+            )}
           >
             {d.deploymentId}
           </button>
@@ -64,11 +74,12 @@ function FilterHeader({ deploymentId }: FilterHeaderProps) {
           <button
             key={tab.value}
             onClick={() => actions.setActiveTab(tab.value)}
-            className={`relative rounded-t px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors ${
+            className={cn(
+              filterWorkspaceTabClass,
               filters.activeTab === tab.value
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+                ? filterWorkspaceTabActiveClass
+                : filterWorkspaceTabInactiveClass,
+            )}
           >
             {tab.label}
           </button>

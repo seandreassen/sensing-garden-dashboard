@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon } from "lucide-react";
 
 import { FilterHeader } from "@/components/filters/FilterHeader";
+import { Button } from "@/components/ui/Button";
 import { FilterProvider } from "@/lib/filters/FilterContext";
 import { useFilterContext } from "@/lib/filters/filterState";
 
@@ -27,13 +28,15 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
     <main className="flex min-h-screen flex-col pt-14">
       {/* Deployment header */}
       <div className="flex items-center gap-3 border-b border-border px-6 py-3">
-        <button
-          className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1 text-muted-foreground"
           onClick={() => navigate({ to: "/" })}
         >
           <ChevronLeftIcon className="h-4 w-4" />
           Deployments
-        </button>
+        </Button>
         <div className="h-4 w-px bg-border" />
         <h1 className="text-sm font-semibold">{deploymentId}</h1>
       </div>

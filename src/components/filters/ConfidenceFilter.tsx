@@ -1,7 +1,10 @@
 import { ShieldCheckIcon } from "lucide-react";
 
-import { filterFieldClass, filterLabelClass } from "@/components/filters/filterStyles";
+import { Button } from "@/components/ui/Button";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { cn } from "@/lib/utils";
+
+import { filterFieldClass, filterLabelClass } from "./filterStyles";
 
 const PRESETS = [
   { value: 0, label: "All" },
@@ -21,20 +24,20 @@ function ConfidenceFilter() {
         Minimum Confidence (0–100)
       </label>
       <div className="flex items-center gap-2">
-        {PRESETS.map((p) => (
-          <button
-            key={p.value}
-            type="button"
-            onClick={() => actions.setMinConfidence(p.value)}
-            className={`h-9 rounded px-3 text-sm font-medium transition-colors ${
-              filters.minConfidence === p.value
-                ? "bg-primary text-primary-foreground"
-                : "border border-border bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {p.label}
-          </button>
-        ))}
+        {PRESETS.map((p) => {
+          const active = filters.minConfidence === p.value;
+          return (
+            <Button
+              key={p.value}
+              variant={active ? "default" : "outline"}
+              size="lg"
+              className={cn("rounded", !active && "bg-card")}
+              onClick={() => actions.setMinConfidence(p.value)}
+            >
+              {p.label}
+            </Button>
+          );
+        })}
         <input
           id="filter-confidence"
           type="range"

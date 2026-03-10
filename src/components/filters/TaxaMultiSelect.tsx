@@ -1,9 +1,11 @@
 import { CheckIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { filterFieldClass, filterLabelTextOnlyClass } from "@/components/filters/filterStyles";
+import { Button } from "@/components/ui/Button";
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useClassifications } from "@/lib/hooks/useClassifications";
+
+import { filterFieldClass, filterLabelTextOnlyClass } from "./filterStyles";
 
 function TaxaMultiSelect() {
   const { filters, actions } = useFilterContext();
@@ -42,11 +44,11 @@ function TaxaMultiSelect() {
         Filter {levelLabel}
       </label>
 
-      <button
+      <Button
         id="filter-taxa"
-        type="button"
+        variant="outline"
+        className="w-full justify-start text-xs font-normal"
         onClick={() => setOpen(!open)}
-        className="flex h-8 items-center gap-1.5 rounded border border-border bg-background px-2.5 text-xs text-foreground"
       >
         <span className="flex-1 truncate text-left">
           {filters.selectedTaxa.length === 0
@@ -54,7 +56,7 @@ function TaxaMultiSelect() {
             : `${filters.selectedTaxa.length} selected`}
         </span>
         <ChevronsUpDownIcon className="h-3 w-3 shrink-0 text-muted-foreground" />
-      </button>
+      </Button>
 
       {filters.selectedTaxa.length > 0 && (
         <div className="flex flex-wrap gap-1">
@@ -64,9 +66,9 @@ function TaxaMultiSelect() {
               className="flex items-center gap-1 rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground"
             >
               {t}
-              <button type="button" onClick={() => actions.toggleTaxon(t)}>
+              <Button variant="ghost" size="icon-xs" onClick={() => actions.toggleTaxon(t)}>
                 <XIcon className="h-2.5 w-2.5" />
-              </button>
+              </Button>
             </span>
           ))}
         </div>
