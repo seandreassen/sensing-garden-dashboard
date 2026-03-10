@@ -85,7 +85,7 @@ interface ObservationsResponse {
 
 type TaxonomyLevel = "family" | "genus" | "species";
 
-type DatePreset = "24h" | "7d" | "30d" | "custom";
+type DatePreset = "all" | "24h" | "7d" | "30d" | "custom";
 
 type WorkspaceTab = "overview" | "analytics" | "observations";
 

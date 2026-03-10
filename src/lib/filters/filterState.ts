@@ -25,6 +25,10 @@ interface FilterActions {
 }
 
 function getDateRange(preset: DatePreset): { startTime: string; endTime: string } {
+  if (preset === "all") {
+    return { startTime: "", endTime: "" };
+  }
+
   const now = new Date();
   const endTime = now.toISOString();
 
@@ -48,8 +52,8 @@ function getDateRange(preset: DatePreset): { startTime: string; endTime: string 
 }
 
 const DEFAULT_FILTERS: FilterState = {
-  datePreset: "7d",
-  ...getDateRange("7d"),
+  datePreset: "all",
+  ...getDateRange("all"),
   taxonomyLevel: "family",
   minConfidence: 0,
   selectedTaxa: [],

@@ -29,10 +29,10 @@ function useObservations(searchParams?: SearchParams) {
       if (searchParams?.deviceFilter) {
         params.set("device_id", searchParams.deviceFilter);
       }
-      if (searchParams?.startTime) {
+      if (searchParams?.startTime && searchParams.startTime !== "") {
         params.set("start_time", searchParams.startTime);
       }
-      if (searchParams?.endTime) {
+      if (searchParams?.endTime && searchParams.endTime !== "") {
         params.set("end_time", searchParams.endTime);
       }
       if (searchParams?.sortBy) {

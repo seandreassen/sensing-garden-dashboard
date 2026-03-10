@@ -1,11 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon } from "lucide-react";
+import { useMemo } from "react";
 
 import { AnalyticsData } from "@/components/analytics/AnalyticsData";
+import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
+import { TopTaxa } from "@/components/charts/TopTaxa";
 import { FilterHeader } from "@/components/filters/FilterHeader";
 import { Button } from "@/components/ui/Button";
+import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { FilterProvider } from "@/lib/filters/FilterContext";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId")({
   component: DeploymentPage,
@@ -28,7 +33,7 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
   const renderTabContent = () => {
     switch (filters.activeTab) {
       case "overview":
-        return <div>Overview content goes here</div>;
+        return <OverviewTab deviceId={filters.deviceId} />;
       case "analytics":
         return <AnalyticsData />;
       case "observations":
@@ -61,5 +66,56 @@ function DeploymentContent({ deploymentId }: { deploymentId: string }) {
       {/* Tab content */}
       <div className="px-6 py-6">{renderTabContent()}</div>
     </main>
+  );
+}
+
+function OverviewTab({ deviceId }: { deviceId?: string }) {
+  const { filters } = useFilterContext();
+
+  const { data, isLoading } = useObservations({
+    deviceFilter: deviceId,
+    startTime: filters.startTime,
+    endTime: filters.endTime,
+    limit: 500,
+  });
+
+  const items = data?.items;
+  const bucket = pickBucket(filters.datePreset);
+
+  const timeData = useMemo(
+    () =>
+      aggregateByTime(
+        items ?? [],
+        filters.startTime,
+        filters.endTime,
+        bucket,
+        filters.minConfidence,
+        filters.taxonomyLevel,
+      ),
+    [
+      items,
+      filters.startTime,
+      filters.endTime,
+      bucket,
+      filters.minConfidence,
+      filters.taxonomyLevel,
+    ],
+  );
+
+  const taxaData = useMemo(
+    () => aggregateByTaxonomy(items ?? [], filters.taxonomyLevel, filters.minConfidence),
+    [items, filters.taxonomyLevel, filters.minConfidence],
+  );
+
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="rounded-lg border border-border bg-card p-4">
+        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Detections over time</h3>
+        <DetectionsOverTime data={timeData} isLoading={isLoading} />
+      </div>
+      <div className="rounded-lg border border-border bg-card p-4">
+        <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
+      </div>
+    </div>
   );
 }
