@@ -1,21 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Label } from "@/components/ui/Label";
+import { Spinner } from "@/components/ui/Spinner";
 import { useFamilyCount } from "@/lib/hooks/useFamilyCount";
 
 export function SpeciesRichnessCard() {
-  const { count, isLoading, error } = useFamilyCount();
+  const { data: count, isLoading } = useFamilyCount();
 
   return (
-    <Card className="border border-zinc-800/70 bg-zinc-950/70">
+    <Card className="w-1/6">
       <CardHeader>
         <CardTitle>Species richness</CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <div className="text-sm text-zinc-400">Unique families detected</div>
+      <CardContent className="h-full">
+        <Label htmlFor="unique-taxon-count" className="text-sm text-muted-foreground">
+          Unique families detected
+        </Label>
 
-        <div className="mt-2 text-6xl font-semibold text-lime-400 tabular-nums">
-          {isLoading ? "—" : error ? "ERR" : (count ?? 0).toLocaleString()}
-        </div>
+        {isLoading ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <div id="unique-taxon-count" className="mt-2 text-6xl font-semibold text-primary">
+            {count ?? 0}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 
+import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
+import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
@@ -50,13 +52,19 @@ function RouteComponent() {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <div className="rounded-lg border border-border bg-card p-4">
-        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Detections over time</h3>
-        <DetectionsOverTime data={timeData} isLoading={isLoading} />
+    <div className="flex flex-col gap-5">
+      <div className="flex gap-5">
+        <TotalInsectCountCard />
+        <SpeciesRichnessCard />
       </div>
-      <div className="rounded-lg border border-border bg-card p-4">
-        <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-lg border border-border bg-card p-4">
+          <h3 className="mb-3 text-sm font-medium text-muted-foreground">Detections over time</h3>
+          <DetectionsOverTime data={timeData} isLoading={isLoading} />
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
+        </div>
       </div>
     </div>
   );
