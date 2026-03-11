@@ -18,7 +18,7 @@ import { useHubs } from "@/lib/hooks/useHubs";
 
 function HubFilter() {
   const { data: hubs } = useHubs();
-  const { updateFilters, hub } = useFilters();
+  const { updateFilters, hub: hubId } = useFilters();
 
   return (
     <div className={filterFieldClass}>
@@ -27,7 +27,7 @@ function HubFilter() {
         Active Hubs
       </Label>
       <Select
-        value={hub ?? ""}
+        value={hubId ?? ""}
         onValueChange={(value) => updateFilters({ hub: value ?? undefined })}
       >
         <SelectTrigger id="filter-hub" className={filterSelectClass}>
@@ -37,9 +37,9 @@ function HubFilter() {
           <SelectItem value="" className="text-muted-foreground">
             All Hubs
           </SelectItem>
-          {hubs?.map((hubId) => (
-            <SelectItem key={hubId} value={hubId}>
-              {hubId}
+          {hubs?.map((hub) => (
+            <SelectItem key={hub.device_id} value={hub.device_id}>
+              {hub.device_id}
             </SelectItem>
           ))}
         </SelectContent>

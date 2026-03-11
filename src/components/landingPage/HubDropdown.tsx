@@ -12,7 +12,7 @@ import {
 import { useHubs } from "@/lib/hooks/useHubs";
 
 function HubDropdown() {
-  const { data: hubIds, isLoading } = useHubs();
+  const { data: hubs, isLoading } = useHubs();
   const navigate = useNavigate();
   const params = useParams({ from: "/hub/$hubId", shouldThrow: false });
   const hubId = params?.hubId;
@@ -39,9 +39,9 @@ function HubDropdown() {
       >
         <SelectGroup>
           <SelectLabel>Choose hub</SelectLabel>
-          {hubIds?.map((id) => (
-            <SelectItem key={id} value={id}>
-              {id}
+          {hubs?.map((hub) => (
+            <SelectItem key={hub.device_id} value={hub.device_id}>
+              {hub.device_id}
             </SelectItem>
           ))}
         </SelectGroup>

@@ -3,7 +3,7 @@ import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { useState } from "react";
 
 import { columns } from "@/components/observationTable/columns";
-import { DataTable } from "@/components/observationTable/data-table";
+import { DataTable } from "@/components/observationTable/DataTable";
 import { Spinner } from "@/components/ui/Spinner";
 import { useObservations } from "@/lib/hooks/useObservations";
 

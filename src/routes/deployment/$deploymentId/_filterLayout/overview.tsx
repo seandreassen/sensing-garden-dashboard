@@ -7,6 +7,7 @@ import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
@@ -15,11 +16,12 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ov
 
 function RouteComponent() {
   const { filters } = useFilterContext();
+  const { startDate, endDate, hub } = useFilters();
 
   const { data, isLoading } = useObservations({
-    deviceFilter: filters.deviceId,
-    startTime: filters.startTime,
-    endTime: filters.endTime,
+    deviceFilter: hub,
+    startTime: startDate,
+    endTime: endDate,
     limit: 500,
   });
 

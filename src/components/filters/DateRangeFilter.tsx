@@ -33,7 +33,9 @@ function DateRangeFilter() {
       </Label>
       <Select
         value={rangePreset}
-        onValueChange={(value) => updateFilters({ rangePreset: value ?? undefined })}
+        onValueChange={(value) =>
+          updateFilters({ rangePreset: (value as RangePreset) ?? undefined })
+        }
       >
         <SelectTrigger id="filter-date-range" className={filterSelectClass}>
           <SelectValue>

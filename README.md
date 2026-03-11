@@ -11,19 +11,20 @@ Web app visualizing data from the Sensing Garden project.
     - `ui/`: Generic reusable components
   - `lib/`: Shared utility functions
 
-## Setup
+## Quick start
 
 ### Prerequisites
 
 - Node.js (https://nodejs.org/en/download)
 - pnpm (https://pnpm.io/installation)
 
-## Development
+### Development
 
-- Clone the project
-- Navigate to the root folder
-- Run `pnpm i` to install dependencies
-- Run `pnpm dev` to run development server
+1. **Clone** the repository.
+2. **Install:** Run `pnpm i` in the root folder to install dependencies.
+3. **Run:** Run `pnpm dev` to start the local development server.
+
+For more information, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 This project uses Git Hooks. Linting and formatting are automatically enforced on every commit.
 

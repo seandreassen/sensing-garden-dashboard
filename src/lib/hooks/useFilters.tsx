@@ -1,4 +1,5 @@
 import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
+import { endOfDay, startOfDay, subDays, subHours } from "date-fns";
 import { useMemo } from "react";
 
 import { filtersDefault, type Filters } from "@/lib/filters";
@@ -8,15 +9,58 @@ function useFilters() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const range = useMemo(() => {
+    const now = new Date();
+
+    switch (search.rangePreset) {
+      case "24h":
+        return {
+          preset: "24h",
+          start: subHours(now, 24).toISOString(),
+          end: now.toISOString(),
+        };
+      case "30d":
+        return {
+          preset: "30d",
+          start: subDays(now, 30).toISOString(),
+          end: now.toISOString(),
+        };
+      // @ts-ignore - Fallthrough case is on purpose
+      case "custom":
+        if (
+          // If custom range is invalid, set default preset range
+          search.startDate &&
+          !isNaN(Date.parse(search.startDate)) &&
+          search.endDate &&
+          !isNaN(Date.parse(search.endDate))
+        ) {
+          return {
+            preset: "custom",
+            start: startOfDay(new Date(search.startDate)).toISOString(),
+            end: endOfDay(new Date(search.endDate)).toISOString(),
+          };
+        }
+      default:
+      case "7d": // 7d is last because it's the default, needs to be after default and custom if incorrectly formatted
+        return {
+          preset: "7d",
+          start: subDays(now, 7).toISOString(),
+          end: now.toISOString(),
+        };
+    }
+  }, [search.rangePreset, search.startDate, search.endDate]);
+
   const filters = useMemo(
     () => ({
       ...search,
-      rangePreset: search.rangePreset ?? filtersDefault.rangePreset,
+      rangePreset: range.preset,
+      startDate: range.start,
+      endDate: range.end,
       taxonomyLevel: search.taxonomyLevel ?? filtersDefault.taxonomyLevel,
       minConfidence: search.minConfidence ?? filtersDefault.minConfidence,
       selectedTaxa: search.selectedTaxa ?? filtersDefault.selectedTaxa,
     }),
-    [search],
+    [search, range],
   );
 
   const updateFilters = (newFilters: Partial<Filters>) => {

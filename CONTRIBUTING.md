@@ -1,0 +1,71 @@
+# Development Guidelines
+
+This document outlines the workflow and coding standards for contributing to the Sensing Garden dashboard.
+
+## Setup
+
+### Prerequisites
+
+- Node.js (https://nodejs.org/en/download)
+- pnpm (https://pnpm.io/installation)
+
+### Getting Started
+
+1. **Clone** the repository.
+2. **Install:** Run `pnpm i` in the root folder to install dependencies.
+3. **Run:** Run `pnpm dev` to start the local development server.
+
+### Tooling
+
+- **VS Code:** Install the recommended extensions from `.vscode/extensions.json`. Project settings in `.vscode/settings.json` are meant to simplify and speed up development.
+- **Git Hooks:** We use `sipmle-git-hooks` for pre-commit hooks. Linting and formatting are automatically enforced on every commit. If a commit fails, resolve the linting errors before retrying.
+
+## Coding Standards
+
+### Components
+
+If files get too long or you're reusing parts of your code, move the code into its own component. Components are placed in a sensible folder under `src/components/`. E.g., the component for filtering by prediction confidence is at `src/components/filters/ConfidenceFilter.tsx`. Component names should use **PascalCase**
+
+### External Components
+
+Before creating a new component, it's recommended to check [shadcn/ui](https://ui.shadcn.com/docs/components) for the component you're looking for. When adding new components, follow our specific configuration to maintain consistency:
+
+1.  **Source:** Get external components from [shadcn/ui](https://ui.shadcn.com/docs/components)
+2.  **Select:** Make sure to select the **Base UI** version over Radix UI.
+3.  **Install:** Follow the installation guide **manual** installation of the component.
+4.  **Refactor:** After adding a component, update the file to match our codebase standards:
+    - **Location:** All external compoennts are placed in `src/components/ui/`.
+    - **Naming:** Ensure the file uses **PascalCase**.
+    - **Directives:** Remove the `"use client"` directive.
+    - **Imports:** Fix paths and resolve all linting errors.
+
+### Icons
+
+We exclusively use **Lucide icons**. All Lucide icons are already installed. Find the icon you want to use at https://lucide.dev/icons/, then add the corresponding component to your code. Always use components ending in **Icon** for better consistency across the project. (All icons have a version with and without Icon, e.g. `<ChevronLeftIcon />` vs `<ChevronLeft />`)
+
+### Data Fetching
+
+When fetching data, use [TanStack Query](https://tanstack.com/query/latest). Create a hook for your query, placed under `src/lib/hooks/`. Look at the documentation for detailed info, or check `src/lib/hooks/useHubs.ts` for a simple example. Types used to get data from the Sensing Garden backend API are placed in `src/lib/types/api.ts`.
+
+### Other
+
+- When exporting content from a file, use `export { ... }` at the end of the file instead of inline exports to make it clear what the file exports. (This does not apply to the `Route` component for all files under `src/routes/`)
+- It's important to keep **type safety**. Do not use `any` or `unknown` unless necessary, and try to as specific as possible. E.g., create an `interface` for your function instead of `Record<string, string>`.
+- Use TailwindCSS, `className`, over inline CSS, `style`.
+- Prefer using our custom TailwindCSS classes where possible. Try not to use classes like `text-zinc-400`, instead using `text-muted-foreground`, to keep consistent styling across the dashboard.
+
+## Project Structure
+
+- `public/`: Static assets
+- `src/`: Source code
+  - `routes/`: Tanstack router file-based route tree
+  - `components/`: React components
+    - `ui/`: Generic reusable components
+  - `lib/`: Shared utility functions
+
+## Contributing
+
+- **Branching:** Use descriptive branch names (e.g., `feat/login`, `fix/broken-slider`).
+- **Commit Messages:** Follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
+- **Pull Request:** Create a pull request with your changes. Target branch should be `dev` unless you have a good reason for not selecting it.
+- **Review:** All pull requests must be reviewed by at least 1 other team member.
