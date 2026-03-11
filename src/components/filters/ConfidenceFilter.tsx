@@ -1,21 +1,27 @@
 import { ShieldCheckIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { useFilterContext } from "@/lib/filters/filterState";
+import { Slider } from "@/components/ui/Slider";
+import { useFilters } from "@/lib/hooks/useFilters";
 import { cn } from "@/lib/utils";
 
 import { filterFieldClass, filterLabelClass } from "./filterStyles";
 
-const PRESETS = [
+const presets = [
   { value: 0, label: "All" },
-  { value: 0.7, label: "≥ 70" },
-  { value: 0.8, label: "≥ 80" },
-  { value: 0.9, label: "≥ 90" },
+  { value: 70, label: "≥ 70" },
+  { value: 80, label: "≥ 80" },
+  { value: 90, label: "≥ 90" },
 ];
 
 function ConfidenceFilter() {
-  const { filters, actions } = useFilterContext();
-  const displayValue = Math.round(filters.minConfidence * 100);
+  const { updateFilters, minConfidence } = useFilters();
+  const [sliderValue, setSliderValue] = useState(minConfidence);
+
+  useEffect(() => {
+    setSliderValue(minConfidence);
+  }, [minConfidence]);
 
   return (
     <div className={filterFieldClass}>
@@ -24,32 +30,32 @@ function ConfidenceFilter() {
         Minimum Confidence (0–100)
       </label>
       <div className="flex items-center gap-2">
-        {PRESETS.map((p) => {
-          const active = filters.minConfidence === p.value;
+        {presets.map((preset) => {
+          const active = minConfidence === preset.value;
           return (
             <Button
-              key={p.value}
+              key={preset.value}
               variant={active ? "default" : "outline"}
               size="lg"
               className={cn("rounded", !active && "bg-card")}
-              onClick={() => actions.setMinConfidence(p.value)}
+              onClick={() => updateFilters({ minConfidence: preset.value })}
             >
-              {p.label}
+              {preset.label}
             </Button>
           );
         })}
-        <input
-          id="filter-confidence"
-          type="range"
+        <Slider
+          value={[sliderValue]}
           min={0}
           max={100}
-          value={displayValue}
-          onChange={(e) => actions.setMinConfidence(Number(e.target.value) / 100)}
-          className="mx-1 flex-1 cursor-pointer"
+          step={1}
+          onValueChange={(value) => setSliderValue(typeof value === "number" ? value : value[0])}
+          onValueCommitted={(value) =>
+            updateFilters({ minConfidence: typeof value === "number" ? value : value[0] })
+          }
+          className="mx-2 h-px flex-1 bg-border"
         />
-        <span className="min-w-[2.5rem] text-right text-sm font-semibold tabular-nums">
-          {displayValue}
-        </span>
+        <span className="min-w-10 text-sm font-semibold">{sliderValue}</span>
       </div>
     </div>
   );

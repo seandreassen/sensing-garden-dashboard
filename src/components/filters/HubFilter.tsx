@@ -5,32 +5,45 @@ import {
   filterLabelClass,
   filterSelectClass,
 } from "@/components/filters/filterStyles";
-import { useFilterContext } from "@/lib/filters/filterState";
+import { Label } from "@/components/ui/Label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
+import { useFilters } from "@/lib/hooks/useFilters";
 import { useHubs } from "@/lib/hooks/useHubs";
 
 function HubFilter() {
-  const { filters, actions } = useFilterContext();
-  const { data: hubs = [] } = useHubs();
+  const { data: hubs } = useHubs();
+  const { updateFilters, hub } = useFilters();
 
   return (
     <div className={filterFieldClass}>
-      <label htmlFor="filter-hub" className={filterLabelClass}>
+      <Label htmlFor="filter-hub" className={filterLabelClass}>
         <RadioIcon className="h-3 w-3" />
         Active Hubs
-      </label>
-      <select
-        id="filter-hub"
-        className={filterSelectClass}
-        value={filters.deviceId ?? ""}
-        onChange={(e) => actions.setDeviceId(e.target.value || undefined)}
+      </Label>
+      <Select
+        value={hub ?? ""}
+        onValueChange={(value) => updateFilters({ hub: value ?? undefined })}
       >
-        <option value="">All Hubs</option>
-        {hubs.map((hub) => (
-          <option key={hub} value={hub}>
-            {hub}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger id="filter-hub" className={filterSelectClass}>
+          <SelectValue placeholder="All Hubs" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="" className="text-muted-foreground">
+            All Hubs
+          </SelectItem>
+          {hubs?.map((hubId) => (
+            <SelectItem key={hubId} value={hubId}>
+              {hubId}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

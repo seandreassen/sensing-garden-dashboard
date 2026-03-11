@@ -83,12 +83,6 @@ interface ObservationsResponse {
   nextToken: string | null;
 }
 
-type TaxonomyLevel = "family" | "genus" | "species";
-
-type DatePreset = "all" | "24h" | "7d" | "30d" | "custom";
-
-type WorkspaceTab = "overview" | "analytics" | "observations";
-
 export type {
   Location,
   EnvironmentData,
@@ -99,7 +93,4 @@ export type {
   DeviceIdProps,
   Observation,
   ObservationsResponse,
-  TaxonomyLevel,
-  DatePreset,
-  WorkspaceTab,
 };

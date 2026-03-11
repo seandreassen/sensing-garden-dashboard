@@ -20,6 +20,7 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
             <Link
               to="/deployment/$deploymentId/overview"
               params={{ deploymentId: deployment.id }}
+              search={(prev) => prev}
               activeOptions={{ exact: false }}
               className={cn(
                 "px-4 py-3 text-xs font-semibold tracking-wide uppercase transition-colors",

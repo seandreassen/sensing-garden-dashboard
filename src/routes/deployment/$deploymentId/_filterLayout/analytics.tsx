@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { AnalyticsData } from "@/components/analytics/AnalyticsData";
 
-export const Route = createFileRoute("/deployment/$deploymentId/_layout/analytics")({
+export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
   component: RouteComponent,
 });
 

@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, stripSearchParams } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { ChevronLeftIcon } from "lucide-react";
 
 import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSelector";
@@ -6,10 +7,15 @@ import { FiltersRow } from "@/components/deploymentLayout/FiltersRow";
 import { TabSelector } from "@/components/deploymentLayout/TabSelector";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Separator } from "@/components/ui/Separator";
+import { filtersDefault, filtersSchema } from "@/lib/filters";
 import { FilterProvider } from "@/lib/filters/FilterContext";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/deployment/$deploymentId/_layout")({
+export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout")({
+  validateSearch: zodValidator(filtersSchema),
+  search: {
+    middlewares: [stripSearchParams(filtersDefault)],
+  },
   component: LayoutComponent,
 });
 

@@ -17,6 +17,7 @@ function TabSelector() {
             <Link
               to={tab.route}
               params={(prev) => prev}
+              search={(prev) => prev}
               className="rounded-t px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors [&.active]:bg-primary [&.active]:text-primary-foreground [&:not(.active)]:text-muted-foreground [&:not(.active)]:hover:text-foreground"
             >
               {tab.label}

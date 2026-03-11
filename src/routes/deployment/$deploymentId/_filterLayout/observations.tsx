@@ -7,7 +7,7 @@ import { DataTable } from "@/components/observationTable/data-table";
 import { Spinner } from "@/components/ui/Spinner";
 import { useObservations } from "@/lib/hooks/useObservations";
 
-export const Route = createFileRoute("/deployment/$deploymentId/_layout/observations")({
+export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   component: RouteComponent,
 });
 

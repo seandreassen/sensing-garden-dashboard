@@ -9,7 +9,7 @@ import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregat
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useObservations } from "@/lib/hooks/useObservations";
 
-export const Route = createFileRoute("/deployment/$deploymentId/_layout/overview")({
+export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
   component: RouteComponent,
 });
 
