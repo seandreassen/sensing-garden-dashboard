@@ -7,7 +7,7 @@
   --color-card-foreground: oklch(0.985 0 0);
   --color-popover: oklch(0.21 0.006 285.885);
   --color-popover-foreground: oklch(0.985 0 0);
-  --color-primary: oklch(0.606 0.25 292.717);
+  --color-primary: oklch(62.265% 0.16245 130.087);
   --color-primary-foreground: oklch(0.969 0.016 293.756);
   --color-secondary: oklch(0.274 0.006 286.033);
   --color-secondary-foreground: oklch(0.985 0 0);
@@ -18,20 +18,12 @@
   --color-destructive: oklch(0.704 0.191 22.216);
   --color-border: oklch(1 0 0 / 10%);
   --color-input: oklch(1 0 0 / 15%);
-  --color-ring: oklch(0.38 0.189 293.745);
-  --color-chart-1: oklch(0.811 0.111 293.571);
-  --color-chart-2: oklch(0.606 0.25 292.717);
-  --color-chart-3: oklch(0.541 0.281 293.009);
-  --color-chart-4: oklch(0.491 0.27 292.581);
-  --color-chart-5: oklch(0.432 0.232 292.759);
-  --color-sidebar: oklch(0.21 0.006 285.885);
-  --color-sidebar-foreground: oklch(0.985 0 0);
-  --color-sidebar-primary: oklch(0.606 0.25 292.717);
-  --color-sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --color-sidebar-accent: oklch(0.274 0.006 286.033);
-  --color-sidebar-accent-foreground: oklch(0.985 0 0);
-  --color-sidebar-border: oklch(1 0 0 / 10%);
-  --color-sidebar-ring: oklch(0.38 0.189 293.745);
+  --color-ring: oklch(0.841 0.238 128.85);
+  --color-chart-1: oklch(0.871 0.15 154.449);
+  --color-chart-2: oklch(0.723 0.219 149.579);
+  --color-chart-3: oklch(0.627 0.194 149.214);
+  --color-chart-4: oklch(0.527 0.154 150.069);
+  --color-chart-5: oklch(0.448 0.119 151.328);
 }
 
 @layer base {

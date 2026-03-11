@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as ObservationTableRouteImport } from "./routes/observationTable";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as HubHubIdRouteImport } from "./routes/hub/$hubId";
-import { Route as DeploymentDeploymentIdRouteImport } from "./routes/deployment/$deploymentId";
+import { Route as DeploymentDeploymentIdLayoutRouteImport } from "./routes/deployment/$deploymentId/_layout";
+import { Route as DeploymentDeploymentIdLayoutIndexRouteImport } from "./routes/deployment/$deploymentId/_layout/index";
+import { Route as DeploymentDeploymentIdLayoutOverviewRouteImport } from "./routes/deployment/$deploymentId/_layout/overview";
+import { Route as DeploymentDeploymentIdLayoutObservationsRouteImport } from "./routes/deployment/$deploymentId/_layout/observations";
+import { Route as DeploymentDeploymentIdLayoutAnalyticsRouteImport } from "./routes/deployment/$deploymentId/_layout/analytics";
 
 const ObservationTableRoute = ObservationTableRouteImport.update({
   id: "/observationTable",
@@ -29,53 +33,104 @@ const HubHubIdRoute = HubHubIdRouteImport.update({
   path: "/hub/$hubId",
   getParentRoute: () => rootRouteImport,
 } as any);
-const DeploymentDeploymentIdRoute = DeploymentDeploymentIdRouteImport.update({
-  id: "/deployment/$deploymentId",
-  path: "/deployment/$deploymentId",
-  getParentRoute: () => rootRouteImport,
-} as any);
+const DeploymentDeploymentIdLayoutRoute =
+  DeploymentDeploymentIdLayoutRouteImport.update({
+    id: "/deployment/$deploymentId/_layout",
+    path: "/deployment/$deploymentId",
+    getParentRoute: () => rootRouteImport,
+  } as any);
+const DeploymentDeploymentIdLayoutIndexRoute =
+  DeploymentDeploymentIdLayoutIndexRouteImport.update({
+    id: "/",
+    path: "/",
+    getParentRoute: () => DeploymentDeploymentIdLayoutRoute,
+  } as any);
+const DeploymentDeploymentIdLayoutOverviewRoute =
+  DeploymentDeploymentIdLayoutOverviewRouteImport.update({
+    id: "/overview",
+    path: "/overview",
+    getParentRoute: () => DeploymentDeploymentIdLayoutRoute,
+  } as any);
+const DeploymentDeploymentIdLayoutObservationsRoute =
+  DeploymentDeploymentIdLayoutObservationsRouteImport.update({
+    id: "/observations",
+    path: "/observations",
+    getParentRoute: () => DeploymentDeploymentIdLayoutRoute,
+  } as any);
+const DeploymentDeploymentIdLayoutAnalyticsRoute =
+  DeploymentDeploymentIdLayoutAnalyticsRouteImport.update({
+    id: "/analytics",
+    path: "/analytics",
+    getParentRoute: () => DeploymentDeploymentIdLayoutRoute,
+  } as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
+  "/deployment/$deploymentId": typeof DeploymentDeploymentIdLayoutRouteWithChildren;
+  "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdLayoutObservationsRoute;
+  "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdLayoutOverviewRoute;
+  "/deployment/$deploymentId/": typeof DeploymentDeploymentIdLayoutIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
+  "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdLayoutObservationsRoute;
+  "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdLayoutOverviewRoute;
+  "/deployment/$deploymentId": typeof DeploymentDeploymentIdLayoutIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/observationTable": typeof ObservationTableRoute;
-  "/deployment/$deploymentId": typeof DeploymentDeploymentIdRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
+  "/deployment/$deploymentId/_layout": typeof DeploymentDeploymentIdLayoutRouteWithChildren;
+  "/deployment/$deploymentId/_layout/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/_layout/observations": typeof DeploymentDeploymentIdLayoutObservationsRoute;
+  "/deployment/$deploymentId/_layout/overview": typeof DeploymentDeploymentIdLayoutOverviewRoute;
+  "/deployment/$deploymentId/_layout/": typeof DeploymentDeploymentIdLayoutIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
     | "/observationTable"
+    | "/hub/$hubId"
     | "/deployment/$deploymentId"
-    | "/hub/$hubId";
+    | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/observations"
+    | "/deployment/$deploymentId/overview"
+    | "/deployment/$deploymentId/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/observationTable" | "/deployment/$deploymentId" | "/hub/$hubId";
+  to:
+    | "/"
+    | "/observationTable"
+    | "/hub/$hubId"
+    | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/observations"
+    | "/deployment/$deploymentId/overview"
+    | "/deployment/$deploymentId";
   id:
     | "__root__"
     | "/"
     | "/observationTable"
-    | "/deployment/$deploymentId"
-    | "/hub/$hubId";
+    | "/hub/$hubId"
+    | "/deployment/$deploymentId/_layout"
+    | "/deployment/$deploymentId/_layout/analytics"
+    | "/deployment/$deploymentId/_layout/observations"
+    | "/deployment/$deploymentId/_layout/overview"
+    | "/deployment/$deploymentId/_layout/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   ObservationTableRoute: typeof ObservationTableRoute;
-  DeploymentDeploymentIdRoute: typeof DeploymentDeploymentIdRoute;
   HubHubIdRoute: typeof HubHubIdRoute;
+  DeploymentDeploymentIdLayoutRoute: typeof DeploymentDeploymentIdLayoutRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
@@ -101,21 +156,74 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof HubHubIdRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/deployment/$deploymentId": {
-      id: "/deployment/$deploymentId";
+    "/deployment/$deploymentId/_layout": {
+      id: "/deployment/$deploymentId/_layout";
       path: "/deployment/$deploymentId";
       fullPath: "/deployment/$deploymentId";
-      preLoaderRoute: typeof DeploymentDeploymentIdRouteImport;
+      preLoaderRoute: typeof DeploymentDeploymentIdLayoutRouteImport;
       parentRoute: typeof rootRouteImport;
+    };
+    "/deployment/$deploymentId/_layout/": {
+      id: "/deployment/$deploymentId/_layout/";
+      path: "/";
+      fullPath: "/deployment/$deploymentId/";
+      preLoaderRoute: typeof DeploymentDeploymentIdLayoutIndexRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdLayoutRoute;
+    };
+    "/deployment/$deploymentId/_layout/overview": {
+      id: "/deployment/$deploymentId/_layout/overview";
+      path: "/overview";
+      fullPath: "/deployment/$deploymentId/overview";
+      preLoaderRoute: typeof DeploymentDeploymentIdLayoutOverviewRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdLayoutRoute;
+    };
+    "/deployment/$deploymentId/_layout/observations": {
+      id: "/deployment/$deploymentId/_layout/observations";
+      path: "/observations";
+      fullPath: "/deployment/$deploymentId/observations";
+      preLoaderRoute: typeof DeploymentDeploymentIdLayoutObservationsRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdLayoutRoute;
+    };
+    "/deployment/$deploymentId/_layout/analytics": {
+      id: "/deployment/$deploymentId/_layout/analytics";
+      path: "/analytics";
+      fullPath: "/deployment/$deploymentId/analytics";
+      preLoaderRoute: typeof DeploymentDeploymentIdLayoutAnalyticsRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdLayoutRoute;
     };
   }
 }
 
+interface DeploymentDeploymentIdLayoutRouteChildren {
+  DeploymentDeploymentIdLayoutAnalyticsRoute: typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
+  DeploymentDeploymentIdLayoutObservationsRoute: typeof DeploymentDeploymentIdLayoutObservationsRoute;
+  DeploymentDeploymentIdLayoutOverviewRoute: typeof DeploymentDeploymentIdLayoutOverviewRoute;
+  DeploymentDeploymentIdLayoutIndexRoute: typeof DeploymentDeploymentIdLayoutIndexRoute;
+}
+
+const DeploymentDeploymentIdLayoutRouteChildren: DeploymentDeploymentIdLayoutRouteChildren =
+  {
+    DeploymentDeploymentIdLayoutAnalyticsRoute:
+      DeploymentDeploymentIdLayoutAnalyticsRoute,
+    DeploymentDeploymentIdLayoutObservationsRoute:
+      DeploymentDeploymentIdLayoutObservationsRoute,
+    DeploymentDeploymentIdLayoutOverviewRoute:
+      DeploymentDeploymentIdLayoutOverviewRoute,
+    DeploymentDeploymentIdLayoutIndexRoute:
+      DeploymentDeploymentIdLayoutIndexRoute,
+  };
+
+const DeploymentDeploymentIdLayoutRouteWithChildren =
+  DeploymentDeploymentIdLayoutRoute._addFileChildren(
+    DeploymentDeploymentIdLayoutRouteChildren,
+  );
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ObservationTableRoute: ObservationTableRoute,
-  DeploymentDeploymentIdRoute: DeploymentDeploymentIdRoute,
   HubHubIdRoute: HubHubIdRoute,
+  DeploymentDeploymentIdLayoutRoute:
+    DeploymentDeploymentIdLayoutRouteWithChildren,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
