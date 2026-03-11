@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as ObservationTableRouteImport } from "./routes/observationTable";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as HubHubIdRouteImport } from "./routes/hub/$hubId";
 import { Route as DeploymentDeploymentIdLayoutRouteImport } from "./routes/deployment/$deploymentId/_layout";
@@ -18,11 +17,6 @@ import { Route as DeploymentDeploymentIdLayoutOverviewRouteImport } from "./rout
 import { Route as DeploymentDeploymentIdLayoutObservationsRouteImport } from "./routes/deployment/$deploymentId/_layout/observations";
 import { Route as DeploymentDeploymentIdLayoutAnalyticsRouteImport } from "./routes/deployment/$deploymentId/_layout/analytics";
 
-const ObservationTableRoute = ObservationTableRouteImport.update({
-  id: "/observationTable",
-  path: "/observationTable",
-  getParentRoute: () => rootRouteImport,
-} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -66,7 +60,6 @@ const DeploymentDeploymentIdLayoutAnalyticsRoute =
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
-  "/observationTable": typeof ObservationTableRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdLayoutRouteWithChildren;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
@@ -76,7 +69,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
-  "/observationTable": typeof ObservationTableRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
   "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdLayoutObservationsRoute;
@@ -86,7 +78,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
-  "/observationTable": typeof ObservationTableRoute;
   "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId/_layout": typeof DeploymentDeploymentIdLayoutRouteWithChildren;
   "/deployment/$deploymentId/_layout/analytics": typeof DeploymentDeploymentIdLayoutAnalyticsRoute;
@@ -98,7 +89,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
-    | "/observationTable"
     | "/hub/$hubId"
     | "/deployment/$deploymentId"
     | "/deployment/$deploymentId/analytics"
@@ -108,7 +98,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
-    | "/observationTable"
     | "/hub/$hubId"
     | "/deployment/$deploymentId/analytics"
     | "/deployment/$deploymentId/observations"
@@ -117,7 +106,6 @@ export interface FileRouteTypes {
   id:
     | "__root__"
     | "/"
-    | "/observationTable"
     | "/hub/$hubId"
     | "/deployment/$deploymentId/_layout"
     | "/deployment/$deploymentId/_layout/analytics"
@@ -128,20 +116,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
-  ObservationTableRoute: typeof ObservationTableRoute;
   HubHubIdRoute: typeof HubHubIdRoute;
   DeploymentDeploymentIdLayoutRoute: typeof DeploymentDeploymentIdLayoutRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/observationTable": {
-      id: "/observationTable";
-      path: "/observationTable";
-      fullPath: "/observationTable";
-      preLoaderRoute: typeof ObservationTableRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/": {
       id: "/";
       path: "/";
@@ -220,7 +200,6 @@ const DeploymentDeploymentIdLayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ObservationTableRoute: ObservationTableRoute,
   HubHubIdRoute: HubHubIdRoute,
   DeploymentDeploymentIdLayoutRoute:
     DeploymentDeploymentIdLayoutRouteWithChildren,

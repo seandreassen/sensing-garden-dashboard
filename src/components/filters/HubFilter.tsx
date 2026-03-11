@@ -16,7 +16,7 @@ function HubFilter() {
     <div className={filterFieldClass}>
       <label htmlFor="filter-hub" className={filterLabelClass}>
         <RadioIcon className="h-3 w-3" />
-        Active Sensors (Hubs)
+        Active Hubs
       </label>
       <select
         id="filter-hub"

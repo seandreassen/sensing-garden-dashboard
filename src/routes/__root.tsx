@@ -17,7 +17,7 @@ function RootComponent() {
   return (
     <div className="flex h-screen w-screen flex-col overflow-y-scroll">
       <Header />
-      <main className="w-full grow">
+      <main className="flex w-full grow flex-col">
         <Outlet />
       </main>
       <ReactQueryDevtools buttonPosition="top-right" />
