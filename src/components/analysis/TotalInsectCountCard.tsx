@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/Label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useCount } from "@/lib/hooks/useCount";
 
-export function TotalInsectCountCard() {
+function TotalInsectCountCard() {
   const { data: count, isLoading } = useCount();
 
   return (
@@ -30,3 +30,5 @@ export function TotalInsectCountCard() {
     </Card>
   );
 }
+
+export { TotalInsectCountCard };

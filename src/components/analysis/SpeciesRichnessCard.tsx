@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/Label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useFamilyCount } from "@/lib/hooks/useFamilyCount";
 
-export function SpeciesRichnessCard() {
+function SpeciesRichnessCard() {
   const { data: count, isLoading } = useFamilyCount();
 
   return (
@@ -30,3 +30,5 @@ export function SpeciesRichnessCard() {
     </Card>
   );
 }
+
+export { SpeciesRichnessCard };
