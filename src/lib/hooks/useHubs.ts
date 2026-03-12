@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import type { DevicesResponse } from "@/lib/types/api";
+
 const BASE_URL = "https://api.sensinggarden.com/v1";
 
 function useHubs() {
@@ -7,11 +9,8 @@ function useHubs() {
     queryKey: ["hubIds"],
     queryFn: async () => {
       const res = await fetch(`${BASE_URL}/devices?limit=100`);
-      const data = await res.json();
-      const unique = [
-        ...new Set<string>(data.items.map((item: { device_id: string }) => item.device_id)),
-      ];
-      return unique;
+      const data = (await res.json()) as DevicesResponse;
+      return data.items;
     },
   });
 }

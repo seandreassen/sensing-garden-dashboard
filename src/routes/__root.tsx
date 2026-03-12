@@ -15,9 +15,11 @@ export const Route = createRootRouteWithContext<{
 
 function RootComponent() {
   return (
-    <div className="min-h-screen overflow-y-scroll [scrollbar-gutter:stable] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent">
+    <div className="flex h-screen w-screen flex-col overflow-y-scroll">
       <Header />
-      <Outlet />
+      <main className="flex w-full grow flex-col">
+        <Outlet />
+      </main>
       <ReactQueryDevtools buttonPosition="top-right" />
       <TanStackRouterDevtools position="bottom-right" />
     </div>

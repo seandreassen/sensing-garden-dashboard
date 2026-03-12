@@ -1,9 +1,15 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 
-function AnalyticsData() {
+export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const { isLoading, isError, error } = useEnvironmentData();
 
   if (isLoading) {
@@ -31,5 +37,3 @@ function AnalyticsData() {
     </div>
   );
 }
-
-export { AnalyticsData };

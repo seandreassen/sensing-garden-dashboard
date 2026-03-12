@@ -5,36 +5,49 @@ import {
   filterLabelClass,
   filterSelectClass,
 } from "@/components/filters/filterStyles";
-import { useFilterContext } from "@/lib/filters/filterState";
-import type { TaxonomyLevel } from "@/lib/types/api";
+import { Label } from "@/components/ui/Label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
+import type { TaxonomyLevel } from "@/lib/filters";
+import { useFilters } from "@/lib/hooks/useFilters";
 
-const LEVELS: { value: TaxonomyLevel; label: string }[] = [
+const levels: { value: TaxonomyLevel; label: string }[] = [
   { value: "family", label: "Family" },
   { value: "genus", label: "Genus" },
   { value: "species", label: "Species" },
 ];
 
 function TaxonomyFilter() {
-  const { filters, actions } = useFilterContext();
+  const { updateFilters, taxonomyLevel } = useFilters();
 
   return (
     <div className={filterFieldClass}>
-      <label htmlFor="filter-taxonomy" className={filterLabelClass}>
+      <Label htmlFor="filter-taxonomy-level" className={filterLabelClass}>
         <TagIcon className="h-3 w-3" />
         Taxonomy Level
-      </label>
-      <select
-        id="filter-taxonomy"
-        className={filterSelectClass}
-        value={filters.taxonomyLevel}
-        onChange={(e) => actions.setTaxonomyLevel(e.target.value as TaxonomyLevel)}
+      </Label>
+      <Select
+        value={taxonomyLevel}
+        onValueChange={(value) => updateFilters({ taxonomyLevel: value ?? undefined })}
       >
-        {LEVELS.map((l) => (
-          <option key={l.value} value={l.value}>
-            {l.label}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger id="filter-taxonomy-level" className={filterSelectClass}>
+          <SelectValue placeholder="Select Taxonomy Level">
+            {levels.find((level) => level.value === taxonomyLevel)?.label}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {levels.map((level) => (
+            <SelectItem key={level.value} value={level.value}>
+              {level.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

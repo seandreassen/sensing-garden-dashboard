@@ -54,7 +54,7 @@ interface PaginatedResponse<T> {
 }
 
 interface Deployment {
-  deploymentId: string;
+  id: string;
   active: boolean;
 }
 
@@ -83,6 +83,17 @@ interface ObservationsResponse {
   nextToken: string | null;
 }
 
+interface Hub {
+  device_id: string;
+  created: Date;
+}
+
+interface DevicesResponse {
+  items: Hub[];
+  next_token: { device_id: string };
+}
+
+// Should be removed - migrate to useFilters()
 type TaxonomyLevel = "family" | "genus" | "species";
 
 type DatePreset = "all" | "24h" | "7d" | "30d" | "custom";
@@ -99,6 +110,7 @@ export type {
   DeviceIdProps,
   Observation,
   ObservationsResponse,
+  DevicesResponse,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,

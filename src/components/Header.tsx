@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 
 function Header() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-lg">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">

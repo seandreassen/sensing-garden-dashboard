@@ -1,11 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 
-type UseFamilyCountResult = {
-  count: number | null;
-  isLoading: boolean;
-  error: string | null;
-};
-
 function asArray(json: unknown): unknown[] {
   if (Array.isArray(json)) {
     return json;
@@ -79,15 +73,9 @@ async function fetchFamilyCount(): Promise<number> {
   return set.size;
 }
 
-export function useFamilyCount(): UseFamilyCountResult {
-  const { data, isLoading, error } = useQuery({
+export function useFamilyCount() {
+  return useQuery({
     queryKey: ["family-count"],
     queryFn: fetchFamilyCount,
   });
-
-  return {
-    count: data ?? null,
-    isLoading,
-    error: error instanceof Error ? error.message : null,
-  };
 }

@@ -24,14 +24,6 @@
   --color-chart-3: oklch(0.541 0.281 293.009);
   --color-chart-4: oklch(0.491 0.27 292.581);
   --color-chart-5: oklch(0.432 0.232 292.759);
-  --color-sidebar: oklch(0.21 0.006 285.885);
-  --color-sidebar-foreground: oklch(0.985 0 0);
-  --color-sidebar-primary: oklch(0.606 0.25 292.717);
-  --color-sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --color-sidebar-accent: oklch(0.274 0.006 286.033);
-  --color-sidebar-accent-foreground: oklch(0.985 0 0);
-  --color-sidebar-border: oklch(1 0 0 / 10%);
-  --color-sidebar-ring: oklch(0.38 0.189 293.745);
 }
 
 @layer base {
