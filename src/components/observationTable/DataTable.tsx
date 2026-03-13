@@ -6,7 +6,9 @@ import {
   useReactTable,
   type OnChangeFn,
 } from "@tanstack/react-table";
+import { useState } from "react";
 
+import { MoreInfoObservation } from "@/components/observationTable/MoreInfoObservation";
 import {
   Table,
   TableBody,
@@ -15,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import type { Observation } from "@/lib/types/api";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,7 +29,7 @@ interface DataTableProps<TData, TValue> {
   onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
-function DataTable<TData, TValue>({
+function DataTable<TData extends Observation, TValue>({
   columns,
   data,
   sorting,
@@ -42,9 +45,19 @@ function DataTable<TData, TValue>({
     onSortingChange,
     state: { sorting },
   });
-
+  const [open, setOpen] = useState<boolean>(false);
+  const [observationData, setObservationData] = useState<Observation | undefined>();
+  const openModal = (rowInfo: Observation) => {
+    setObservationData(rowInfo);
+    setOpen(true);
+  };
   return (
     <div className="overflow-hidden rounded-md border">
+      <MoreInfoObservation
+        onClose={() => setOpen(false)}
+        observationData={observationData}
+        openStatus={open}
+      />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -64,7 +77,12 @@ function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+              <TableRow
+                className="cursor-pointer"
+                onClick={() => openModal(row.original)} //Opens modal with correct row's info onclick.
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
