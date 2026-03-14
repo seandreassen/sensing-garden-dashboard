@@ -23,6 +23,13 @@ type HeatmapMode = "day-hour" | "week-day";
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const HOUR_LABELS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 
+/**
+ * Picks grid layout from date range. Currently:
+ * - day-hour: ≤7 days → rows = weekdays (7), cols = hours (24).
+ * - week-day: else → rows = weeks (can be many), cols = weekdays (7).
+ * Limitation: custom ranges like 1 year produce ~52 week-rows; consider adding
+ * a "month-day" mode (rows = months, max 12) for spans > ~12 weeks.
+ */
 function pickHeatmapMode(rangePreset: string, startDate: string, endDate: string): HeatmapMode {
   if (rangePreset === "24h" || rangePreset === "7d") {
     return "day-hour";
