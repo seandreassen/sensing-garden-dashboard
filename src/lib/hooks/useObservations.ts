@@ -41,7 +41,7 @@ function useObservations(searchParams?: SearchParams) {
 
       params.set("sort_desc", String(searchParams?.sortDesc ?? false));
 
-      params.set("limit", String(searchParams?.limit));
+      params.set("limit", String(searchParams?.limit ?? 100));
 
       //Token pagination not implemented.
       if (searchParams?.nextToken) {
