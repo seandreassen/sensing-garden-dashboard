@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const rangePresets = ["24h", "7d", "30d", "custom"] as const;
+const rangePresets = ["24h", "7d", "30d", "3m", "1y", "custom"] as const;
 type RangePreset = (typeof rangePresets)[number];
 
 const taxonomyLevels = ["family", "genus", "species"] as const;
 type TaxonomyLevel = (typeof taxonomyLevels)[number];
 
 const filtersDefault = {
-  rangePreset: "7d" as RangePreset,
+  rangePreset: "30d" as RangePreset,
   startDate: "",
   endDate: "",
   hub: "",
