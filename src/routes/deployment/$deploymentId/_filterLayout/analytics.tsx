@@ -5,7 +5,7 @@ import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
 import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
-import { aggregateHeatmap, pickHeatmapMode } from "@/lib/heatmapAggregation";
+import { aggregateHeatmap } from "@/lib/heatmapAggregation";
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -25,7 +25,16 @@ function RouteComponent() {
     limit: 500,
   });
 
-  const envItems = useMemo(() => envResult ?? [], [envResult]);
+  const envItems = useMemo(() => {
+    const startMs = new Date(startDate).getTime();
+    const endMs = new Date(endDate).getTime();
+
+    return (envResult ?? []).filter((item) => {
+      const timestampMs = new Date(item.timestamp).getTime();
+      const matchesHub = !hub || item.device_id === hub;
+      return matchesHub && timestampMs >= startMs && timestampMs <= endMs;
+    });
+  }, [envResult, hub, startDate, endDate]);
   const obsItems = useMemo(() => obsResult?.items ?? [], [obsResult?.items]);
 
   const heatmapGrid = useMemo(
@@ -41,9 +50,6 @@ function RouteComponent() {
       ),
     [obsItems, envItems, startDate, endDate, rangePreset, minConfidence, taxonomyLevel],
   );
-
-  const heatmapMode = pickHeatmapMode(rangePreset, startDate, endDate);
-
   if (envLoading && obsLoading) {
     return <div>Loading data...</div>;
   }
@@ -55,10 +61,8 @@ function RouteComponent() {
     <div className="flex flex-col gap-6">
       <ActivityHeatmap
         grid={heatmapGrid}
-        peakIntensity={heatmapGrid.maxCount}
-        rangeLabel={heatmapMode === "day-hour" ? "day-hour" : "week-day"}
         taxonomyLabel={taxonomyLevel}
-        isLoading={obsLoading}
+        isLoading={obsLoading || envLoading}
       />
 
       <div className="flex flex-col border border-border">
