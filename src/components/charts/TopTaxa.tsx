@@ -35,16 +35,28 @@ const LEVEL_LABELS: Record<TaxonomyLevel, string> = {
 function TopTaxa({ data, taxonomyLevel, isLoading }: TopTaxaProps) {
   if (isLoading) {
     return (
-      <div className="flex h-[300px] items-center justify-center">
-        <span className="text-sm text-muted-foreground">Loading chart...</span>
+      <div>
+        <h3 className="mb-3 text-sm font-medium text-muted-foreground">
+          {LEVEL_LABELS[taxonomyLevel]}
+        </h3>
+        <div className="flex h-75 items-center justify-center">
+          <span className="text-sm text-muted-foreground">Loading chart...</span>
+        </div>
       </div>
     );
   }
 
   if (data.length === 0) {
     return (
-      <div className="flex h-[300px] items-center justify-center">
-        <span className="text-sm text-muted-foreground">No taxonomy data for selected filters</span>
+      <div>
+        <h3 className="mb-3 text-sm font-medium text-muted-foreground">
+          {LEVEL_LABELS[taxonomyLevel]}
+        </h3>
+        <div className="flex h-75 items-center justify-center">
+          <span className="text-sm text-muted-foreground">
+            No taxonomy data for selected filters
+          </span>
+        </div>
       </div>
     );
   }

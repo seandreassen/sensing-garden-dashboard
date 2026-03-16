@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
-import { endOfDay, startOfDay, subDays, subHours } from "date-fns";
+import { endOfDay, startOfDay, subDays, subHours, subMonths, subYears } from "date-fns";
 import { useMemo } from "react";
 
 import { filtersDefault, type Filters } from "@/lib/filters";
@@ -19,10 +19,22 @@ function useFilters() {
           start: subHours(now, 24).toISOString(),
           end: now.toISOString(),
         };
-      case "30d":
+      case "7d":
         return {
-          preset: "30d",
-          start: subDays(now, 30).toISOString(),
+          preset: "7d",
+          start: subDays(now, 7).toISOString(),
+          end: now.toISOString(),
+        };
+      case "3m":
+        return {
+          preset: "3m",
+          start: subMonths(now, 3).toISOString(),
+          end: now.toISOString(),
+        };
+      case "1y":
+        return {
+          preset: "1y",
+          start: subYears(now, 1).toISOString(),
           end: now.toISOString(),
         };
       // @ts-ignore - Fallthrough case is on purpose
@@ -41,10 +53,10 @@ function useFilters() {
           };
         }
       default:
-      case "7d": // 7d is last because it's the default, needs to be after default and custom if incorrectly formatted
+      case "30d": // 30d is last because it's the default, needs to be after default and custom if incorrectly formatted
         return {
-          preset: "7d",
-          start: subDays(now, 7).toISOString(),
+          preset: "30d",
+          start: subDays(now, 30).toISOString(),
           end: now.toISOString(),
         };
     }
