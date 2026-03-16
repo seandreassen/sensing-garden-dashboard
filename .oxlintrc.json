@@ -1,0 +1,77 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "react",
+    "react-perf",
+    "oxc",
+    "import",
+    "jsx-a11y",
+    "node",
+    "promise"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "curly": "warn",
+    "eqeqeq": "warn",
+    "max-depth": "warn",
+    "max-lines": "warn",
+    "no-console": "warn",
+    "no-empty": "warn",
+    "no-empty-function": "warn",
+    "no-eq-null": "warn",
+    "no-param-reassign": "warn",
+    "no-var": "warn",
+    "prefer-const": "warn",
+
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-import-type-side-effects": "warn",
+    "typescript/no-non-null-assertion": "warn",
+    "typescript/no-require-imports": "warn",
+    "typescript/promise-function-async": "warn",
+
+    "unicorn/no-abusive-eslint-disable": "warn",
+    "unicorn/no-array-for-each": "warn",
+    "unicorn/no-array-reduce": "warn",
+    "unicorn/prefer-node-protocol": "warn",
+
+    "react/jsx-boolean-value": "warn",
+    "react/jsx-curly-brace-presence": "warn",
+    "react/jsx-filename-extension": ["warn", { "extensions": ["tsx"] }],
+    "react/jsx-fragments": "warn",
+    "react/jsx-max-depth": ["warn", { "max": 5 }],
+    "react/jsx-no-useless-fragment": "warn",
+    "react/only-export-components": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "warn",
+    "react/self-closing-comp": "warn",
+
+    "import/no-absolute-path": "off",
+    "import/no-cycle": "warn",
+    "import/no-default-export": "warn",
+    "import/no-duplicates": "warn",
+    "import/no-relative-parent-imports": "warn",
+    "import/no-unassigned-import": [
+      "warn",
+      {
+        "allow": ["**/*.css"]
+      }
+    ],
+
+    "node/no-process-env": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["vite.config.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["src/routeTree.gen.ts"]
+}

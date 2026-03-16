@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "experimentalSortImports": {},
+  "experimentalSortPackageJson": {
+    "sortScripts": true
+  },
+  "experimentalTailwindcss": {
+    "stylesheet": "./src/index.css",
+    "attributes": ["className"]
+  },
+  "ignorePatterns": ["index.html", "src/routeTree.gen.ts"]
+}

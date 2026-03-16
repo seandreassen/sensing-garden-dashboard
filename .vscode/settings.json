@@ -1,0 +1,19 @@
+{
+  "editor.tabSize": 2,
+  "editor.linkedEditing": true,
+
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+
+  "files.associations": {
+    "index.css": "tailwindcss"
+  },
+
+  "oxc.fmt.configPath": ".oxfmtrc.json",
+  "oxc.configPath": ".oxlintrc.json",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  }
+}
