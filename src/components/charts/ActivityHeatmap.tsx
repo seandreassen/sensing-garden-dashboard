@@ -101,6 +101,7 @@ function ActivityHeatmap({ grid, taxonomyLabel, isLoading }: ActivityHeatmapProp
 
   const cols = grid.colLabels.length;
   const modeCopy = getModeCopy(grid.mode);
+  const showEnvironmentalData = grid.mode === "date-hour";
 
   return (
     <div className="flex flex-col gap-4 rounded border border-border bg-card p-6">
@@ -173,6 +174,7 @@ function ActivityHeatmap({ grid, taxonomyLabel, isLoading }: ActivityHeatmapProp
         {activeCell && isPointerInside && (
           <CellTooltip
             cell={activeCell}
+            showEnvironmentalData={showEnvironmentalData}
             x={tooltipPos.x}
             y={tooltipPos.y}
             flipped={tooltipPos.flipped}

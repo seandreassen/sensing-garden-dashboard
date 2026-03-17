@@ -55,11 +55,13 @@ function HeatmapHeader({
 
 function CellTooltip({
   cell,
+  showEnvironmentalData,
   x,
   y,
   flipped,
 }: {
   cell: HeatmapCell;
+  showEnvironmentalData: boolean;
   x: number;
   y: number;
   flipped: boolean;
@@ -78,28 +80,30 @@ function CellTooltip({
       <p className="mt-0.5 text-lg font-semibold">
         {cell.count} <span className="text-xs font-normal text-muted-foreground">detections</span>
       </p>
-      <div className="mt-1.5 flex flex-col gap-1 border-t border-border pt-1.5">
-        <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="flex items-center gap-1 text-muted-foreground">
-            <Thermometer className="h-3 w-3" /> Temp
-          </span>
-          <span className="font-medium">{cell.temp !== undefined ? `${cell.temp}°C` : "--"}</span>
+      {showEnvironmentalData && (
+        <div className="mt-1.5 flex flex-col gap-1 border-t border-border pt-1.5">
+          <div className="flex items-center justify-between gap-4 text-xs">
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Thermometer className="h-3 w-3" /> Temp
+            </span>
+            <span className="font-medium">{cell.temp !== undefined ? `${cell.temp}°C` : "--"}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4 text-xs">
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Droplet className="h-3 w-3" /> Humidity
+            </span>
+            <span className="font-medium">
+              {cell.humidity !== undefined ? `${cell.humidity}%` : "--"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4 text-xs">
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Wind className="h-3 w-3" /> AQI
+            </span>
+            <span className="font-medium">{cell.aqi !== undefined ? cell.aqi : "--"}</span>
+          </div>
         </div>
-        <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="flex items-center gap-1 text-muted-foreground">
-            <Droplet className="h-3 w-3" /> Humidity
-          </span>
-          <span className="font-medium">
-            {cell.humidity !== undefined ? `${cell.humidity}%` : "--"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="flex items-center gap-1 text-muted-foreground">
-            <Wind className="h-3 w-3" /> AQI
-          </span>
-          <span className="font-medium">{cell.aqi !== undefined ? cell.aqi : "--"}</span>
-        </div>
-      </div>
+      )}
       <span
         className={`${arrowBase} ${flipped ? "-top-3 border-b-border" : "-bottom-3 border-t-border"}`}
       />

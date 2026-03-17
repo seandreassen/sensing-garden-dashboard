@@ -94,7 +94,7 @@ function enumerateWeeks(startDate: string, endDate: string): Date[] {
 
 function aggregateHeatmapWeekDay(
   observations: Observation[],
-  envData: EnvironmentData[],
+  _envData: EnvironmentData[],
   startDate: string,
   endDate: string,
 ): HeatmapGrid {
@@ -122,16 +122,6 @@ function aggregateHeatmapWeekDay(
 
     cells[row][col].count++;
   }
-
-  const envLookup = buildEnvLookup(envData, (date) => {
-    const row = weekIndexes.get(getWeekStart(date).getTime());
-    if (row === undefined) {
-      return null;
-    }
-    return `${row}-${jsDayToMondayIndex(date.getDay())}`;
-  });
-
-  applyEnvData(cells, envLookup);
 
   return {
     cells,
@@ -162,7 +152,7 @@ function enumerateMonths(startDate: string, endDate: string): Date[] {
 
 function aggregateHeatmapMonthWeekday(
   observations: Observation[],
-  envData: EnvironmentData[],
+  _envData: EnvironmentData[],
   startDate: string,
   endDate: string,
 ): HeatmapGrid {
@@ -190,16 +180,6 @@ function aggregateHeatmapMonthWeekday(
 
     cells[row][col].count++;
   }
-
-  const envLookup = buildEnvLookup(envData, (date) => {
-    const row = monthIndexes.get(formatMonthKey(date));
-    if (row === undefined) {
-      return null;
-    }
-    return `${row}-${jsDayToMondayIndex(date.getDay())}`;
-  });
-
-  applyEnvData(cells, envLookup);
 
   return {
     cells,
