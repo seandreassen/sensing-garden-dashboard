@@ -61,7 +61,7 @@ export function HeroCarousel() {
         />
       ))}
       <div className="absolute inset-0 bg-black/40" />
-      <div className="absolute right-0 bottom-0 left-0 h-32 bg-gradient-to-b from-transparent to-background" />
+      <div className="absolute right-0 bottom-0 left-0 h-32 bg-linear-to-b from-transparent to-background" />
       <div className="absolute inset-0 flex flex-col justify-center px-8 sm:px-16">
         <h1 className="text-4xl font-black tracking-tight text-white uppercase sm:text-6xl">
           Sensing Garden

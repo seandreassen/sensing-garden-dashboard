@@ -56,6 +56,10 @@ interface PaginatedResponse<T> {
 interface Deployment {
   id: string;
   active: boolean;
+  name?: string;
+  location?: string;
+  hub_count?: number;
+  last_updated?: string;
 }
 
 interface DeviceIdProps {
