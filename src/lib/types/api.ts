@@ -67,12 +67,12 @@ interface Observation {
   timestamp: string;
   device_id: string;
   model_id?: string;
-  species?: string;
-  genus?: string;
-  family?: string;
-  species_confidence?: number;
-  genus_confidence?: number;
-  family_confidence?: number;
+  species: string;
+  genus: string;
+  family: string;
+  species_confidence: number;
+  genus_confidence: number;
+  family_confidence: number;
   classification_data?: ClassificationData;
   image_url?: string;
   image_bucket?: string;

@@ -24,6 +24,8 @@
   --color-chart-3: oklch(0.541 0.281 293.009);
   --color-chart-4: oklch(0.491 0.27 292.581);
   --color-chart-5: oklch(0.432 0.232 292.759);
+  --color-confirmGreen: oklch(62.7% 0.194 149.214);
+  --color-uncertainOrange: oklch(66.6% 0.179 58.318);
 }
 
 @layer base {
