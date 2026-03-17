@@ -5,6 +5,7 @@ import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
 import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
+import { GoogleMaps } from "@/components/map/googleMaps";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useFilters } from "@/lib/hooks/useFilters";
@@ -66,6 +67,9 @@ function RouteComponent() {
         </div>
         <div className="rounded-lg border border-border bg-card p-4">
           <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
+        </div>
+        <div className="rounded-lg border border-border bg-card p-4">
+          <GoogleMaps />
         </div>
       </div>
     </div>
