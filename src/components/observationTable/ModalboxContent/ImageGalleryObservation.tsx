@@ -2,6 +2,8 @@ import { useRef } from "react";
 import ImageGallery from "react-image-gallery";
 import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
 
+import type { Observation } from "@/lib/types/api";
+
 import "react-image-gallery/styles/image-gallery.css";
 
 /**
@@ -17,15 +19,13 @@ import "react-image-gallery/styles/image-gallery.css";
  *
  * @param image_url - URL of the observation image. Falls back to an empty string if undefined.
  */
-type ImageGalleryObservationProps = {
-  image_url?: string;
-};
-const ImageGalleryObservation = ({ image_url }: ImageGalleryObservationProps) => {
+
+const ImageGalleryObservation = ({ observationData }: { observationData?: Observation }) => {
   const galleryRef = useRef<ImageGalleryRef>(null);
   const images: GalleryItem[] = [
     {
-      original: image_url ?? "",
-      thumbnail: image_url ?? "",
+      original: observationData?.image_url ?? "",
+      thumbnail: observationData?.image_url ?? "",
       originalAlt: "Empty image",
     },
     {

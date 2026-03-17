@@ -1,6 +1,8 @@
+import { ConfirmObservation } from "@/components/observationTable/ModalboxContent/ConfirmObservation";
 import { EnvironmentDataPerObservation } from "@/components/observationTable/ModalboxContent/EnvironmentDataPerObservation";
 import { ImageGalleryObservation } from "@/components/observationTable/ModalboxContent/ImageGalleryObservation";
 import { ObservationMetadata } from "@/components/observationTable/ModalboxContent/Metadata";
+import { TaxonomyClassification } from "@/components/observationTable/ModalboxContent/TaxonomyClassification";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +13,6 @@ import {
 } from "@/components/ui/Dialog";
 import type { Observation } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
-
-import { ConfirmObservation } from "./ModalboxContent/ConfirmObservation";
-import { TaxonomyClassification } from "./ModalboxContent/TaxonomyClassification";
 
 /**
  * Contains the following sections:
@@ -31,7 +30,7 @@ import { TaxonomyClassification } from "./ModalboxContent/TaxonomyClassification
  * @param openStatus - Controls whether the dialog is visible.
  * @param onClose - Callback fired when the dialog is closed.
  * @param observationData - An {@link Observation} fetched via the `useObservations` hook
- * in the parent observation table.
+ * in the data-table's parent `observations`
  *
  * @status Incomplete — `device_id` is used as observation title in DialogTitle`, swap to "observation_id" if observation_id is available through api.
  * `EnvironmentDataPerObservation` All data is placeholder data.
@@ -63,10 +62,7 @@ function MoreInfoObservation({ onClose, observationData, openStatus }: MoreInfoO
         </DialogHeader>
 
         <div aria-label="Data cards on selected observation." className="overflow-y-auto px-4">
-          <ImageGalleryObservation
-            aria-label="image-gallery"
-            image_url={observationData?.image_url}
-          />
+          <ImageGalleryObservation aria-label="image-gallery" observationData={observationData} />
 
           <ObservationMetadata
             aria-label="observation metadata"
