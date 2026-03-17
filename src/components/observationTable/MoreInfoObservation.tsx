@@ -37,7 +37,7 @@ import { TaxonomyClassification } from "./ModalboxContent/TaxonomyClassification
  * `EnvironmentDataPerObservation` All data is placeholder data.
  * `ImageGalleryObservation` In time of writing each observation has 1 image url, not a list of image urls. Image gallery uses 2 stock photos.
  *
- *
+ * @todo Add feature to swap between observations from table. See Figma
  * @todo Replace `device_id` with `observation_id` in `DialogDescription`.
  * @todo Pass `observationData` to `EnvironmentDataPerObservation` when supported.
  * @todo Pass `observationData` to `ConfirmObservation` when database verification is connected.
