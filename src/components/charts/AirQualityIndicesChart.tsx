@@ -12,9 +12,20 @@ import {
 } from "recharts";
 
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { useFilters } from "@/lib/hooks/useFilters";
 
 function AirQualityIndicesChart() {
-  const { data: rawData = [], isError, isLoading, error } = useEnvironmentData();
+  const { startDate, endDate, hub } = useFilters();
+  const {
+    data: rawData = [],
+    isError,
+    isLoading,
+    error,
+  } = useEnvironmentData({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+  });
 
   const [enabledIndices, setEnabledIndices] = useState({
     voc: true,

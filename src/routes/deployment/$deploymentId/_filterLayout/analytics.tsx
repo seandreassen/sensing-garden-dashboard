@@ -4,13 +4,19 @@ import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
 import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { useFilters } from "@/lib/hooks/useFilters";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { isLoading, isError, error } = useEnvironmentData();
+  const { startDate, endDate, hub } = useFilters();
+  const { isLoading, isError, error } = useEnvironmentData({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+  });
 
   if (isLoading) {
     return <div>Loading environmental data...</div>;

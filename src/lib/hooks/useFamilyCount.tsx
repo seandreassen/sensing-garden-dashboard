@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { addGlobalQueryParameters } from "@/lib/queryParameters";
+import type { QueryParameters } from "@/lib/types/api";
+
 function asArray(json: unknown): unknown[] {
   if (Array.isArray(json)) {
     return json;
@@ -51,31 +54,35 @@ function getFamily(item: unknown): string | null {
   );
 }
 
-async function fetchFamilyCount(): Promise<number> {
-  const res = await fetch("https://api.sensinggarden.com/v1/classifications");
-
-  if (!res.ok) {
-    throw new Error(`Request failed (${res.status})`);
-  }
-
-  const json: unknown = await res.json();
-  const arr = asArray(json);
-  const set = new Set<string>();
-
-  for (const item of arr) {
-    const family = getFamily(item);
-
-    if (family) {
-      set.add(family);
-    }
-  }
-
-  return set.size;
-}
-
-export function useFamilyCount() {
+export function useFamilyCount(queryParams: QueryParameters) {
   return useQuery({
-    queryKey: ["family-count"],
-    queryFn: fetchFamilyCount,
+    queryKey: ["family-count", queryParams],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      addGlobalQueryParameters(params, queryParams);
+
+      const res = await fetch(
+        `https://api.sensinggarden.com/v1/classifications?${params.toString()}`,
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch species richness: ${res.status}`);
+      }
+
+      const json: unknown = await res.json();
+      const arr = asArray(json);
+      const set = new Set<string>();
+
+      for (const item of arr) {
+        const family = getFamily(item);
+
+        if (family) {
+          set.add(family);
+        }
+      }
+
+      return set.size;
+    },
   });
 }

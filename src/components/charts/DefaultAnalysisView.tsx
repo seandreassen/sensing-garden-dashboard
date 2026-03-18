@@ -14,13 +14,14 @@ const PRESET_LABELS: Record<string, string> = {
   "24h": "last 24 hours",
   "7d": "last 7 days",
   "30d": "last 30 days",
+  "3m": "last 3 montsh",
 };
 
 function DefaultAnalysisView({ deviceId }: DefaultAnalysisViewProps) {
   const { filters } = useFilterContext();
 
   const { data: classifications, isLoading } = useObservations({
-    deviceFilter: deviceId,
+    hubId: deviceId,
     startTime: filters.startTime || undefined,
     endTime: filters.endTime || undefined,
   });

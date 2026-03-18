@@ -1,3 +1,9 @@
+interface PaginatedResponse<T> {
+  items: T[];
+  count?: number;
+  next_token?: string | null;
+}
+
 interface Location {
   lat: number;
   long: number;
@@ -18,6 +24,8 @@ interface EnvironmentData {
   location?: { lat?: number; long?: number; alt?: number };
 }
 
+interface EnvironmentResponse extends PaginatedResponse<EnvironmentData> {}
+
 interface Deployment {
   id: string;
   active: boolean;
@@ -29,24 +37,24 @@ interface DeviceIdProps {
 
 // Left timestamp and device id required.
 interface Observation {
-  species?: string;
-  genus?: string;
-  family?: string;
-  species_confidence?: number;
-  genus_confidence?: number;
-  family_confidence?: number;
+  species: string;
+  genus: string;
+  family: string;
+  species_confidence: number;
+  genus_confidence: number;
+  family_confidence: number;
   timestamp: string;
   device_id: string;
-  model_id?: string;
+  model_id: string;
   image_url?: string;
-  image_bucket?: string;
-  image_key?: string;
+  image_bucket: string;
+  image_key: string;
 }
 
-interface ObservationsResponse {
-  items: Observation[];
+interface ObservationsResponse extends PaginatedResponse<Observation> {}
+
+interface ObservationCountResponse {
   count: number;
-  nextToken: string | null;
 }
 
 interface Hub {
@@ -54,9 +62,15 @@ interface Hub {
   created: Date;
 }
 
-interface DevicesResponse {
-  items: Hub[];
-  next_token: { device_id: string };
+interface DevicesResponse extends PaginatedResponse<Hub> {}
+
+interface QueryParameters {
+  startTime?: string;
+  endTime?: string;
+  hubId?: string;
+  limit?: number;
+  sortBy?: string;
+  sortDesc?: boolean;
 }
 
 // Should be removed - migrate to useFilters()
@@ -69,11 +83,14 @@ type WorkspaceTab = "overview" | "analytics" | "observations";
 export type {
   Location,
   EnvironmentData,
+  EnvironmentResponse,
   Deployment,
   DeviceIdProps,
   Observation,
   ObservationsResponse,
+  ObservationCountResponse,
   DevicesResponse,
+  QueryParameters,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,
