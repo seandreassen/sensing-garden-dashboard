@@ -6,7 +6,7 @@ import {
   useReactTable,
   type OnChangeFn,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observationTable/ObservationRowDialog";
 import {
@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
 
 interface DataTableProps<TData, TValue> {
@@ -35,6 +36,31 @@ function DataTable<TData extends Observation, TValue>({
   sorting,
   onSortingChange,
 }: DataTableProps<TData, TValue>) {
+  const { taxonomyLevel } = useFilters();
+
+  const [columnVisibility, setColumnVisibility] = useState({
+    family: false,
+    family_confidence: false,
+    genus: false,
+    genus_confidence: false,
+    species: false,
+    species_confidence: false,
+  });
+
+  useEffect(() => {
+    const taxonomy: string = taxonomyLevel;
+    const confidence = `${taxonomyLevel}_confidence`;
+    setColumnVisibility({
+      family: false,
+      family_confidence: false,
+      genus: false,
+      genus_confidence: false,
+      species: false,
+      species_confidence: false,
+      [taxonomy]: true,
+      [confidence]: true,
+    });
+  }, [taxonomyLevel]);
   const table = useReactTable({
     data,
     columns,
@@ -43,7 +69,10 @@ function DataTable<TData extends Observation, TValue>({
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
-    state: { sorting },
+    state: {
+      sorting,
+      columnVisibility,
+    },
   });
   const [open, setOpen] = useState<boolean>(false);
   const [observationData, setObservationData] = useState<Observation | undefined>();
@@ -58,7 +87,7 @@ function DataTable<TData extends Observation, TValue>({
         observationData={observationData}
         openStatus={open}
       />
-      <Table>
+      <Table className="w-full table-fixed text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
