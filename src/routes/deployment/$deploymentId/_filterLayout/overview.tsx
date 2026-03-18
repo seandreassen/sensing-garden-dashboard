@@ -8,6 +8,7 @@ import { TopTaxa } from "@/components/charts/TopTaxa";
 import { GoogleMaps } from "@/components/map/googleMaps";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { useDeploymentCoordinates, useDeploymentCenter } from "@/lib/hooks/useDeployments";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
@@ -16,6 +17,9 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ov
 });
 
 function RouteComponent() {
+  const { deploymentId } = Route.useParams();
+  const coordinates = useDeploymentCoordinates(deploymentId);
+  const center = useDeploymentCenter(deploymentId);
   const { filters } = useFilterContext();
   const { startDate, endDate, hub } = useFilters();
 
@@ -69,7 +73,7 @@ function RouteComponent() {
           <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
         </div>
         <div className="rounded-lg border border-border bg-card p-4">
-          <GoogleMaps />
+          <GoogleMaps key={deploymentId} initialPins={coordinates} center={center} />
         </div>
       </div>
     </div>

@@ -3,6 +3,10 @@ import { useState, useRef } from "react";
 
 type Pin = { lat: number; lng: number };
 
+const DEFAULT_CENTER = { lat: 59.9139, lng: 10.7522 };
+const DEFAULT_ZOOM = 11;
+const CENTER_PIN_MIN_ZOOM = 12;
+
 const dragImage = new Image();
 dragImage.src =
   "data:image/svg+xml;charset=utf-8," +
@@ -20,12 +24,15 @@ function handleDragStart(e: React.DragEvent<HTMLSpanElement>) {
 function MapWithDrop({
   pins,
   setPins,
+  center,
 }: {
   pins: Pin[];
   setPins: React.Dispatch<React.SetStateAction<Pin[]>>;
+  center?: Pin;
 }) {
   const map = useMap();
   const mapDivRef = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -46,12 +53,12 @@ function MapWithDrop({
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
     const topLeft = projection.fromLatLngToPoint(new google.maps.LatLng(ne.lat(), sw.lng()));
-    const zoom = map.getZoom();
-    if (!topLeft || zoom === undefined) {
+    const currentZoom = map.getZoom();
+    if (!topLeft || currentZoom === undefined) {
       return;
     }
 
-    const scale = Math.pow(2, zoom);
+    const scale = Math.pow(2, currentZoom);
     const worldPoint = new google.maps.Point(x / scale + topLeft.x, y / scale + topLeft.y);
     const latLng = projection.fromPointToLatLng(worldPoint);
     if (!latLng) {
@@ -80,17 +87,29 @@ function MapWithDrop({
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      <Map defaultZoom={9} defaultCenter={{ lat: 53.54, lng: 10 }} mapId="DEMO_MAP_ID">
-        {pins.map((pin, i) => (
-          <AdvancedMarker key={i} position={pin} draggable onDragEnd={(e) => handleDragEnd(i, e)} />
-        ))}
+      <Map
+        defaultZoom={DEFAULT_ZOOM}
+        defaultCenter={center ?? DEFAULT_CENTER}
+        mapId="DEMO_MAP_ID"
+        onCameraChanged={(ev) => setZoom(ev.detail.zoom)}
+      >
+        {center && zoom < CENTER_PIN_MIN_ZOOM && <AdvancedMarker position={center} />}
+        {zoom >= CENTER_PIN_MIN_ZOOM &&
+          pins.map((pin, i) => (
+            <AdvancedMarker
+              key={i}
+              position={pin}
+              draggable
+              onDragEnd={(e) => handleDragEnd(i, e)}
+            />
+          ))}
       </Map>
     </div>
   );
 }
 
-export function GoogleMaps() {
-  const [pins, setPins] = useState<Pin[]>([]);
+export function GoogleMaps({ initialPins = [], center }: { initialPins?: Pin[]; center?: Pin }) {
+  const [pins, setPins] = useState<Pin[]>(initialPins);
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -98,7 +117,11 @@ export function GoogleMaps() {
         <span
           draggable
           onDragStart={handleDragStart}
-          style={{ cursor: "grab", userSelect: "none", display: "inline-block" }}
+          style={{
+            cursor: "grab",
+            userSelect: "none",
+            display: "inline-block",
+          }}
           title="Dra meg til kartet"
         >
           <svg
@@ -119,7 +142,7 @@ export function GoogleMaps() {
           Dra pinnen til kartet for å plassere den
         </span>
       </div>
-      <MapWithDrop pins={pins} setPins={setPins} />
+      <MapWithDrop pins={pins} setPins={setPins} center={center} />
     </APIProvider>
   );
 }
