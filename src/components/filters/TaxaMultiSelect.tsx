@@ -1,105 +1,174 @@
-import { CheckIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CheckIcon, GitBranchIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/Button";
-import { useFilterContext } from "@/lib/filters/filterState";
-import { useObservations } from "@/lib/hooks/useObservations";
+import {
+  filterFieldClass,
+  filterLabelClass,
+  filterSelectClass,
+} from "@/components/filters/filterStyles";
+import { Label } from "@/components/ui/Label";
+import { Select, SelectTrigger } from "@/components/ui/Select";
+import type { TaxonomyLevel } from "@/lib/filters";
+import { useFilters } from "@/lib/hooks/useFilters";
 
-import { filterFieldClass, filterLabelTextOnlyClass } from "./filterStyles";
+const TAXONOMY_TEXT: Record<
+  TaxonomyLevel,
+  {
+    selectedLabel: string;
+    triggerLabel: string;
+    searchPlaceholder: string;
+    emptyLabel: string;
+  }
+> = {
+  family: {
+    selectedLabel: "Selected families",
+    triggerLabel: "Select taxa",
+    searchPlaceholder: "Search families...",
+    emptyLabel: "No families found",
+  },
+  genus: {
+    selectedLabel: "Selected genera",
+    triggerLabel: "Select taxa",
+    searchPlaceholder: "Search genera...",
+    emptyLabel: "No genera found",
+  },
+  species: {
+    selectedLabel: "Selected species",
+    triggerLabel: "Select taxa",
+    searchPlaceholder: "Search species...",
+    emptyLabel: "No species found",
+  },
+};
 
 function TaxaMultiSelect() {
-  const { filters, actions } = useFilterContext();
+  const { taxonomyLevel, selectedTaxa, updateFilters } = useFilters();
+
+  const currentLevel: TaxonomyLevel = taxonomyLevel ?? "family";
+  const currentSelectedTaxa = selectedTaxa ?? [];
+  const taxonomyText = TAXONOMY_TEXT[currentLevel];
+
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const { data } = useObservations({
-    startTime: filters.startTime,
-    endTime: filters.endTime,
-    deviceFilter: filters.deviceId,
-  });
+  const availableTaxa = currentSelectedTaxa;
 
-  const availableTaxa = useMemo(() => {
-    if (!data?.items) {
-      return [];
+  const filteredTaxa = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) {
+      return availableTaxa;
     }
-    const names = new Set<string>();
-    for (const obs of data.items) {
-      const name = obs[filters.taxonomyLevel];
-      if (name) {
-        names.add(name);
+    return availableTaxa.filter((taxon) => taxon.toLowerCase().includes(q));
+  }, [availableTaxa, search]);
+
+  const toggleTaxon = (taxon: string) => {
+    const next = currentSelectedTaxa.includes(taxon)
+      ? currentSelectedTaxa.filter((t) => t !== taxon)
+      : [...currentSelectedTaxa, taxon];
+
+    updateFilters({ selectedTaxa: next });
+  };
+
+  useEffect(() => {
+    setSearch("");
+  }, [currentLevel]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false);
       }
     }
-    return Array.from(names).toSorted();
-  }, [data, filters.taxonomyLevel]);
 
-  const levelLabel =
-    filters.taxonomyLevel === "family"
-      ? "families"
-      : filters.taxonomyLevel === "genus"
-        ? "genera"
-        : "species";
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className={`relative ${filterFieldClass}`}>
-      <label htmlFor="filter-taxa" className={filterLabelTextOnlyClass}>
-        Filter {levelLabel}
-      </label>
+    <div className={filterFieldClass} ref={rootRef}>
+      <Label htmlFor="filter-taxa" className={filterLabelClass}>
+        <GitBranchIcon className="h-3 w-3" />
+        {taxonomyText.selectedLabel}
+      </Label>
 
-      <Button
-        id="filter-taxa"
-        variant="outline"
-        className="w-full justify-start text-xs font-normal"
-        onClick={() => setOpen(!open)}
-      >
-        <span className="flex-1 truncate text-left">
-          {filters.selectedTaxa.length === 0
-            ? `All ${levelLabel}`
-            : `${filters.selectedTaxa.length} selected`}
-        </span>
-        <ChevronsUpDownIcon className="h-3 w-3 shrink-0 text-muted-foreground" />
-      </Button>
-
-      {filters.selectedTaxa.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {filters.selectedTaxa.map((t) => (
-            <span
-              key={t}
-              className="flex items-center gap-1 rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground"
-            >
-              {t}
-              <Button variant="ghost" size="icon-xs" onClick={() => actions.toggleTaxon(t)}>
-                <XIcon className="h-2.5 w-2.5" />
-              </Button>
+      <div className="relative">
+        <Select value="">
+          <SelectTrigger
+            id="filter-taxa"
+            className={filterSelectClass}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              setOpen((prev) => !prev);
+            }}
+          >
+            <span>
+              {currentSelectedTaxa.length === 0
+                ? taxonomyText.triggerLabel
+                : currentSelectedTaxa.length === 1
+                  ? currentSelectedTaxa[0]
+                  : `${currentSelectedTaxa.length} selected`}
             </span>
-          ))}
-        </div>
-      )}
+          </SelectTrigger>
+        </Select>
 
-      {open && (
-        <div className="absolute top-full z-50 mt-1 max-h-48 w-56 overflow-y-auto rounded border border-border bg-card shadow-lg">
-          {availableTaxa.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-muted-foreground">No data available</div>
-          ) : (
-            availableTaxa.map((taxon) => {
-              const selected = filters.selectedTaxa.includes(taxon);
-              return (
-                <button
-                  key={taxon}
-                  type="button"
-                  onClick={() => actions.toggleTaxon(taxon)}
-                  className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-accent"
-                >
-                  <span
-                    className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-sm border ${selected ? "border-primary bg-primary" : "border-border"}`}
-                  >
-                    {selected && <CheckIcon className="h-2.5 w-2.5 text-primary-foreground" />}
-                  </span>
-                  {taxon}
-                </button>
-              );
-            })
-          )}
-        </div>
-      )}
+        {open && (
+          <div className="absolute top-full left-0 z-50 mt-1 w-full rounded-md border bg-background shadow-lg">
+            <div className="p-2">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={taxonomyText.searchPlaceholder}
+                className="w-full rounded-md border px-3 py-2 text-sm"
+              />
+            </div>
+
+            <div className="flex gap-2 px-2 pb-2">
+              <button
+                type="button"
+                onClick={() => updateFilters({ selectedTaxa: availableTaxa })}
+                className="rounded-md border px-3 py-2 text-sm"
+              >
+                Select all
+              </button>
+              <button
+                type="button"
+                onClick={() => updateFilters({ selectedTaxa: [] })}
+                className="rounded-md border px-3 py-2 text-sm"
+              >
+                Clear all
+              </button>
+            </div>
+
+            <div className="max-h-64 overflow-y-auto border-t p-1">
+              {filteredTaxa.length === 0 ? (
+                <div className="px-3 py-2 text-sm text-muted-foreground">
+                  {taxonomyText.emptyLabel}
+                </div>
+              ) : (
+                filteredTaxa.map((taxon) => {
+                  const selected = currentSelectedTaxa.includes(taxon);
+
+                  return (
+                    <button
+                      key={taxon}
+                      type="button"
+                      onClick={() => toggleTaxon(taxon)}
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
+                    >
+                      {selected ? (
+                        <CheckIcon className="flex h-4 w-4 rounded border" />
+                      ) : (
+                        <span className="h-4 w-4 rounded border" />
+                      )}
+                      {taxon}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
