@@ -3,6 +3,20 @@ import { useState, useRef } from "react";
 
 type Pin = { lat: number; lng: number };
 
+const dragImage = new Image();
+dragImage.src =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    `<svg width="28" height="40" viewBox="0 0 28 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 40 14 40C14 40 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="#EA4335"/>
+      <circle cx="14" cy="14" r="6" fill="white"/>
+    </svg>`,
+  );
+
+function handleDragStart(e: React.DragEvent<HTMLSpanElement>) {
+  e.dataTransfer.setDragImage(dragImage, 14, 40);
+}
+
 function MapWithDrop({
   pins,
   setPins,
@@ -83,10 +97,23 @@ export function GoogleMaps() {
       <div style={{ marginBottom: "8px" }}>
         <span
           draggable
-          style={{ cursor: "grab", fontSize: "28px", userSelect: "none" }}
+          onDragStart={handleDragStart}
+          style={{ cursor: "grab", userSelect: "none", display: "inline-block" }}
           title="Dra meg til kartet"
         >
-          📍
+          <svg
+            width="28"
+            height="40"
+            viewBox="0 0 28 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 40 14 40C14 40 28 24.5 28 14C28 6.268 21.732 0 14 0Z"
+              fill="#EA4335"
+            />
+            <circle cx="14" cy="14" r="6" fill="white" />
+          </svg>
         </span>
         <span style={{ marginLeft: "8px", fontSize: "14px", color: "#555" }}>
           Dra pinnen til kartet for å plassere den
