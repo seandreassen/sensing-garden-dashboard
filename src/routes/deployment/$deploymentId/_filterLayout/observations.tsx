@@ -1,11 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
+import { Download } from "lucide-react";
 import { useState } from "react";
 
 import { columns } from "@/components/observationTable/columns";
 import { DataTable } from "@/components/observationTable/DataTable";
+import { Button } from "@/components/ui/Button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover";
 import { Spinner } from "@/components/ui/Spinner";
+import { useDownloadObservations } from "@/lib/hooks/useDownloadedObservations";
+import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
+import type { Observation } from "@/lib/types/api";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   component: RouteComponent,
@@ -27,7 +33,94 @@ function RouteComponent() {
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     const newSorting = typeof updater === "function" ? updater(sorting) : updater;
     setSorting(newSorting);
-    setNextToken(undefined); // reset cursor
+    setNextToken(undefined);
+  };
+
+  const { fetchObservationsForDownload } = useDownloadObservations();
+  const filters = useFilters();
+
+  const [downloadCSV, setDownloadCSV] = useState(true);
+  const [downloadJSON, setDownloadJSON] = useState(true);
+  const [downloadImages, setDownloadImages] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      const data = await fetchObservationsForDownload({
+        sortBy: sorting[0]?.id,
+        sortDesc: sorting[0]?.desc,
+        deviceFilter,
+      });
+      const items: Observation[] = data.items ?? [];
+
+      const headers: (keyof Observation)[] = ["timestamp", "device_id"];
+      if (filters.taxonomyLevel === "family") {
+        headers.push("family", "family_confidence");
+      } else if (filters.taxonomyLevel === "genus") {
+        headers.push("genus", "genus_confidence");
+      } else if (filters.taxonomyLevel === "species") {
+        headers.push("species", "species_confidence");
+      }
+
+      if (downloadCSV) {
+        const rows = items.map((obj) =>
+          headers
+            .map((h) => {
+              const val = obj[h];
+              if (val === undefined || val === null) {
+                return "";
+              }
+              const str = String(val);
+              if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+                return `"${str.replace(/"/g, '""')}"`;
+              }
+              return str;
+            })
+            .join(","),
+        );
+        const csv = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Sensing_Garden_Observations.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      if (downloadJSON) {
+        // Lag et nytt array med kun de feltene vi vil ha med
+        const filteredItems: Partial<Observation>[] = items.map((obj) => {
+          const filtered: Record<string, string | number | undefined> = {};
+          for (let i = 0; i < headers.length; i++) {
+            const h = headers[i];
+            filtered[h] = obj[h]; // OK nå
+          }
+          return filtered; // Returner hvert objekt
+        });
+
+        // Lag blob og last ned filen
+        const blob = new Blob([JSON.stringify(filteredItems, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Sensing_Garden_Observations.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      if (downloadImages) {
+        // TODO: implement image download
+      }
+      // CSV / JSON download code
+    } catch {
+      // TODO: handle error properly
+    }
   };
 
   return isLoading ? (
@@ -35,14 +128,72 @@ function RouteComponent() {
       <Spinner className="size-8" />
     </div>
   ) : (
-    <DataTable
-      columns={columns}
-      data={observations?.items ?? []}
-      nextToken={observations?.nextToken}
-      isLoading={isLoading}
-      sorting={sorting}
-      onLoadMore={(token) => setNextToken(token)}
-      onSortingChange={handleSortingChange}
-    />
+    <div className="flex flex-col gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Observations</h2>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className="inline-flex items-center gap-2">
+              <Download size={16} /> Export data
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="flex w-64 flex-col gap-1 p-3">
+            <p className="px-2 pb-2 text-sm font-medium text-muted-foreground">Select formats</p>
+
+            {/* CSV */}
+            <button
+              onClick={() => setDownloadCSV((prev) => !prev)}
+              className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted/50"
+            >
+              CSV
+              <span className="w-4 text-right text-xs">{downloadCSV ? "✓" : ""}</span>
+            </button>
+
+            {/* JSON */}
+            <button
+              onClick={() => setDownloadJSON((prev) => !prev)}
+              className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted/50"
+            >
+              JSON
+              <span className="w-4 text-right text-xs">{downloadJSON ? "✓" : ""}</span>
+            </button>
+
+            {/* Images */}
+            <button
+              onClick={() => setDownloadImages((prev) => !prev)}
+              className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted/50"
+            >
+              Images (ZIP)
+              <span className="w-4 text-right text-xs">{downloadImages ? "✓" : ""}</span>
+            </button>
+
+            <div className="my-2 h-px bg-border" />
+
+            {/* Download */}
+            <Button
+              className="w-full"
+              disabled={!downloadCSV && !downloadJSON && !downloadImages}
+              onClick={handleDownload}
+            >
+              Download data
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Table */}
+      <DataTable
+        columns={columns}
+        data={observations?.items ?? []}
+        nextToken={observations?.nextToken}
+        isLoading={isLoading}
+        sorting={sorting}
+        onLoadMore={(token) => setNextToken(token)}
+        onSortingChange={handleSortingChange}
+      />
+    </div>
   );
 }
