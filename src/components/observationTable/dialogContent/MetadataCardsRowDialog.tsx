@@ -18,7 +18,7 @@ import type { Observation } from "@/lib/types/api";
 * @todo Implement visualization for confidence percentage.
 */
 
-const ObservationMetadata = ({ observationData }: { observationData?: Observation }) => {
+function MetadataCardsRowDialog({ observationData }: { observationData?: Observation }) {
   const timestampReadable = observationData?.timestamp
     ? new Date(observationData?.timestamp).toLocaleString("en-US", {
         year: "numeric",
@@ -68,5 +68,5 @@ const ObservationMetadata = ({ observationData }: { observationData?: Observatio
       </div>
     </div>
   );
-};
-export { ObservationMetadata };
+}
+export { MetadataCardsRowDialog };

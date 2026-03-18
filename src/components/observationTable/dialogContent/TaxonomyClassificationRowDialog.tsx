@@ -17,7 +17,7 @@ import type { Observation } from "@/lib/types/api";
   Passed down from parent: "observation.tsx", which fetches from api with the hook "useObservations.tsx".
 */
 
-const TaxonomyClassification = ({ observationData }: { observationData?: Observation }) => {
+function TaxonomyClassificationRowDialog({ observationData }: { observationData?: Observation }) {
   return (
     <>
       <h1 className="mb-4 border-b py-4 text-lg">Taxonomy classification</h1>
@@ -38,5 +38,5 @@ const TaxonomyClassification = ({ observationData }: { observationData?: Observa
       </Card>
     </>
   );
-};
-export { TaxonomyClassification };
+}
+export { TaxonomyClassificationRowDialog };

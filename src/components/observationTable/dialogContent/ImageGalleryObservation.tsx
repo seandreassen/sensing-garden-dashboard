@@ -20,7 +20,7 @@ import "react-image-gallery/styles/image-gallery.css";
  * @param image_url - URL of the observation image. Falls back to an empty string if undefined.
  */
 
-const ImageGalleryObservation = ({ observationData }: { observationData?: Observation }) => {
+function ImageGalleryObservation({ observationData }: { observationData?: Observation }) {
   const galleryRef = useRef<ImageGalleryRef>(null);
   const images: GalleryItem[] = [
     {
@@ -42,6 +42,6 @@ const ImageGalleryObservation = ({ observationData }: { observationData?: Observ
       <ImageGallery ref={galleryRef} items={images} showPlayButton={false} showBullets />
     </div>
   );
-};
+}
 
 export { ImageGalleryObservation };

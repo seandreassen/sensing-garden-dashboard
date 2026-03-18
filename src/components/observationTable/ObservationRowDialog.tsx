@@ -1,8 +1,8 @@
 import { ConfirmObservation } from "@/components/observationTable/dialogContent/ConfirmObservation";
 import { EnvironmentDataPerObservation } from "@/components/observationTable/dialogContent/EnvironmentDataPerObservation";
 import { ImageGalleryObservation } from "@/components/observationTable/dialogContent/ImageGalleryObservation";
-import { ObservationMetadata } from "@/components/observationTable/dialogContent/MetadataCardsRowDialog";
-import { TaxonomyClassification } from "@/components/observationTable/dialogContent/TaxonomyClassificationRowDialog";
+import { MetadataCardsRowDialog } from "@/components/observationTable/dialogContent/MetadataCardsRowDialog";
+import { TaxonomyClassificationRowDialog } from "@/components/observationTable/dialogContent/TaxonomyClassificationRowDialog";
 import {
   Dialog,
   DialogContent,
@@ -44,13 +44,13 @@ import { cn } from "@/lib/utils";
  *
  */
 
-type MoreInfoObservationProps = {
+type ObservationRowDialogProps = {
   onClose: () => void;
   observationData?: Observation;
   openStatus: boolean;
 };
 
-function MoreInfoObservation({ onClose, observationData, openStatus }: MoreInfoObservationProps) {
+function ObservationRowDialog({ onClose, observationData, openStatus }: ObservationRowDialogProps) {
   return (
     <Dialog open={openStatus} onOpenChange={onClose}>
       <DialogContent className={cn("flex flex-col !max-h-6/7 lg: sm:!max-w-1/2  col-1 mx-auto ")}>
@@ -64,12 +64,12 @@ function MoreInfoObservation({ onClose, observationData, openStatus }: MoreInfoO
         <div aria-label="Data cards on selected observation." className="overflow-y-auto px-4">
           <ImageGalleryObservation aria-label="image-gallery" observationData={observationData} />
 
-          <ObservationMetadata
+          <MetadataCardsRowDialog
             aria-label="observation metadata"
             observationData={observationData}
           />
 
-          <TaxonomyClassification
+          <TaxonomyClassificationRowDialog
             aria-label="Taxonomy classification"
             observationData={observationData}
           />
@@ -83,4 +83,4 @@ function MoreInfoObservation({ onClose, observationData, openStatus }: MoreInfoO
     </Dialog>
   );
 }
-export { MoreInfoObservation };
+export { ObservationRowDialog };

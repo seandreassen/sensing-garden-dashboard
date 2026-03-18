@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/Button";
  * @todo connect verification buttons to database. (If database support for verification status is available.)
    
  */
-const ConfirmObservation = () => {
+function ConfirmObservation() {
   return (
     <div className="flex flex-row gap-4">
       <Button
@@ -55,6 +55,6 @@ const ConfirmObservation = () => {
       </Button>
     </div>
   );
-};
+}
 
 export { ConfirmObservation };

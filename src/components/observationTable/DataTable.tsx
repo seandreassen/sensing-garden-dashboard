@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { MoreInfoObservation } from "@/components/observationTable/ObservationRowDialog";
+import { ObservationRowDialog } from "@/components/observationTable/ObservationRowDialog";
 import {
   Table,
   TableBody,
@@ -53,7 +53,7 @@ function DataTable<TData extends Observation, TValue>({
   };
   return (
     <div className="overflow-hidden rounded-md border">
-      <MoreInfoObservation
+      <ObservationRowDialog
         onClose={() => setOpen(false)}
         observationData={observationData}
         openStatus={open}

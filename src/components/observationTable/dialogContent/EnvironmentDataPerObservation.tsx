@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/Card";
  * @todo Minor style tweaks to match figma model
  *
  */
-const EnvironmentDataPerObservation = () => {
+function EnvironmentDataPerObservation() {
   return (
     <>
       <h1 className="mb-4 border-b py-4 text-lg">Environmental conditions at capture</h1>
@@ -42,5 +42,5 @@ const EnvironmentDataPerObservation = () => {
       </div>
     </>
   );
-};
+}
 export { EnvironmentDataPerObservation };
