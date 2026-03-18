@@ -31,7 +31,7 @@ interface DeviceIdProps {
 interface Observation {
   timestamp: string;
   device_id: string;
-  model_id?: string;
+  model_id: string;
   species: string;
   genus: string;
   family: string;
