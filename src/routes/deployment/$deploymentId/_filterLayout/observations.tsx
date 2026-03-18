@@ -8,7 +8,6 @@ import { DataTable } from "@/components/observationTable/DataTable";
 import { Button } from "@/components/ui/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover";
 import { Spinner } from "@/components/ui/Spinner";
-import { useDownloadObservations } from "@/lib/hooks/useDownloadedObservations";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 import type { Observation } from "@/lib/types/api";
@@ -36,7 +35,6 @@ function RouteComponent() {
     setNextToken(undefined);
   };
 
-  const { fetchObservationsForDownload } = useDownloadObservations();
   const filters = useFilters();
 
   const [downloadCSV, setDownloadCSV] = useState(true);
@@ -45,12 +43,7 @@ function RouteComponent() {
 
   const handleDownload = async () => {
     try {
-      const data = await fetchObservationsForDownload({
-        sortBy: sorting[0]?.id,
-        sortDesc: sorting[0]?.desc,
-        deviceFilter,
-      });
-      const items: Observation[] = data.items ?? [];
+      const items: Observation[] = observations?.items ?? [];
 
       const headers: (keyof Observation)[] = ["timestamp", "device_id"];
       if (filters.taxonomyLevel === "family") {
@@ -90,17 +83,15 @@ function RouteComponent() {
       }
 
       if (downloadJSON) {
-        // Lag et nytt array med kun de feltene vi vil ha med
         const filteredItems: Partial<Observation>[] = items.map((obj) => {
           const filtered: Record<string, string | number | undefined> = {};
           for (let i = 0; i < headers.length; i++) {
             const h = headers[i];
-            filtered[h] = obj[h]; // OK nå
+            filtered[h] = obj[h];
           }
-          return filtered; // Returner hvert objekt
+          return filtered;
         });
 
-        // Lag blob og last ned filen
         const blob = new Blob([JSON.stringify(filteredItems, null, 2)], {
           type: "application/json",
         });
@@ -117,7 +108,6 @@ function RouteComponent() {
       if (downloadImages) {
         // TODO: implement image download
       }
-      // CSV / JSON download code
     } catch {
       // TODO: handle error properly
     }
