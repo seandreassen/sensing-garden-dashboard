@@ -18,41 +18,6 @@ interface EnvironmentData {
   location?: { lat?: number; long?: number; alt?: number };
 }
 
-interface ClassificationCandidate {
-  name: string;
-  confidence: number;
-}
-
-interface ClassificationData {
-  family?: ClassificationCandidate[];
-  genus?: ClassificationCandidate[];
-  species?: ClassificationCandidate[];
-}
-
-interface Classification {
-  device_id: string;
-  timestamp: string;
-  model_id: string;
-  family: string;
-  genus: string;
-  species: string;
-  family_confidence: number;
-  genus_confidence: number;
-  species_confidence: number;
-  classification_data?: ClassificationData;
-  image_url?: string;
-  image_key?: string;
-  image_bucket?: string;
-  location?: Location;
-  environment?: EnvironmentData;
-}
-
-interface PaginatedResponse<T> {
-  items: T[];
-  count: number;
-  next_token?: string;
-}
-
 interface Deployment {
   id: string;
   active: boolean;
@@ -84,6 +49,7 @@ interface Observation {
 
 interface ObservationsResponse {
   items: Observation[];
+  count: number;
   nextToken: string | null;
 }
 
@@ -107,9 +73,6 @@ type WorkspaceTab = "overview" | "analytics" | "observations";
 export type {
   Location,
   EnvironmentData,
-  ClassificationData,
-  Classification,
-  PaginatedResponse,
   Deployment,
   DeviceIdProps,
   Observation,
