@@ -53,7 +53,6 @@ function useObservations(searchParams?: SearchParams) {
       if (!res.ok) {
         throw new Error(`Failed to fetch observations: ${res.status}`);
       }
-
       return res.json();
     },
   });

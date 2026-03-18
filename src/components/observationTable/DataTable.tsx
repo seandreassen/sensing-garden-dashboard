@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { MoreInfoObservation } from "@/components/observationTable/MoreInfoObservation";
+import { MoreInfoObservation } from "@/components/observationTable/ObservationRowDialog";
 import {
   Table,
   TableBody,

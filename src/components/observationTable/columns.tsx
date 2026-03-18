@@ -4,11 +4,12 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import type { Observation } from "@/lib/types/api";
 
-/*
-Columns: Image, Hub, Family, Genus, Species and timestamp.
-  Should allow sort by timestamp.
-  Maybe later an observation status will be added to allow confirmation of observations.
-  */
+/**
+* Columns: Image, Hub, Family, Genus, Species and timestamp.
+* Should allow sort by timestamp.
+* Maybe later an observation status will be added to allow confirmation of observations.
+
+*/
 
 const columns: ColumnDef<Observation>[] = [
   {
@@ -18,7 +19,6 @@ const columns: ColumnDef<Observation>[] = [
         className="text-align center h-20 w-20 text-wrap"
         src={row.original.image_url ?? ""}
         aria-label="image of observation"
-        loading="lazy"
       />
     ),
   },

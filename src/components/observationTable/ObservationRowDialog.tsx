@@ -1,8 +1,8 @@
-import { ConfirmObservation } from "@/components/observationTable/ModalboxContent/ConfirmObservation";
-import { EnvironmentDataPerObservation } from "@/components/observationTable/ModalboxContent/EnvironmentDataPerObservation";
-import { ImageGalleryObservation } from "@/components/observationTable/ModalboxContent/ImageGalleryObservation";
-import { ObservationMetadata } from "@/components/observationTable/ModalboxContent/Metadata";
-import { TaxonomyClassification } from "@/components/observationTable/ModalboxContent/TaxonomyClassification";
+import { ConfirmObservation } from "@/components/observationTable/modalboxContent/ConfirmObservation";
+import { EnvironmentDataPerObservation } from "@/components/observationTable/modalboxContent/EnvironmentDataPerObservation";
+import { ImageGalleryObservation } from "@/components/observationTable/modalboxContent/ImageGalleryObservation";
+import { ObservationMetadata } from "@/components/observationTable/modalboxContent/MetadataCardsRowDialog";
+import { TaxonomyClassification } from "@/components/observationTable/modalboxContent/TaxonomyClassificationRowDialog";
 import {
   Dialog,
   DialogContent,

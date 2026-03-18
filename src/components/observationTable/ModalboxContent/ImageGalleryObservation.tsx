@@ -10,8 +10,8 @@ import "react-image-gallery/styles/image-gallery.css";
  * Image gallery for displaying photos tied to an observation.
  * Built with `react-image-gallery`.
  *
- * @status Incomplete — currently hardcoded with two placeholder images from picsum.photos.
- * Only the first image slot uses `image_url` from the observation.
+ * @status Incomplete — Only the first image slot uses `image_url` from the observation. Twoo placeholder images from picsum.photos are hardcoded in
+ * Should take in array of images..
  *
  * @todo Replace placeholder images with actual observation images when multiple image
  * URLs are available in the {@link Observation} object.
