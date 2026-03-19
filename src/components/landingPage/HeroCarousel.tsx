@@ -53,8 +53,8 @@ export function HeroCarousel() {
           className="absolute inset-x-0 w-full object-cover transition-opacity duration-1000"
           style={{
             opacity: i === current ? 1 : 0,
-            top: "-10%",
-            height: "120%",
+            top: "-5%",
+            height: "110%",
             transform: `translateY(${offsetY}px)`,
           }}
           aria-hidden="true"
