@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-import img1 from "@/assets/img1.png";
-import img2 from "@/assets/img2.png";
-import img3 from "@/assets/img3.png";
-import img4 from "@/assets/img4.png";
+import img1 from "@/assets/blueSky.png";
+import img2 from "@/assets/garden.png";
+import img3 from "@/assets/rooftopGarden.png";
+import img4 from "@/assets/rooftopSkyline.png";
 
 const images = [img1, img2, img3, img4];
 const INTERVAL_MS = 5000;
