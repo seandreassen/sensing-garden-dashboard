@@ -81,9 +81,9 @@ function RouteComponent() {
               }
               return str;
             })
-            .join(","),
+            .join(", "),
         );
-        const csv = [headers.join(","), ...rows].join("\n");
+        const csv = [headers.join(", "), ...rows].join("\n");
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -205,7 +205,7 @@ function RouteComponent() {
 
             {/* Download */}
             <Button
-              className="w-full"
+              className="w-full hover:scale-105"
               disabled={!downloadCSV && !downloadJSON && !downloadImages}
               onClick={handleDownload}
             >
