@@ -121,7 +121,6 @@ function RouteComponent() {
       if (downloadImages) {
         const zip = new JSZip();
         const folder = zip.folder("images");
-
         if (!folder) {
           return;
         }
@@ -141,7 +140,6 @@ function RouteComponent() {
         }
 
         const content = await zip.generateAsync({ type: "blob" });
-
         const url = URL.createObjectURL(content);
         const a = document.createElement("a");
         a.href = url;
@@ -152,7 +150,7 @@ function RouteComponent() {
         URL.revokeObjectURL(url);
       }
     } catch {
-      // TODO: handle error properly
+      alert("Something went wrong while downloading. Please try again.");
     }
   };
 
