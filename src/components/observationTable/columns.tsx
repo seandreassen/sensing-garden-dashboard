@@ -19,6 +19,7 @@ const columns: ColumnDef<Observation>[] = [
         className="text-align center h-20 w-20 text-wrap"
         src={row.original.image_url ?? ""}
         aria-label="image of observation"
+        loading="lazy"
       />
     ),
   },

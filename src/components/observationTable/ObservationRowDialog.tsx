@@ -1,8 +1,8 @@
-import { ConfirmObservation } from "@/components/observationTable/dialogContent/ConfirmObservation";
-import { EnvironmentDataPerObservation } from "@/components/observationTable/dialogContent/EnvironmentDataPerObservation";
-import { ImageGalleryObservation } from "@/components/observationTable/dialogContent/ImageGalleryObservation";
-import { MetadataCardsRowDialog } from "@/components/observationTable/dialogContent/MetadataCardsRowDialog";
-import { TaxonomyClassificationRowDialog } from "@/components/observationTable/dialogContent/TaxonomyClassificationRowDialog";
+import { ConfirmObservation } from "@/components/observationTable/observationDialog/ConfirmObservation";
+import { EnvironmentDataPerObservation } from "@/components/observationTable/observationDialog/EnvironmentDataPerObservation";
+import { ImageGalleryObservation } from "@/components/observationTable/observationDialog/ImageGalleryObservation";
+import { MetadataCardsRowDialog } from "@/components/observationTable/observationDialog/MetadataCardsRowDialog";
+import { TaxonomyClassificationRowDialog } from "@/components/observationTable/observationDialog/TaxonomyClassificationRowDialog";
 import {
   Dialog,
   DialogContent,
@@ -76,7 +76,7 @@ function ObservationRowDialog({ onClose, observationData, openStatus }: Observat
 
           <EnvironmentDataPerObservation aria-label="Environmental conditions" />
         </div>
-        <DialogFooter>
+        <DialogFooter className={cn("sm:flex-col ")}>
           <ConfirmObservation />
         </DialogFooter>
       </DialogContent>

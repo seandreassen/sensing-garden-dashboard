@@ -38,8 +38,14 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
     },
   ];
   return (
-    <div className="mx-auto my-auto sm:w-6/7">
-      <ImageGallery ref={galleryRef} items={images} showPlayButton={false} showBullets />
+    <div className="mx-auto my-auto sm:w-xs">
+      <ImageGallery
+        showThumbnails={false}
+        ref={galleryRef}
+        items={images}
+        showPlayButton={false}
+        showBullets
+      />
     </div>
   );
 }
