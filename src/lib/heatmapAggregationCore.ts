@@ -154,24 +154,6 @@ function getMaxCount(cells: HeatmapCell[][]): number {
   return maxCount;
 }
 
-export {
-  DAY_LABELS,
-  HOUR_LABELS,
-  applyEnvData,
-  buildEnvLookup,
-  filterObservations,
-  formatMonthKey,
-  formatDateKey,
-  getMaxCount,
-  getStartOfDay,
-  getWeekStart,
-  jsDayToMondayIndex,
-  monthDayFormatter,
-  monthFormatter,
-  pickHeatmapMode,
-};
-export type { HeatmapCell, HeatmapGrid, HeatmapMode };
-
 function formatDateKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
     date.getDate(),
@@ -189,3 +171,21 @@ function getWeekStart(date: Date): Date {
 function formatMonthKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
+
+export {
+  DAY_LABELS,
+  HOUR_LABELS,
+  applyEnvData,
+  buildEnvLookup,
+  filterObservations,
+  formatMonthKey,
+  formatDateKey,
+  getMaxCount,
+  getStartOfDay,
+  getWeekStart,
+  jsDayToMondayIndex,
+  monthDayFormatter,
+  monthFormatter,
+  pickHeatmapMode,
+};
+export type { HeatmapCell, HeatmapGrid, HeatmapMode };
