@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
+import JSZip from "jszip";
 import { Download } from "lucide-react";
 import { useState } from "react";
 
@@ -15,6 +16,18 @@ import type { Observation } from "@/lib/types/api";
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   component: RouteComponent,
 });
+
+const fetchImageBlob = async (url: string): Promise<Blob | null> => {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      return null;
+    }
+    return await res.blob();
+  } catch {
+    return null;
+  }
+};
 
 function RouteComponent() {
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
@@ -106,7 +119,37 @@ function RouteComponent() {
       }
 
       if (downloadImages) {
-        // TODO: implement image download
+        const zip = new JSZip();
+        const folder = zip.folder("images");
+
+        if (!folder) {
+          return;
+        }
+
+        for (const item of items) {
+          if (!item.image_url) {
+            continue;
+          }
+
+          const blob = await fetchImageBlob(item.image_url);
+          if (!blob) {
+            continue;
+          }
+
+          const filename = `${item.device_id}_${item.timestamp}.jpg`;
+          folder.file(filename, blob);
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+
+        const url = URL.createObjectURL(content);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Sensing_Garden_Images.zip";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
     } catch {
       // TODO: handle error properly
