@@ -68,6 +68,11 @@ function RouteComponent() {
       }
 
       if (downloadCSV) {
+        const now = new Date();
+        const timestamp = now.toLocaleString("sv-SE").replace(/[: ]/g, "-");
+
+        const filename = `Sensing_Garden_Observations_${timestamp}.csv`;
+
         const rows = items.map((obj) =>
           headers
             .map((h) => {
@@ -83,12 +88,14 @@ function RouteComponent() {
             })
             .join(", "),
         );
+
         const csv = [headers.join(", "), ...rows].join("\n");
+
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "Sensing_Garden_Observations.csv";
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -96,6 +103,11 @@ function RouteComponent() {
       }
 
       if (downloadJSON) {
+        const now = new Date();
+        const timestamp = now.toLocaleString("sv-SE").replace(/[: ]/g, "-");
+
+        const filename = `Sensing_Garden_Observations_${timestamp}.json`;
+
         const filteredItems: Partial<Observation>[] = items.map((obj) => {
           const filtered: Record<string, string | number | undefined> = {};
           for (let i = 0; i < headers.length; i++) {
@@ -108,10 +120,11 @@ function RouteComponent() {
         const blob = new Blob([JSON.stringify(filteredItems, null, 2)], {
           type: "application/json",
         });
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "Sensing_Garden_Observations.json";
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -119,6 +132,11 @@ function RouteComponent() {
       }
 
       if (downloadImages) {
+        const now = new Date();
+        const timestamp = now.toLocaleString("sv-SE").replace(/[: ]/g, "-");
+
+        const filenameZip = `Sensing_Garden_Images_${timestamp}.zip`;
+
         const zip = new JSZip();
         const folder = zip.folder("images");
         if (!folder) {
@@ -135,7 +153,9 @@ function RouteComponent() {
             continue;
           }
 
-          const filename = `${item.device_id}_${item.timestamp}.jpg`;
+          const safeTimestamp = String(item.timestamp).replace(/[: ]/g, "-");
+
+          const filename = `${item.device_id}_${safeTimestamp}.jpg`;
           folder.file(filename, blob);
         }
 
@@ -143,7 +163,7 @@ function RouteComponent() {
         const url = URL.createObjectURL(content);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "Sensing_Garden_Images.zip";
+        a.download = filenameZip;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -165,7 +185,7 @@ function RouteComponent() {
         <h2 className="text-lg font-semibold">Observations</h2>
 
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger>
             <Button className="inline-flex items-center gap-2">
               <Download size={16} /> Export data
             </Button>
