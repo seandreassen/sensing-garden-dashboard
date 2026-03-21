@@ -66,7 +66,7 @@ function LayoutComponent() {
         <Separator />
       </div>
 
-      <div className="flex w-full grow flex-col px-4 py-8">
+      <div className="flex w-full grow flex-col px-4 pt-12 pb-8">
         <Outlet />
       </div>
     </FilterProvider>
