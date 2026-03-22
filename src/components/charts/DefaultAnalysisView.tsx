@@ -14,7 +14,7 @@ const PRESET_LABELS: Record<string, string> = {
   "24h": "last 24 hours",
   "7d": "last 7 days",
   "30d": "last 30 days",
-  "3m": "last 3 montsh",
+  "3m": "last 3 months",
 };
 
 function DefaultAnalysisView({ deviceId }: DefaultAnalysisViewProps) {
