@@ -73,7 +73,7 @@ function RouteComponent() {
           <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
         </div>
         <div className="rounded-lg border border-border bg-card p-4">
-          <GoogleMaps key={deploymentId} initialPins={coordinates} center={center} />
+          <GoogleMaps key={deploymentId} initialLocations={coordinates} center={center} />
         </div>
       </div>
     </div>
