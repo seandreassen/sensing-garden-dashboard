@@ -13,6 +13,16 @@ import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 import type { Observation } from "@/lib/types/api";
 
+/**
+ * Calls data with useObservations hook with parameters from url
+ * Sorting state set in `handleSortingChange` in child `DataTable`
+ * Adds a download button which supports csv, json and zipped folder of iages.
+ *
+ * @status - Incomplete lacks pagination, date filtering, and showing confidence as bar only for select species.
+ *
+ * @todo - Implement pagination, date filtering, and show confidence for only selected taxonomy.
+ *
+ */
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   component: RouteComponent,
 });
@@ -30,22 +40,21 @@ const fetchImageBlob = async (url: string): Promise<Blob | null> => {
 };
 
 function RouteComponent() {
+  const { hub, startDate, endDate } = useFilters();
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
-  const [deviceFilter] = useState<string>();
-  const [nextToken, setNextToken] = useState<string>();
 
   const { data: observations, isLoading } = useObservations({
     sortBy: sorting[0]?.id,
     sortDesc: sorting[0]?.desc,
-    deviceFilter,
-    nextToken,
+    deviceFilter: hub || undefined,
+    startTime: startDate || undefined,
+    endTime: endDate || undefined,
     limit: 10,
   });
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     const newSorting = typeof updater === "function" ? updater(sorting) : updater;
     setSorting(newSorting);
-    setNextToken(undefined);
   };
 
   const filters = useFilters();
@@ -242,7 +251,6 @@ function RouteComponent() {
         nextToken={observations?.nextToken}
         isLoading={isLoading}
         sorting={sorting}
-        onLoadMore={(token) => setNextToken(token)}
         onSortingChange={handleSortingChange}
       />
     </div>
