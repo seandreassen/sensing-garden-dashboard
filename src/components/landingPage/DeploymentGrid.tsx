@@ -14,7 +14,7 @@ function DeploymentGrid({ deployments }: DeploymentGridProps) {
           id={deployment.id}
           active={deployment.active}
           name={deployment.name}
-          location={deployment.location}
+          place={deployment.place}
           hub_count={deployment.hub_count}
           last_updated={deployment.last_updated}
         />
