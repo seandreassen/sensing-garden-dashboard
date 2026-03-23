@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
 
-import { HubDropdown } from "@/components/landingPage/HubDropdown";
 import { Logo } from "@/components/landingPage/Logo";
 import { Button } from "@/components/ui/Button";
 
@@ -19,7 +18,6 @@ function Header() {
             <span>Welcome to the Sensing City Lab</span>
           </div>
           <div className="hidden items-center gap-4 md:flex">
-            <HubDropdown />
             <Button variant="outline" size="sm">
               Sign In
             </Button>

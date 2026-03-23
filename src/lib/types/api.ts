@@ -22,6 +22,10 @@ interface Deployment {
   id: string;
   active: boolean;
   location?: { lat: number; lng: number };
+  name?: string;
+  place?: string;
+  hub_count?: number;
+  last_updated?: string;
 }
 
 interface DeviceIdProps {
@@ -30,15 +34,15 @@ interface DeviceIdProps {
 
 // Left timestamp and device id required.
 interface Observation {
-  species?: string;
-  genus?: string;
-  family?: string;
-  species_confidence?: number;
-  genus_confidence?: number;
-  family_confidence?: number;
   timestamp: string;
   device_id: string;
-  model_id?: string;
+  model_id: string;
+  species: string;
+  genus: string;
+  family: string;
+  species_confidence: number;
+  genus_confidence: number;
+  family_confidence: number;
   image_url?: string;
   image_bucket?: string;
   image_key?: string;

@@ -1,14 +1,18 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { Progress } from "@/components/ui/Progress";
 import type { Observation } from "@/lib/types/api";
 
-/*
-Columns: Image, Hub, Family, Genus, Species and timestamp.
-  Should allow sort by timestamp.
-  Maybe later an observation status will be added to allow confirmation of observations.
-  */
+/**
+* Columns: Image, Hub, Family, Genus, Species and timestamp.
+* 
+* @status - incomplete progres sbar should match confidence.
+* @todo - Edit color of progress bar to match confidence satisfaction. 
+* @todo - When confirmations status is supported in backend, implement confirmations tatus row.
+
+*/
 
 const columns: ColumnDef<Observation>[] = [
   {
@@ -30,44 +34,65 @@ const columns: ColumnDef<Observation>[] = [
     },
   },
   {
+    accessorKey: "family",
     header: "Family",
     cell: ({ row }) => {
       const family = row.original.family ?? "-";
-      const family_confidence = row.original.family_confidence;
+      return <span>{family}</span>;
+    },
+  },
+  {
+    accessorKey: "family_confidence",
+    header: "Confidence",
+    cell: ({ row }) => {
+      const confidence = row.original.family_confidence;
       return (
-        <div className="flex flex-col">
-          <span>{family}</span>
-          <span className="text-xs text-gray-500">
-            Confidence: {family_confidence?.toFixed(4) ?? "-"}
-          </span>
+        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
     },
   },
+
   {
+    accessorKey: "genus",
     header: "Genus",
     cell: ({ row }) => {
-      const genus = row.original.genus ?? "-";
-      const genus_confidence = row.original.genus_confidence;
+      const genus = row.original.genus;
+      return <span>{genus}</span>;
+    },
+  },
+  {
+    accessorKey: "genus_confidence",
+    header: "Confidence",
+    cell: ({ row }) => {
+      const confidence = row.original.genus_confidence;
       return (
-        <div className="flex flex-col">
-          <span>{genus}</span>
-          <span className="text-xs text-gray-500">Confidence: {genus_confidence?.toFixed(4)}</span>
+        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
     },
   },
   {
+    accessorKey: "species",
     header: "Species",
     cell: ({ row }) => {
       const species = row.original.species;
-      const species_confidence = row.original.species_confidence;
+      return <span>{species}</span>;
+    },
+  },
+  {
+    accessorKey: "species_confidence",
+    header: "Confidence",
+    cell: ({ row }) => {
+      const confidence = row.original.species_confidence;
       return (
-        <div className="flex max-w-40 flex-col text-wrap">
-          <span>{species}</span>
-          <span className="text-xs text-gray-500">
-            Confidence: {species_confidence?.toFixed(4)}
-          </span>
+        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
     },
@@ -81,7 +106,7 @@ const columns: ColumnDef<Observation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Timestamp
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
