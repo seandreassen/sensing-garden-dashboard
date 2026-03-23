@@ -18,7 +18,7 @@ const buttonVariants = cva(
         confirm:
           "bg-success/10 hover:bg-success/20 focus-visible:ring-success/10  text-success focus-visible:border-success/40",
         uncertain:
-          "bg-warm/10 hover:bg-warm/20 focus-visible:ring-warm/10  text-warm focus-visible:border-warm/40",
+          "bg-warn/10 hover:bg-warn/20 focus-visible:ring-warn/10  text-warn focus-visible:border-warn/40",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
