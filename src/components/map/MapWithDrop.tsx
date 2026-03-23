@@ -1,9 +1,9 @@
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useRef, useState } from "react";
 
+import { computeMinZoomForLocations } from "@/lib/locationUtils";
 import type { Location } from "@/lib/types/api";
 
-import { computeMinZoomForLocations } from "./locationUtils";
 import { PinIcon } from "./PinIcon";
 
 const DEFAULT_ZOOM = 11;
@@ -11,7 +11,11 @@ const SINGLE_PIN_ZOOM = 15;
 
 function computeDefaultView(locations: Location[]) {
   if (locations.length === 0) {
-    return { defaultCenter: undefined, defaultZoom: DEFAULT_ZOOM, defaultBounds: undefined };
+    return {
+      defaultCenter: undefined,
+      defaultZoom: DEFAULT_ZOOM,
+      defaultBounds: undefined,
+    };
   }
 
   const lats = locations.map((l) => l.lat);
@@ -22,7 +26,11 @@ function computeDefaultView(locations: Location[]) {
   };
 
   if (locations.length === 1) {
-    return { defaultCenter: center, defaultZoom: SINGLE_PIN_ZOOM, defaultBounds: undefined };
+    return {
+      defaultCenter: center,
+      defaultZoom: SINGLE_PIN_ZOOM,
+      defaultBounds: undefined,
+    };
   }
 
   return {

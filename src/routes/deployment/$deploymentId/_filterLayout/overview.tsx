@@ -5,7 +5,7 @@ import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
 import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
-import { GoogleMaps } from "@/components/map/googleMaps";
+import { GoogleMaps } from "@/components/map/GoogleMaps";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
 import { useDeploymentCoordinates, useDeploymentCenter } from "@/lib/hooks/useDeployments";
