@@ -16,9 +16,9 @@ const buttonVariants = cva(
           "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
 
         confirm:
-          "bg-confirmGreen/10 hover:bg-confirmGreen/20 focus-visible:ring-confirmGreen/10  text-confirmGreen focus-visible:border-confirmGreen/40",
+          "bg-success/10 hover:bg-success/20 focus-visible:ring-success/10  text-success focus-visible:border-success/40",
         uncertain:
-          "bg-uncertainOrange/10 hover:bg-uncertainOrange/20 focus-visible:ring-uncertainOrange/10  text-uncertainOrange focus-visible:border-uncertainOrange/40",
+          "bg-warm/10 hover:bg-warm/20 focus-visible:ring-warm/10  text-warm focus-visible:border-warm/40",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

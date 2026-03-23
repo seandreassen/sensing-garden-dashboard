@@ -21,6 +21,7 @@ interface EnvironmentData {
 interface Deployment {
   id: string;
   active: boolean;
+  location?: { lat: number; lng: number };
 }
 
 interface DeviceIdProps {
@@ -41,8 +42,6 @@ interface Observation {
   image_url?: string;
   image_bucket?: string;
   image_key?: string;
-  location?: Location;
-  environment?: EnvironmentData;
 }
 
 interface ObservationsResponse {

@@ -1,4 +1,4 @@
-import { Calendar, Radio, Percent, Cpu } from "lucide-react";
+import { CalendarIcon, RadioIcon, PercentIcon, CpuIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/Card";
 import type { Observation } from "@/lib/types/api";
@@ -34,21 +34,21 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
       <h1 className="mb-4 border-b py-4 text-lg">Observation metadata</h1>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card className="flex flex-row flex-wrap gap-0">
-          <Calendar className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
+          <CalendarIcon className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
           <CardContent className="py-auto flex-1">
             <h2 className="top-2 pb-1 text-muted-foreground">Timestamp</h2>
             <p>{timestampReadable}</p>
           </CardContent>
         </Card>
         <Card className="flex flex-row flex-wrap gap-0">
-          <Radio className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
+          <RadioIcon className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
           <CardContent className="flex-1 justify-center">
             <h2 className="pb-1 text-muted-foreground">Hub ID</h2>
             <p className="text-wrap">{observationData?.device_id ?? "Not found"}</p>
           </CardContent>
         </Card>
         <Card className="flex flex-row flex-wrap gap-0">
-          <Percent className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
+          <PercentIcon className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
           <CardContent className="flex-1 justify-center">
             <h2 className="pb-1 text-muted-foreground">AI Confidence </h2>
             <p className="text-wrap">
@@ -59,7 +59,7 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
           </CardContent>
         </Card>
         <Card className="flex flex-row flex-wrap gap-0">
-          <Cpu className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
+          <CpuIcon className="my-auto mr-0 ml-2 shrink-0 basis-1/8" />
           <CardContent className="flex-1 justify-center">
             <h2 className="pb-1 text-muted-foreground">Ai Model</h2>
             <p className="text-wrap">{observationData?.model_id ?? "Not found"}</p>
