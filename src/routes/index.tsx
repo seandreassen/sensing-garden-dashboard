@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { DeploymentGrid } from "@/components/landingPage/DeploymentGrid";
 import { HeroCarousel } from "@/components/landingPage/HeroCarousel";
-import { Header } from "@/components/layout/RootHeader";
+import { Header } from "@/components/RootHeader";
 import { Separator } from "@/components/ui/Separator";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDeployments } from "@/lib/hooks/useDeployments";

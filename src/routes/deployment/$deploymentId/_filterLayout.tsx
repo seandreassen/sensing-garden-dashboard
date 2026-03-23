@@ -1,12 +1,10 @@
-import { createFileRoute, Link, Outlet, stripSearchParams } from "@tanstack/react-router";
+import { createFileRoute, Outlet, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { ChevronLeftIcon } from "lucide-react";
 
+import { Header } from "@/components/deploymentLayout/DeploymentHeader";
 import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSelector";
 import { FiltersRow } from "@/components/deploymentLayout/FiltersRow";
 import { TabSelector } from "@/components/deploymentLayout/TabSelector";
-import { Header } from "@/components/layout/DeploymentHeader";
-import { buttonVariants } from "@/components/ui/button-variants";
 import { Separator } from "@/components/ui/Separator";
 import { filtersDefault, filtersSchema } from "@/lib/filters";
 import { FilterProvider } from "@/lib/filters/FilterContext";
@@ -24,21 +22,6 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout")(
 function CollapsibleNav({ deploymentId }: { deploymentId: string }) {
   return (
     <div className="overflow-hidden">
-      <div className="flex items-center gap-3 px-6 py-3">
-        <Link
-          to="/"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "gap-1 text-muted-foreground",
-          )}
-        >
-          <ChevronLeftIcon />
-          Deployments
-        </Link>
-        <Separator orientation="vertical" />
-        <h1 className="font-semibold">{deploymentId}</h1>
-      </div>
-      <Separator />
       <DeploymentSelector deploymentId={deploymentId} />
     </div>
   );
@@ -51,7 +34,7 @@ function LayoutComponent() {
   return (
     <FilterProvider>
       <Header />
-      <div className="sticky top-16.25 z-10 flex flex-col bg-background/90 backdrop-blur-lg">
+      <div className="sticky top-14 z-50 flex flex-col bg-card backdrop-blur-lg">
         <div
           className={cn(
             "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",

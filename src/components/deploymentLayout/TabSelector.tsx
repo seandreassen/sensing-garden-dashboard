@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
+import { buttonVariants } from "@/components/ui/button-variants";
+import { cn } from "@/lib/utils";
 import type { FileRoutesByTo } from "@/routeTree.gen";
 
 const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
@@ -10,15 +12,18 @@ const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
 
 function TabSelector() {
   return (
-    <nav className="mt-2">
-      <ul className="flex list-none px-6">
+    <nav className="bg-popover py-3">
+      <ul className="flex list-none gap-2 px-6">
         {tabs.map((tab) => (
           <li key={tab.route} className="flex">
             <Link
               to={tab.route}
               params={(prev) => prev}
               search={(prev) => prev}
-              className="rounded-t px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors [&.active]:bg-primary [&.active]:text-primary-foreground [&:not(.active)]:text-muted-foreground [&:not(.active)]:hover:text-foreground"
+              className={cn(
+                buttonVariants({ variant: "secondary", size: "lg" }),
+                "tracking-wide uppercase [&.active]:bg-primary [&.active]:text-primary-foreground",
+              )}
             >
               {tab.label}
             </Link>

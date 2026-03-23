@@ -153,7 +153,7 @@ function TaxaMultiSelect() {
         </Select>
 
         {open && (
-          <div className="absolute top-full left-0 z-50 mt-1 w-full rounded-md border bg-background shadow-lg">
+          <div className="absolute top-full left-0 z-50 mt-1 w-full rounded-md border bg-popover shadow-lg">
             <div className="p-2">
               <input
                 value={search}

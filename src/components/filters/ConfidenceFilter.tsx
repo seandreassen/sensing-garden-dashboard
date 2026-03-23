@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Slider } from "@/components/ui/Slider";
 import { useFilters } from "@/lib/hooks/useFilters";
-import { cn } from "@/lib/utils";
 
 import { filterFieldClass, filterLabelClass } from "./filterStyles";
 
@@ -37,7 +36,7 @@ function ConfidenceFilter() {
               key={preset.value}
               variant={active ? "default" : "outline"}
               size="lg"
-              className={cn("rounded", !active && "bg-card")}
+              className="px-2"
               onClick={() => updateFilters({ minConfidence: preset.value })}
             >
               {preset.label}
@@ -53,7 +52,7 @@ function ConfidenceFilter() {
           onValueCommitted={(value) =>
             updateFilters({ minConfidence: typeof value === "number" ? value : value[0] })
           }
-          className="mx-2 h-px flex-1 bg-border"
+          className="mx-2 h-px flex-1 rounded-full border-2 bg-border"
         />
         <span className="min-w-10 text-sm font-semibold">{sliderValue}</span>
       </div>
