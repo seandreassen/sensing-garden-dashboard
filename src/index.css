@@ -7,8 +7,8 @@
   --color-card-foreground: oklch(0.985 0 0);
   --color-popover: oklch(0.21 0.006 285.885);
   --color-popover-foreground: oklch(0.985 0 0);
-  --color-primary: oklch(0.648 0.2 131.684);
-  --color-primary-foreground: oklch(0.986 0.031 120.757);
+  --color-primary: oklch(0.7463 0.1842 125.94);
+  --color-primary-foreground: oklch(0.141 0.005 285.823);
   --color-secondary: oklch(0.274 0.006 286.033);
   --color-secondary-foreground: oklch(0.985 0 0);
   --color-muted: oklch(0.274 0.006 286.033);
@@ -95,32 +95,4 @@ select::-webkit-scrollbar-thumb {
 
 select::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
-}
-
-/* Range slider — sharp square thumb */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 4px;
-  border-radius: 0;
-  background: var(--color-border);
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 1px;
-  background: var(--color-primary);
-  cursor: pointer;
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 1px;
-  border: none;
-  background: var(--color-primary);
-  cursor: pointer;
 }

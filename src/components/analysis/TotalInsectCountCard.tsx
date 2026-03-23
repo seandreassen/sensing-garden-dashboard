@@ -1,10 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Label } from "@/components/ui/Label";
 import { Spinner } from "@/components/ui/Spinner";
-import { useCount } from "@/lib/hooks/useCount";
+import { useFilters } from "@/lib/hooks/useFilters";
+import { useObservationCount } from "@/lib/hooks/useObservationCount";
 
 function TotalInsectCountCard() {
-  const { data: count, isLoading } = useCount();
+  const { startDate, endDate, hub } = useFilters();
+  const { data: count, isLoading } = useObservationCount({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+  });
 
   return (
     <Card className="w-1/6">

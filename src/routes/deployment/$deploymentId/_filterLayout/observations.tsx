@@ -7,11 +7,13 @@ import { useState } from "react";
 import { columns } from "@/components/observationTable/columns";
 import { DataTable } from "@/components/observationTable/DataTable";
 import { Button } from "@/components/ui/Button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover";
 import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 import type { Observation } from "@/lib/types/api";
+import { cn } from "@/lib/utils";
 
 /**
  * Calls data with useObservations hook with parameters from url
@@ -44,12 +46,12 @@ function RouteComponent() {
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
 
   const { data: observations, isLoading } = useObservations({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+    limit: 10,
     sortBy: sorting[0]?.id,
     sortDesc: sorting[0]?.desc,
-    deviceFilter: hub || undefined,
-    startTime: startDate || undefined,
-    endTime: endDate || undefined,
-    limit: 10,
   });
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
@@ -194,10 +196,8 @@ function RouteComponent() {
         <h2 className="text-lg font-semibold">Observations</h2>
 
         <Popover>
-          <PopoverTrigger>
-            <Button className="inline-flex items-center gap-2">
-              <Download size={16} /> Export data
-            </Button>
+          <PopoverTrigger className={cn(buttonVariants(), "inline-flex items-center gap-2")}>
+            <Download size={16} /> Export data
           </PopoverTrigger>
 
           <PopoverContent className="flex w-64 flex-col gap-1 p-3">
@@ -248,7 +248,6 @@ function RouteComponent() {
       <DataTable
         columns={columns}
         data={observations?.items ?? []}
-        nextToken={observations?.nextToken}
         isLoading={isLoading}
         sorting={sorting}
         onSortingChange={handleSortingChange}

@@ -2,9 +2,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Label } from "@/components/ui/Label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useFamilyCount } from "@/lib/hooks/useFamilyCount";
+import { useFilters } from "@/lib/hooks/useFilters";
 
 function SpeciesRichnessCard() {
-  const { data: count, isLoading } = useFamilyCount();
+  const { startDate, endDate, hub } = useFilters();
+  const { data: count, isLoading } = useFamilyCount({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+    limit: 500,
+  });
 
   return (
     <Card className="w-1/6">

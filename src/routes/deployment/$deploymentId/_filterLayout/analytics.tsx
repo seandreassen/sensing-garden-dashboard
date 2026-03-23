@@ -17,11 +17,20 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/an
 function RouteComponent() {
   const { startDate, endDate, hub, rangePreset, taxonomyLevel, minConfidence } = useFilters();
 
-  const { data: envResult, isLoading: envLoading, isError, error } = useEnvironmentData();
-  const { data: obsResult, isLoading: obsLoading } = useObservations({
-    deviceFilter: hub,
+  const {
+    data: envResult,
+    isLoading: envLoading,
+    isError,
+    error,
+  } = useEnvironmentData({
     startTime: startDate,
     endTime: endDate,
+    hubId: hub,
+  });
+  const { data: obsResult, isLoading: obsLoading } = useObservations({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
     limit: 500,
   });
 

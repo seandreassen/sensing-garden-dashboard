@@ -20,6 +20,7 @@ const presets: { value: RangePreset; label: string }[] = [
   { value: "24h", label: "Last 24 Hours" },
   { value: "7d", label: "Last 7 Days" },
   { value: "30d", label: "Last 30 Days" },
+  { value: "3m", label: "Last 3 Months" },
   { value: "custom", label: "Custom Range" },
 ];
 

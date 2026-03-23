@@ -24,9 +24,9 @@ function RouteComponent() {
   const { startDate, endDate, hub } = useFilters();
 
   const { data, isLoading } = useObservations({
-    deviceFilter: hub,
     startTime: startDate,
     endTime: endDate,
+    hubId: hub,
     limit: 500,
   });
 

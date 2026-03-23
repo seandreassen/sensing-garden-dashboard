@@ -1,3 +1,9 @@
+interface PaginatedResponse<T> {
+  items: T[];
+  count?: number;
+  next_token?: string | null;
+}
+
 interface Location {
   lat: number;
   long: number;
@@ -17,6 +23,8 @@ interface EnvironmentData {
   device_id: string;
   location?: { lat?: number; long?: number; alt?: number };
 }
+
+interface EnvironmentResponse extends PaginatedResponse<EnvironmentData> {}
 
 interface Deployment {
   id: string;
@@ -44,14 +52,14 @@ interface Observation {
   genus_confidence: number;
   family_confidence: number;
   image_url?: string;
-  image_bucket?: string;
-  image_key?: string;
+  image_bucket: string;
+  image_key: string;
 }
 
-interface ObservationsResponse {
-  items: Observation[];
+interface ObservationsResponse extends PaginatedResponse<Observation> {}
+
+interface ObservationCountResponse {
   count: number;
-  nextToken: string | null;
 }
 
 interface Hub {
@@ -59,9 +67,15 @@ interface Hub {
   created: Date;
 }
 
-interface DevicesResponse {
-  items: Hub[];
-  next_token: { device_id: string };
+interface DevicesResponse extends PaginatedResponse<Hub> {}
+
+interface QueryParameters {
+  startTime?: string;
+  endTime?: string;
+  hubId?: string;
+  limit?: number;
+  sortBy?: string;
+  sortDesc?: boolean;
 }
 
 // Should be removed - migrate to useFilters()
@@ -74,11 +88,14 @@ type WorkspaceTab = "overview" | "analytics" | "observations";
 export type {
   Location,
   EnvironmentData,
+  EnvironmentResponse,
   Deployment,
   DeviceIdProps,
   Observation,
   ObservationsResponse,
+  ObservationCountResponse,
   DevicesResponse,
+  QueryParameters,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,

@@ -63,19 +63,19 @@ const TAXONOMY_TEXT: Record<
 > = {
   family: {
     selectedLabel: "Selected families",
-    triggerLabel: "Select taxa",
+    triggerLabel: "Select families",
     searchPlaceholder: "Search families...",
     emptyLabel: "No families found",
   },
   genus: {
     selectedLabel: "Selected genera",
-    triggerLabel: "Select taxa",
+    triggerLabel: "Select genera",
     searchPlaceholder: "Search genera...",
     emptyLabel: "No genera found",
   },
   species: {
     selectedLabel: "Selected species",
-    triggerLabel: "Select taxa",
+    triggerLabel: "Select species",
     searchPlaceholder: "Search species...",
     emptyLabel: "No species found",
   },
