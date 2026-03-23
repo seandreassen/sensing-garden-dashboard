@@ -21,8 +21,9 @@ interface EnvironmentData {
 interface Deployment {
   id: string;
   active: boolean;
+  location?: { lat: number; lng: number };
   name?: string;
-  location?: string;
+  place?: string;
   hub_count?: number;
   last_updated?: string;
 }
