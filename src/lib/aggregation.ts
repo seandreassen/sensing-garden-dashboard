@@ -1,3 +1,4 @@
+import { getObservationConfidence } from "@/lib/confidence";
 import type { Observation, TaxonomyLevel } from "@/lib/types/api";
 
 // --- Time aggregation ---
@@ -108,10 +109,9 @@ function aggregateByTime(
   const effectiveStart = startTime || deriveRange(observations).startTime;
   const effectiveEnd = endTime || deriveRange(observations).endTime;
   const buckets = generateEmptyBuckets(effectiveStart, effectiveEnd, bucket);
-  const confKey = `${taxonomyLevel}_confidence` as keyof Observation;
 
   for (const obs of observations) {
-    const confidence = (obs[confKey] as number | undefined) ?? 0;
+    const confidence = getObservationConfidence(obs, taxonomyLevel);
     if (confidence < minConfidence) {
       continue;
     }
@@ -141,11 +141,10 @@ function aggregateByTaxonomy(
   minConfidence: number = 0,
   topN: number = 10,
 ): TaxonCount[] {
-  const confKey = `${taxonomyLevel}_confidence` as keyof Observation;
   const counts = new Map<string, number>();
 
   for (const obs of observations) {
-    const confidence = (obs[confKey] as number | undefined) ?? 0;
+    const confidence = getObservationConfidence(obs, taxonomyLevel);
     if (confidence < minConfidence) {
       continue;
     }

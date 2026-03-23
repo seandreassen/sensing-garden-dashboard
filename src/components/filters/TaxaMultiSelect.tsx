@@ -11,6 +11,47 @@ import { Select, SelectTrigger } from "@/components/ui/Select";
 import type { TaxonomyLevel } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
 
+const mockTaxonomy = {
+  family: [
+    "Apidae", // bees
+    "Formicidae", // ants
+    "Culicidae", // mosquitoes
+    "Coccinellidae", // ladybugs
+    "Carabidae", // ground beetles
+    "Pieridae", // butterflies
+    "Acrididae", // grasshoppers
+    "Gryllidae", // crickets
+  ],
+
+  genus: [
+    "Apis",
+    "Bombus",
+    "Formica",
+    "Camponotus",
+    "Anopheles",
+    "Culex",
+    "Harmonia",
+    "Carabus",
+    "Pieris",
+    "Locusta",
+    "Gryllus",
+  ],
+
+  species: [
+    "Apis mellifera",
+    "Bombus terrestris",
+    "Formica rufa",
+    "Camponotus pennsylvanicus",
+    "Anopheles gambiae",
+    "Culex pipiens",
+    "Harmonia axyridis",
+    "Carabus nemoralis",
+    "Pieris rapae",
+    "Locusta migratoria",
+    "Gryllus campestris",
+  ],
+};
+
 const TAXONOMY_TEXT: Record<
   TaxonomyLevel,
   {
@@ -51,7 +92,7 @@ function TaxaMultiSelect() {
   const [search, setSearch] = useState("");
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const availableTaxa = currentSelectedTaxa;
+  const availableTaxa = useMemo(() => mockTaxonomy[taxonomyLevel] || [], [taxonomyLevel]);
 
   const filteredTaxa = useMemo(() => {
     const q = search.trim().toLowerCase();
