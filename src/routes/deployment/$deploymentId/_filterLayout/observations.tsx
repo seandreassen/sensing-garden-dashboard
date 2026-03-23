@@ -12,6 +12,17 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 import type { Observation } from "@/lib/types/api";
+
+/**
+ * Calls data with useObservations hook with parameters from url
+ * Sorting state set in `handleSortingChange` in child `DataTable`
+ * Adds a download button which supports csv, json and zipped folder of iages.
+ *
+ * @status - Incomplete lacks pagination, date filtering, and showing confidence as bar only for select species.
+ *
+ * @todo - Implement pagination, date filtering, and show confidence for only selected taxonomy.
+ *
+ */
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   component: RouteComponent,
 });

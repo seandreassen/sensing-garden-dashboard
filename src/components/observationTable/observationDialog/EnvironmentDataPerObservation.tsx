@@ -1,4 +1,4 @@
-import { Thermometer, Droplets, MapPin } from "lucide-react";
+import { ThermometerIcon, DropletsIcon, MapPinIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/Card";
 
@@ -17,7 +17,7 @@ function EnvironmentDataPerObservation() {
       <div className="flex flex-row gap-8">
         <Card className="mx-auto flex basis-1/3 flex-col">
           <CardContent className="flex flex-col items-center gap-1">
-            <Thermometer className="basis-1/3" />
+            <ThermometerIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Temperature</h2>
             <p className="basis-1/3 font-bold"> 22 C</p>
             {/*Placeholder value*/}
@@ -25,7 +25,7 @@ function EnvironmentDataPerObservation() {
         </Card>
         <Card className="mx-auto flex basis-1/3 flex-col">
           <CardContent className="flex flex-col items-center gap-1">
-            <Droplets className="basis-1/3" />
+            <DropletsIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Humidity</h2>
             <p className="basis-1/3 font-bold"> 46%</p>
             {/*Placeholder value*/}
@@ -33,7 +33,7 @@ function EnvironmentDataPerObservation() {
         </Card>
         <Card className="mx-auto flex basis-1/3 flex-col">
           <CardContent className="flex flex-col items-center gap-1">
-            <MapPin className="basis-1/3" />
+            <MapPinIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Location</h2>
             <p className="basis-1/3 font-bold"> Garden Sector A</p>
             {/*Placeholder value*/}

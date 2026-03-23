@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import type { Observation } from "@/lib/types/api";
@@ -82,7 +82,7 @@ const columns: ColumnDef<Observation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Timestamp
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },

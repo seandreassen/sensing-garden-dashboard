@@ -1,4 +1,4 @@
-import { CircleCheck, CircleAlert, CircleX } from "lucide-react";
+import { CircleCheckIcon, CircleAlertIcon, CircleXIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 
@@ -26,7 +26,7 @@ function ConfirmObservation() {
         className="flex flex-1 flex-col rounded-sm border py-4"
       >
         <div className="flex flex-col items-center gap-1">
-          <CircleCheck className="basis-1/2" />
+          <CircleCheckIcon className="basis-1/2" />
           <p className="basis-1/2 font-semibold"> CONFIRM ID</p>
           {/*Placeholder value*/}
         </div>
@@ -37,7 +37,7 @@ function ConfirmObservation() {
         className="flex flex-1 flex-col rounded-sm border py-4"
       >
         <div className="flex flex-col items-center gap-1">
-          <CircleAlert className="basis-1/2" />
+          <CircleAlertIcon className="basis-1/2" />
           <p className="basis-1/2 font-semibold"> UNCERTAIN</p>
           {/*Placeholder value*/}
         </div>
@@ -48,7 +48,7 @@ function ConfirmObservation() {
         className="flex flex-1 flex-col rounded-sm border py-4"
       >
         <div className="flex flex-col items-center gap-1">
-          <CircleX className="basis-1/2" />
+          <CircleXIcon className="basis-1/2" />
           <p className="basis-1/2 font-semibold"> REJECT ID</p>
           {/*Placeholder value*/}
         </div>
