@@ -41,8 +41,6 @@ interface Observation {
   image_url?: string;
   image_bucket?: string;
   image_key?: string;
-  location?: Location;
-  environment?: EnvironmentData;
 }
 
 interface ObservationsResponse {
