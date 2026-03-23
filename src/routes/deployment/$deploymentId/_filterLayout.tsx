@@ -5,6 +5,7 @@ import { ChevronLeftIcon } from "lucide-react";
 import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSelector";
 import { FiltersRow } from "@/components/deploymentLayout/FiltersRow";
 import { TabSelector } from "@/components/deploymentLayout/TabSelector";
+import { Header } from "@/components/layout/DeploymentHeader";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Separator } from "@/components/ui/Separator";
 import { filtersDefault, filtersSchema } from "@/lib/filters";
@@ -49,6 +50,7 @@ function LayoutComponent() {
 
   return (
     <FilterProvider>
+      <Header />
       <div className="sticky top-16.25 z-10 flex flex-col bg-background/90 backdrop-blur-lg">
         <div
           className={cn(
