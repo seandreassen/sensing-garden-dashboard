@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import type { Deployment } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 
-function DeploymentCard({ active, id, name, location, hub_count, last_updated }: Deployment) {
+function DeploymentCard({ active, id, name, place, hub_count, last_updated }: Deployment) {
   const navigate = useNavigate();
 
   const handleCardClicked = () => {
@@ -44,7 +44,7 @@ function DeploymentCard({ active, id, name, location, hub_count, last_updated }:
       {/* Location */}
       <div className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
         <MapPin className="h-3.5 w-3.5 shrink-0" />
-        <span className="truncate">{location ?? "—"}</span>
+        <span className="truncate">{place ?? "—"}</span>
       </div>
 
       {/* Divider */}
