@@ -2,10 +2,11 @@ import { ShieldCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { Label } from "@/components/ui/Label";
 import { Slider } from "@/components/ui/Slider";
 import { useFilters } from "@/lib/hooks/useFilters";
 
-import { filterFieldClass, filterLabelClass } from "./filterStyles";
+import { filterLabelClass } from "./filterStyles";
 
 const presets = [
   { value: 0, label: "All" },
@@ -23,11 +24,11 @@ function ConfidenceFilter() {
   }, [minConfidence]);
 
   return (
-    <div className={filterFieldClass}>
-      <label htmlFor="filter-confidence" className={filterLabelClass}>
-        <ShieldCheckIcon className="h-3 w-3" />
+    <div className="flex flex-col gap-2">
+      <Label htmlFor="filter-confidence" className={filterLabelClass}>
+        <ShieldCheckIcon className="size-4" />
         Minimum Confidence (0–100)
-      </label>
+      </Label>
       <div className="flex items-center gap-2">
         {presets.map((preset) => {
           const active = minConfidence === preset.value;
@@ -35,7 +36,6 @@ function ConfidenceFilter() {
             <Button
               key={preset.value}
               variant={active ? "default" : "outline"}
-              size="lg"
               className="px-2"
               onClick={() => updateFilters({ minConfidence: preset.value })}
             >

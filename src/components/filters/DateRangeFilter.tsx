@@ -1,10 +1,6 @@
 import { CalendarIcon } from "lucide-react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -49,9 +45,9 @@ function DateRangeFilter() {
   };
 
   return (
-    <div className={filterFieldClass}>
+    <div className="flex flex-col gap-2">
       <Label htmlFor="filter-date-range" className={filterLabelClass}>
-        <CalendarIcon className="h-3 w-3" />
+        <CalendarIcon className="size-4" />
         Date Range
       </Label>
       <Select value={rangePreset} onValueChange={(v) => v && handlePresetChange(v)}>

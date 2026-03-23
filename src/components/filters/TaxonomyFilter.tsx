@@ -1,10 +1,6 @@
 import { TagIcon } from "lucide-react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -26,9 +22,9 @@ function TaxonomyFilter() {
   const { updateFilters, taxonomyLevel } = useFilters();
 
   return (
-    <div className={filterFieldClass}>
+    <div className="flex flex-col gap-2">
       <Label htmlFor="filter-taxonomy-level" className={filterLabelClass}>
-        <TagIcon className="h-3 w-3" />
+        <TagIcon className="size-4" />
         Taxonomy Level
       </Label>
       <Select

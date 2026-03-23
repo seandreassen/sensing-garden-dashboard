@@ -1,11 +1,7 @@
 import { CheckIcon, GitBranchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectTrigger } from "@/components/ui/Select";
 import type { TaxonomyLevel } from "@/lib/filters";
@@ -126,9 +122,9 @@ function TaxaMultiSelect() {
   }, []);
 
   return (
-    <div className={filterFieldClass} ref={rootRef}>
+    <div className="flex flex-col gap-2" ref={rootRef}>
       <Label htmlFor="filter-taxa" className={filterLabelClass}>
-        <GitBranchIcon className="h-3 w-3" />
+        <GitBranchIcon className="size-4" />
         {taxonomyText.selectedLabel}
       </Label>
 
