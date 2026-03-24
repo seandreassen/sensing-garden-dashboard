@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { env } from "@/env";
 import { addGlobalQueryParameters } from "@/lib/queryParameters";
 import type { ObservationCountResponse, QueryParameters } from "@/lib/types/api";
 
@@ -12,7 +13,7 @@ function useObservationCount(queryParams: QueryParameters) {
       addGlobalQueryParameters(params, queryParams);
 
       const res = await fetch(
-        `https://api.sensinggarden.com/v1/classifications/count?${params.toString()}`,
+        `${env.VITE_API_BASE_URL}/classifications/count?${params.toString()}`,
       );
 
       if (!res.ok) {

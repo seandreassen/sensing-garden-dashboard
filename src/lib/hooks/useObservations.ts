@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { env } from "@/env";
 import { addGlobalQueryParameters } from "@/lib/queryParameters";
 import type { ObservationsResponse, QueryParameters } from "@/lib/types/api";
-
-const BASE_URL = "https://api.sensinggarden.com/v1";
 
 /*
 Calls api to gather list of observations. 
@@ -31,7 +30,7 @@ function useObservations(searchParams?: SearchParams) {
         params.set("next_token", searchParams.nextToken);
       }
 
-      const res = await fetch(`${BASE_URL}/classifications?${params.toString()}`);
+      const res = await fetch(`${env.VITE_API_BASE_URL}/classifications?${params.toString()}`);
 
       if (!res.ok) {
         throw new Error(`Failed to fetch observations: ${res.status}`);

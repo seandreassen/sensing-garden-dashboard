@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { env } from "@/env";
+
 export type TopFamilyRow = {
   rank: number;
   family: string;
@@ -70,7 +72,7 @@ async function fetchTopFamilies(limit: number): Promise<{
   rows: TopFamilyRow[];
   totalDetections: number;
 }> {
-  const res = await fetch("https://api.sensinggarden.com/v1/classifications");
+  const res = await fetch(`${env.VITE_API_BASE_URL}/classifications`);
 
   if (!res.ok) {
     throw new Error(`Request failed (${res.status})`);
