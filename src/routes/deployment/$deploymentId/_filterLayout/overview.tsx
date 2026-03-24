@@ -13,6 +13,9 @@ import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
+  head: () => ({
+    meta: [{ title: "Overview | Sensing Garden Dashboard" }],
+  }),
   component: RouteComponent,
 });
 

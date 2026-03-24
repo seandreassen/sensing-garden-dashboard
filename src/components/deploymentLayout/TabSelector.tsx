@@ -8,6 +8,7 @@ const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
   { label: "Overview", route: "/deployment/$deploymentId/overview" },
   { label: "Analytics", route: "/deployment/$deploymentId/analytics" },
   { label: "Observations", route: "/deployment/$deploymentId/observations" },
+  { label: "Info", route: "/deployment/$deploymentId/info" },
 ] as const;
 
 function TabSelector() {
