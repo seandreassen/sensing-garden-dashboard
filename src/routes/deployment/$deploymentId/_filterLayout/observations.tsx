@@ -26,6 +26,9 @@ import { cn } from "@/lib/utils";
  *
  */
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
+  head: () => ({
+    meta: [{ title: "Observations | Sensing Garden Dashboard" }],
+  }),
   component: RouteComponent,
 });
 

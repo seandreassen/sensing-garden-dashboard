@@ -1,6 +1,7 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 
+import { env } from "@/env";
 import type { Location } from "@/lib/types/api";
 
 import { MapWithDrop } from "./MapWithDrop";
@@ -30,7 +31,7 @@ function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }:
   const [locations, setLocations] = useState<Location[]>(initialLocations);
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+    <>
       {allowDragAndDrop && (
         <div className="mb-2 flex items-center gap-2">
           <span
@@ -44,13 +45,21 @@ function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }:
           <span className="text-sm text-gray-500">Drag the pin onto the map to place it</span>
         </div>
       )}
-      <MapWithDrop
-        locations={locations}
-        setLocations={setLocations}
-        center={center}
-        allowDragAndDrop={allowDragAndDrop}
-      />
-    </APIProvider>
+      <div className="flex h-125 items-center justify-center">
+        {env.VITE_GOOGLE_MAPS_API_KEY ? (
+          <APIProvider apiKey={env.VITE_GOOGLE_MAPS_API_KEY}>
+            <MapWithDrop
+              locations={locations}
+              setLocations={setLocations}
+              center={center}
+              allowDragAndDrop={allowDragAndDrop}
+            />
+          </APIProvider>
+        ) : (
+          <p className="text-destructive">Missing VITE_GOOGLE_MAPS_API_KEY</p>
+        )}
+      </div>
+    </>
   );
 }
 

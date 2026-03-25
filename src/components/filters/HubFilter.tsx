@@ -1,10 +1,6 @@
 import { RadioIcon } from "lucide-react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -21,9 +17,9 @@ function HubFilter() {
   const { updateFilters, hub: hubId } = useFilters();
 
   return (
-    <div className={filterFieldClass}>
+    <div className="flex flex-col gap-2">
       <Label htmlFor="filter-hub" className={filterLabelClass}>
-        <RadioIcon className="h-3 w-3" />
+        <RadioIcon className="size-4" />
         Active Hubs
       </Label>
       <Select

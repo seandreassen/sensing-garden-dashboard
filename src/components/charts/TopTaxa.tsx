@@ -10,11 +10,9 @@ import {
 } from "recharts";
 
 import type { TaxonCount } from "@/lib/aggregation";
-import type { TaxonomyLevel } from "@/lib/types/api";
 
 interface TopTaxaProps {
   data: TaxonCount[];
-  taxonomyLevel: TaxonomyLevel;
   isLoading?: boolean;
 }
 
@@ -26,19 +24,10 @@ const BAR_COLORS = [
   "var(--color-chart-5)",
 ];
 
-const LEVEL_LABELS: Record<TaxonomyLevel, string> = {
-  family: "Top families",
-  genus: "Top genera",
-  species: "Top species",
-};
-
-function TopTaxa({ data, taxonomyLevel, isLoading }: TopTaxaProps) {
+function TopTaxa({ data, isLoading }: TopTaxaProps) {
   if (isLoading) {
     return (
       <div>
-        <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-          {LEVEL_LABELS[taxonomyLevel]}
-        </h3>
         <div className="flex h-75 items-center justify-center">
           <span className="text-sm text-muted-foreground">Loading chart...</span>
         </div>
@@ -49,9 +38,6 @@ function TopTaxa({ data, taxonomyLevel, isLoading }: TopTaxaProps) {
   if (data.length === 0) {
     return (
       <div>
-        <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-          {LEVEL_LABELS[taxonomyLevel]}
-        </h3>
         <div className="flex h-75 items-center justify-center">
           <span className="text-sm text-muted-foreground">
             No taxonomy data for selected filters
@@ -63,9 +49,6 @@ function TopTaxa({ data, taxonomyLevel, isLoading }: TopTaxaProps) {
 
   return (
     <div>
-      <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-        {LEVEL_LABELS[taxonomyLevel]}
-      </h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />

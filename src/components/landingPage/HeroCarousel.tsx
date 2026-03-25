@@ -21,7 +21,7 @@ function findScrollParent(el: HTMLElement | null): HTMLElement | Window {
   return window;
 }
 
-export function HeroCarousel() {
+function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,13 +60,13 @@ export function HeroCarousel() {
           aria-hidden="true"
         />
       ))}
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-background/40" />
       <div className="absolute right-0 bottom-0 left-0 h-32 bg-linear-to-b from-transparent to-background" />
-      <div className="absolute inset-0 flex flex-col justify-center px-8 sm:px-16">
-        <h1 className="text-4xl font-black tracking-tight text-white uppercase sm:text-6xl">
+      <div className="absolute inset-0 flex flex-col justify-center px-16">
+        <h1 className="text-6xl font-black tracking-tight uppercase text-shadow-lg">
           Sensing Garden
         </h1>
-        <p className="mt-3 max-w-xl text-base text-white/80 sm:text-lg">
+        <p className="mt-3 max-w-xl text-lg text-shadow-md">
           Global monitoring network for biodiversity research and urban ecology. Select a deployment
           to explore temporal patterns and species composition.
         </p>
@@ -87,3 +87,5 @@ export function HeroCarousel() {
     </div>
   );
 }
+
+export { HeroCarousel };

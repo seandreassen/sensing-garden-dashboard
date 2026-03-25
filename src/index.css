@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: oklch(0.141 0.005 285.823);
-  --color-foreground: oklch(0.985 0 0);
-  --color-card: oklch(0.21 0.006 285.885);
-  --color-card-foreground: oklch(0.985 0 0);
-  --color-popover: oklch(0.21 0.006 285.885);
-  --color-popover-foreground: oklch(0.985 0 0);
-  --color-primary: oklch(0.7463 0.1842 125.94);
-  --color-primary-foreground: oklch(0.141 0.005 285.823);
-  --color-secondary: oklch(0.274 0.006 286.033);
-  --color-secondary-foreground: oklch(0.985 0 0);
-  --color-muted: oklch(0.274 0.006 286.033);
-  --color-muted-foreground: oklch(0.705 0.015 286.067);
-  --color-accent: oklch(0.274 0.006 286.033);
-  --color-accent-foreground: oklch(0.985 0 0);
-  --color-destructive: oklch(0.704 0.191 22.216);
-  --color-border: oklch(1 0 0 / 10%);
-  --color-input: oklch(1 0 0 / 15%);
-  --color-ring: oklch(0.405 0.101 131.063);
+  --color-background: oklch(14.93% 0.0071 178.97);
+  --color-foreground: oklch(94.61% 0 0);
+  --color-card: oklch(19.64% 0.0065 214.46);
+  --color-card-foreground: oklch(94.61% 0 0);
+  --color-popover: oklch(17.37% 0.0067 214.5);
+  --color-popover-foreground: oklch(92.49% 0 0);
+  --color-primary: oklch(74.33% 0.1835 126.01);
+  --color-primary-foreground: oklch(17.38% 0.0139 149.67);
+  --color-secondary: oklch(22.08% 0.0091 208.75);
+  --color-secondary-foreground: oklch(62.93% 0.0059 197.01);
+  --color-muted: oklch(18.06% 0.0075 196.97);
+  --color-muted-foreground: oklch(68.05% 0.0081 196.97);
+  --color-accent: oklch(21.3% 0.0078 211.08);
+  --color-accent-foreground: oklch(94.61% 0 0);
+  --color-border: oklch(27.82% 0.0099 196.6);
+  --color-input: oklch(16.36% 0.0067 178.64);
+  --color-ring: oklch(59.33% 0.1835 126.01);
+  --color-success: oklch(56% 0.1218 155.86);
+  --color-warn: oklch(74.74% 0.1796 57.14);
+  --color-destructive: oklch(57.85% 0.2138 27.17);
   --color-chart-1: oklch(0.871 0.15 154.449);
-  --color-chart-2: oklch(0.723 0.219 149.579);
+  --color-chart-2: oklch(92.271% 0.12602 156.575);
   --color-chart-3: oklch(0.627 0.194 149.214);
   --color-chart-4: oklch(0.527 0.154 150.069);
   --color-chart-5: oklch(0.448 0.119 151.328);
-  --color-success: oklch(62.7% 0.194 149.214);
-  --color-warm: oklch(66.6% 0.179 58.318);
 }
 
 @layer base {
