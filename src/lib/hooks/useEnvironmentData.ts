@@ -1,28 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { EnvironmentData } from "@/lib/types/api";
+import { env } from "@/env";
+import { getHeaders } from "@/lib/headers";
+import { addGlobalQueryParameters } from "@/lib/queryParameters";
+import type { EnvironmentResponse, QueryParameters } from "@/lib/types/api";
 
-const API_URL = "https://api.sensinggarden.com/v1/environment";
-
-function useEnvironmentData() {
-  return useQuery<EnvironmentData[], Error>({
-    queryKey: ["environmentData"],
+function useEnvironmentData(queryParams: QueryParameters) {
+  return useQuery({
+    queryKey: ["environment", queryParams],
     queryFn: async () => {
-      const res = await fetch(API_URL, {
-        headers: {
-          "X-API-Key": import.meta.env.VITE_API_KEY,
-        },
+      const params = new URLSearchParams();
+
+      addGlobalQueryParameters(params, queryParams);
+
+      const res = await fetch(`${env.VITE_API_BASE_URL}/environment?${params.toString()}`, {
+        headers: getHeaders(),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch environment data");
+        throw new Error(`Failed to fetch observation count: ${res.status}`);
       }
 
-      const json = await res.json();
-      return json.items ?? json;
+      return ((await res.json()) as EnvironmentResponse).items;
     },
-    staleTime: 1000 * 60, // 1 minute
-    refetchInterval: 1000 * 60, // auto-refetch every minute if needed
   });
 }
 

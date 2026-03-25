@@ -5,23 +5,32 @@ import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
 import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
 import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
+import { GoogleMaps } from "@/components/map/GoogleMaps";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
+import { useDeploymentCoordinates, useDeploymentCenter } from "@/lib/hooks/useDeployments";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
+  head: () => ({
+    meta: [{ title: "Overview | Sensing Garden Dashboard" }],
+  }),
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { deploymentId } = Route.useParams();
+  const coordinates = useDeploymentCoordinates(deploymentId);
+  const center = useDeploymentCenter(deploymentId);
   const { filters } = useFilterContext();
   const { startDate, endDate, hub } = useFilters();
 
   const { data, isLoading } = useObservations({
-    deviceFilter: hub,
     startTime: startDate,
     endTime: endDate,
+    hubId: hub,
     limit: 500,
   });
 
@@ -59,14 +68,40 @@ function RouteComponent() {
         <TotalInsectCountCard />
         <SpeciesRichnessCard />
       </div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border border-border bg-card p-4">
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">Detections over time</h3>
-          <DetectionsOverTime data={timeData} isLoading={isLoading} />
-        </div>
-        <div className="rounded-lg border border-border bg-card p-4">
-          <TopTaxa data={taxaData} taxonomyLevel={filters.taxonomyLevel} isLoading={isLoading} />
-        </div>
+      <div className="grid grid-cols-3 gap-6">
+        <Card className="col-span-2">
+          <CardHeader className="flex flex-col">
+            <CardTitle className="text-lg">Insect detections over time</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Daily detection count over the selected period
+            </p>
+          </CardHeader>
+          <CardContent>
+            <DetectionsOverTime data={timeData} isLoading={isLoading} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-col">
+            <CardTitle className="text-lg">Top families</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Most detected families over the selected period
+            </p>
+          </CardHeader>
+          <CardContent>
+            <TopTaxa data={taxaData} isLoading={isLoading} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-2">
+          <CardHeader className="flex flex-col">
+            <CardTitle className="text-lg">Deployment location</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Location of deployment and its contained hubs
+            </p>
+          </CardHeader>
+          <CardContent>
+            <GoogleMaps key={deploymentId} initialLocations={coordinates} center={center} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -10,22 +10,17 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as HubHubIdRouteImport } from "./routes/hub/$hubId";
 import { Route as DeploymentDeploymentIdFilterLayoutRouteImport } from "./routes/deployment/$deploymentId/_filterLayout";
 import { Route as DeploymentDeploymentIdSplatRouteImport } from "./routes/deployment/$deploymentId/$";
 import { Route as DeploymentDeploymentIdFilterLayoutIndexRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/index";
 import { Route as DeploymentDeploymentIdFilterLayoutOverviewRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/overview";
 import { Route as DeploymentDeploymentIdFilterLayoutObservationsRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/observations";
+import { Route as DeploymentDeploymentIdFilterLayoutInfoRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/info";
 import { Route as DeploymentDeploymentIdFilterLayoutAnalyticsRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/analytics";
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const HubHubIdRoute = HubHubIdRouteImport.update({
-  id: "/hub/$hubId",
-  path: "/hub/$hubId",
   getParentRoute: () => rootRouteImport,
 } as any);
 const DeploymentDeploymentIdFilterLayoutRoute =
@@ -58,6 +53,12 @@ const DeploymentDeploymentIdFilterLayoutObservationsRoute =
     path: "/observations",
     getParentRoute: () => DeploymentDeploymentIdFilterLayoutRoute,
   } as any);
+const DeploymentDeploymentIdFilterLayoutInfoRoute =
+  DeploymentDeploymentIdFilterLayoutInfoRouteImport.update({
+    id: "/info",
+    path: "/info",
+    getParentRoute: () => DeploymentDeploymentIdFilterLayoutRoute,
+  } as any);
 const DeploymentDeploymentIdFilterLayoutAnalyticsRoute =
   DeploymentDeploymentIdFilterLayoutAnalyticsRouteImport.update({
     id: "/analytics",
@@ -67,19 +68,19 @@ const DeploymentDeploymentIdFilterLayoutAnalyticsRoute =
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
-  "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdFilterLayoutRouteWithChildren;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
   "/deployment/$deploymentId/": typeof DeploymentDeploymentIdFilterLayoutIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
-  "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdFilterLayoutIndexRoute;
@@ -87,10 +88,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
-  "/hub/$hubId": typeof HubHubIdRoute;
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId/_filterLayout": typeof DeploymentDeploymentIdFilterLayoutRouteWithChildren;
   "/deployment/$deploymentId/_filterLayout/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/_filterLayout/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/_filterLayout/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/_filterLayout/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
   "/deployment/$deploymentId/_filterLayout/": typeof DeploymentDeploymentIdFilterLayoutIndexRoute;
@@ -99,29 +100,29 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
-    | "/hub/$hubId"
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId"
     | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/info"
     | "/deployment/$deploymentId/observations"
     | "/deployment/$deploymentId/overview"
     | "/deployment/$deploymentId/";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
-    | "/hub/$hubId"
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/info"
     | "/deployment/$deploymentId/observations"
     | "/deployment/$deploymentId/overview"
     | "/deployment/$deploymentId";
   id:
     | "__root__"
     | "/"
-    | "/hub/$hubId"
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId/_filterLayout"
     | "/deployment/$deploymentId/_filterLayout/analytics"
+    | "/deployment/$deploymentId/_filterLayout/info"
     | "/deployment/$deploymentId/_filterLayout/observations"
     | "/deployment/$deploymentId/_filterLayout/overview"
     | "/deployment/$deploymentId/_filterLayout/";
@@ -129,7 +130,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
-  HubHubIdRoute: typeof HubHubIdRoute;
   DeploymentDeploymentIdSplatRoute: typeof DeploymentDeploymentIdSplatRoute;
   DeploymentDeploymentIdFilterLayoutRoute: typeof DeploymentDeploymentIdFilterLayoutRouteWithChildren;
 }
@@ -141,13 +141,6 @@ declare module "@tanstack/react-router" {
       path: "/";
       fullPath: "/";
       preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/hub/$hubId": {
-      id: "/hub/$hubId";
-      path: "/hub/$hubId";
-      fullPath: "/hub/$hubId";
-      preLoaderRoute: typeof HubHubIdRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/deployment/$deploymentId/_filterLayout": {
@@ -185,6 +178,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DeploymentDeploymentIdFilterLayoutObservationsRouteImport;
       parentRoute: typeof DeploymentDeploymentIdFilterLayoutRoute;
     };
+    "/deployment/$deploymentId/_filterLayout/info": {
+      id: "/deployment/$deploymentId/_filterLayout/info";
+      path: "/info";
+      fullPath: "/deployment/$deploymentId/info";
+      preLoaderRoute: typeof DeploymentDeploymentIdFilterLayoutInfoRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdFilterLayoutRoute;
+    };
     "/deployment/$deploymentId/_filterLayout/analytics": {
       id: "/deployment/$deploymentId/_filterLayout/analytics";
       path: "/analytics";
@@ -197,6 +197,7 @@ declare module "@tanstack/react-router" {
 
 interface DeploymentDeploymentIdFilterLayoutRouteChildren {
   DeploymentDeploymentIdFilterLayoutAnalyticsRoute: typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  DeploymentDeploymentIdFilterLayoutInfoRoute: typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   DeploymentDeploymentIdFilterLayoutObservationsRoute: typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   DeploymentDeploymentIdFilterLayoutOverviewRoute: typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
   DeploymentDeploymentIdFilterLayoutIndexRoute: typeof DeploymentDeploymentIdFilterLayoutIndexRoute;
@@ -206,6 +207,8 @@ const DeploymentDeploymentIdFilterLayoutRouteChildren: DeploymentDeploymentIdFil
   {
     DeploymentDeploymentIdFilterLayoutAnalyticsRoute:
       DeploymentDeploymentIdFilterLayoutAnalyticsRoute,
+    DeploymentDeploymentIdFilterLayoutInfoRoute:
+      DeploymentDeploymentIdFilterLayoutInfoRoute,
     DeploymentDeploymentIdFilterLayoutObservationsRoute:
       DeploymentDeploymentIdFilterLayoutObservationsRoute,
     DeploymentDeploymentIdFilterLayoutOverviewRoute:
@@ -221,7 +224,6 @@ const DeploymentDeploymentIdFilterLayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HubHubIdRoute: HubHubIdRoute,
   DeploymentDeploymentIdSplatRoute: DeploymentDeploymentIdSplatRoute,
   DeploymentDeploymentIdFilterLayoutRoute:
     DeploymentDeploymentIdFilterLayoutRouteWithChildren,

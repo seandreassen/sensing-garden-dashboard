@@ -1,30 +1,34 @@
+import { CameraIcon } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Label } from "@/components/ui/Label";
 import { Spinner } from "@/components/ui/Spinner";
-import { useCount } from "@/lib/hooks/useCount";
+import { useFilters } from "@/lib/hooks/useFilters";
+import { useObservationCount } from "@/lib/hooks/useObservationCount";
 
 function TotalInsectCountCard() {
-  const { data: count, isLoading } = useCount();
+  const { startDate, endDate, hub } = useFilters();
+  const { data: count, isLoading } = useObservationCount({
+    startTime: startDate,
+    endTime: endDate,
+    hubId: hub,
+  });
 
   return (
-    <Card className="w-1/6">
-      <CardHeader>
-        <CardTitle>Total insects</CardTitle>
+    <Card className="flex h-36 w-1/5 flex-col gap-3">
+      <CardHeader className="flex flex-col gap-3">
+        <CameraIcon className="size-5 text-primary" />
+        <CardTitle className="text-sm text-muted-foreground uppercase">
+          Total observations
+        </CardTitle>
       </CardHeader>
 
-      <CardContent className="h-full">
-        <Label htmlFor="total-insect-count" className="text-sm text-muted-foreground">
-          Total detections in database
-        </Label>
-
+      <CardContent>
         {isLoading ? (
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />
           </div>
         ) : (
-          <div id="total-insect-count" className="mt-2 text-6xl font-semibold text-primary">
-            {count ?? 0}
-          </div>
+          <span className="mt-2 text-4xl font-semibold">{count ?? 0}</span>
         )}
       </CardContent>
     </Card>
