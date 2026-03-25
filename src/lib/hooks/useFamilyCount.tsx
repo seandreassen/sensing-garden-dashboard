@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
+import { getHeaders } from "@/lib/headers";
 import { addGlobalQueryParameters } from "@/lib/queryParameters";
 import type { QueryParameters } from "@/lib/types/api";
 
@@ -63,7 +64,9 @@ export function useFamilyCount(queryParams: QueryParameters) {
 
       addGlobalQueryParameters(params, queryParams);
 
-      const res = await fetch(`${env.VITE_API_BASE_URL}/classifications?${params.toString()}`);
+      const res = await fetch(`${env.VITE_API_BASE_URL}/classifications?${params.toString()}`, {
+        headers: getHeaders(),
+      });
 
       if (!res.ok) {
         throw new Error(`Failed to fetch species richness: ${res.status}`);

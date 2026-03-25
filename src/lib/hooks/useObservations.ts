@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
+import { getHeaders } from "@/lib/headers";
 import { addGlobalQueryParameters } from "@/lib/queryParameters";
 import type { ObservationsResponse, QueryParameters } from "@/lib/types/api";
 
@@ -30,7 +31,9 @@ function useObservations(searchParams?: SearchParams) {
         params.set("next_token", searchParams.nextToken);
       }
 
-      const res = await fetch(`${env.VITE_API_BASE_URL}/classifications?${params.toString()}`);
+      const res = await fetch(`${env.VITE_API_BASE_URL}/classifications?${params.toString()}`, {
+        headers: getHeaders(),
+      });
 
       if (!res.ok) {
         throw new Error(`Failed to fetch observations: ${res.status}`);

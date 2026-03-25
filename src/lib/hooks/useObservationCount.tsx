@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
+import { getHeaders } from "@/lib/headers";
 import { addGlobalQueryParameters } from "@/lib/queryParameters";
 import type { ObservationCountResponse, QueryParameters } from "@/lib/types/api";
 
@@ -14,6 +15,7 @@ function useObservationCount(queryParams: QueryParameters) {
 
       const res = await fetch(
         `${env.VITE_API_BASE_URL}/classifications/count?${params.toString()}`,
+        { headers: getHeaders() },
       );
 
       if (!res.ok) {
