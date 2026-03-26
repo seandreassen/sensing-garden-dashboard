@@ -42,7 +42,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
     device_id: hub ? [hub] : undefined,
     deployment_id: deploymentId,
     min_confidence: minConfidence,
-    taxonomy_level: selectedTaxa.length > 0 ? taxonomyLevel : undefined,
+    taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
     interval_length: interval_unit,
     interval_unit: "h",

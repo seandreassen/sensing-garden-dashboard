@@ -56,7 +56,7 @@ function addQueryParameters(
     params.set("model_id", model_id);
   }
   if (min_confidence) {
-    params.set("min_confidence", String(min_confidence));
+    params.set("min_confidence", String(min_confidence / 100));
   }
   if (taxonomy_level) {
     params.set("taxonomy_level", taxonomy_level);

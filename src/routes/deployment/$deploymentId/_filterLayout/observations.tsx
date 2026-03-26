@@ -55,7 +55,7 @@ function RouteComponent() {
     device_id: hub ? [hub] : undefined,
     deployment_id: deploymentId,
     min_confidence: minConfidence,
-    taxonomy_level: selectedTaxa.length > 0 ? taxonomyLevel : undefined,
+    taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
     sort_by: sorting[0].id as keyof Observation,
     sort_desc: sorting[0].desc,

@@ -17,7 +17,7 @@ function TotalInsectCountCard({ deploymentId }: TotalInsectCountCardProps) {
     device_id: hub ? [hub] : undefined,
     deployment_id: deploymentId,
     min_confidence: minConfidence,
-    taxonomy_level: selectedTaxa.length > 0 ? taxonomyLevel : undefined,
+    taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
   });
 
