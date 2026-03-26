@@ -67,13 +67,57 @@ interface GetDeploymentParameters {
   deployment_id: string;
 }
 
+interface TaxaCount {
+  taxa: string;
+  count: number;
+}
+
+interface TaxaCountResponse {
+  counts: TaxaCount[];
+}
+
+type TaxonomyLevel = "family" | "genus" | "species";
+
+interface GetTaxaCountParameters {
+  start_time?: string;
+  end_time?: string;
+  device_id?: string[];
+  deployment_id?: string;
+  model_id?: string;
+  min_confidence?: number;
+  taxonomy_level: TaxonomyLevel;
+  selected_taxa?: string[];
+  sort_desc?: boolean;
+}
+
+type IntervalUnit = "h" | "d";
+
+interface ObservationsTimeSeriesResponse {
+  counts: number[];
+  start_time: Date;
+  interval_length: number;
+  interval_unit: IntervalUnit;
+}
+
+interface GetObservationsTimeSeriesParameters {
+  start_time: string;
+  end_time: string;
+  device_id?: string[];
+  deployment_id?: string;
+  model_id?: string;
+  min_confidence?: number;
+  taxonomy_level?: TaxonomyLevel;
+  selected_taxa?: string[];
+  interval_length: number;
+  interval_unit: IntervalUnit;
+}
+
 interface DeviceIdProps {
   value?: string;
 }
 
-// Left timestamp and device id required.
 interface Observation {
-  timestamp: string;
+  timestamp: Date;
   device_id: string;
   model_id: string;
   species: string;
@@ -87,10 +131,40 @@ interface Observation {
   image_key: string;
 }
 
-interface ObservationsResponse extends PaginatedResponse<Observation> {}
+interface ObservationsResponse {
+  items: Observation[];
+  count: number;
+  next_token: string;
+}
 
 interface ObservationCountResponse {
   count: number;
+}
+
+interface GetObservationsParameters {
+  start_time: string;
+  end_time: string;
+  device_id?: string[];
+  deployment_id?: string;
+  model_id?: string;
+  min_confidence?: number;
+  taxonomy_level?: TaxonomyLevel;
+  selected_taxa?: string[];
+  limit?: number;
+  next_token?: string;
+  sort_by?: keyof Observation;
+  sort_desc?: boolean;
+}
+
+interface GetObservationCountParameters {
+  start_time: string;
+  end_time: string;
+  device_id?: string[];
+  deployment_id?: string;
+  model_id?: string;
+  min_confidence?: number;
+  taxonomy_level?: TaxonomyLevel;
+  selected_taxa?: string[];
 }
 
 interface Hub {
@@ -101,7 +175,6 @@ interface Hub {
 interface DevicesResponse extends PaginatedResponse<Hub> {}
 
 // Should be removed - migrate to useFilters()
-type TaxonomyLevel = "family" | "genus" | "species";
 
 type DatePreset = "all" | "24h" | "7d" | "30d" | "custom";
 
@@ -116,10 +189,17 @@ export type {
   DeploymentResponse,
   GetDeploymentsParameters,
   GetDeploymentParameters,
+  TaxaCountResponse,
+  GetTaxaCountParameters,
+  IntervalUnit,
+  ObservationsTimeSeriesResponse,
+  GetObservationsTimeSeriesParameters,
   DeviceIdProps,
   Observation,
   ObservationsResponse,
   ObservationCountResponse,
+  GetObservationsParameters,
+  GetObservationCountParameters,
   DevicesResponse,
   TaxonomyLevel,
   DatePreset,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
 import { getHeaders } from "@/lib/headers";
-import { addGlobalQueryParameters } from "@/lib/queryParameters";
+import { addQueryParameters } from "@/lib/queryParameters";
 import type { DeploymentsResponse, GetDeploymentsParameters } from "@/lib/types/api";
 
 function useDeployments(queryParameters?: GetDeploymentsParameters) {
@@ -11,7 +11,7 @@ function useDeployments(queryParameters?: GetDeploymentsParameters) {
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      addGlobalQueryParameters(params, queryParameters);
+      addQueryParameters(params, queryParameters);
 
       const res = await fetch(`${env.VITE_API_BASE_URL}/deployments?${params.toString()}`, {
         headers: getHeaders(),
