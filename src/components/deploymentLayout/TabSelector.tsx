@@ -10,6 +10,7 @@ const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
   { label: "Analytics", route: "/deployment/$deploymentId/analytics" },
   { label: "Observations", route: "/deployment/$deploymentId/observations" },
   { label: "Info", route: "/deployment/$deploymentId/info" },
+  { label: "Edit", route: "/deployment/$deploymentId/edit" },
 ] as const;
 
 interface TabSelectorProps {
