@@ -7,8 +7,10 @@ import {
   type OnChangeFn,
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
+import type { JSX } from "react";
 
 import { ObservationRowDialog } from "@/components/observationTable/ObservationRowDialog";
+import { Button } from "@/components/ui/Button";
 import {
   Table,
   TableBody,
@@ -19,13 +21,15 @@ import {
 } from "@/components/ui/Table";
 import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   nextToken?: string | null;
   isLoading?: boolean;
   sorting: SortingState;
+  rowCount?: number;
+  pageIndex: number;
+  onPageChange: (direction: "forward" | "backward") => void;
   onSortingChange: OnChangeFn<SortingState>;
   onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
@@ -35,6 +39,9 @@ function DataTable<TData extends Observation, TValue>({
   data,
   sorting,
   onSortingChange,
+  rowCount,
+  pageIndex,
+  onPageChange,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
 
@@ -66,6 +73,7 @@ function DataTable<TData extends Observation, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true, //Shows that filtering, sorting and pagination will not be client side.
+    rowCount: rowCount,
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
@@ -80,6 +88,35 @@ function DataTable<TData extends Observation, TValue>({
     setObservationData(rowInfo);
     setOpen(true);
   };
+
+  {
+    /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
+  }
+  const paginationButtons: JSX.Element = (
+    <div className="flex items-center justify-start space-x-2 px-3 py-4">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onPageChange("backward")}
+        disabled={pageIndex < 1}
+      >
+        Previous
+      </Button>
+      <span className="text-xs">
+        Rows {pageIndex * 10 + 1}-
+        {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * 10} of {rowCount}
+        Page {pageIndex + 1} of {table.getPageCount()}
+      </span>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onPageChange("forward")}
+        disabled={pageIndex >= table.getPageCount() - 1}
+      >
+        Next
+      </Button>
+    </div>
+  );
   return (
     <div className="overflow-hidden rounded-md border">
       <ObservationRowDialog
@@ -128,6 +165,7 @@ function DataTable<TData extends Observation, TValue>({
           )}
         </TableBody>
       </Table>
+      {paginationButtons}
     </div>
   );
 }

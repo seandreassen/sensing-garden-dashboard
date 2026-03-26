@@ -1,7 +1,7 @@
 interface PaginatedResponse<T> {
   items: T[];
   count?: number;
-  next_token?: string | null;
+  next_token?: string;
 }
 
 interface Location {
