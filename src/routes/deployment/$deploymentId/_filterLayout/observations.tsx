@@ -45,16 +45,20 @@ const fetchImageBlob = async (url: string): Promise<Blob | null> => {
 };
 
 function RouteComponent() {
-  const { hub, startDate, endDate } = useFilters();
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
 
-  const { data: observations, isLoading } = useObservations({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
-    limit: 10,
-    sortBy: sorting[0]?.id,
-    sortDesc: sorting[0]?.desc,
+  const { deploymentId } = Route.useParams();
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
+  const { data, isLoading } = useObservations({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: selectedTaxa.length > 0 ? taxonomyLevel : undefined,
+    selected_taxa: selectedTaxa,
+    sort_by: sorting[0].id as keyof Observation,
+    sort_desc: sorting[0].desc,
   });
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
@@ -70,7 +74,7 @@ function RouteComponent() {
 
   const handleDownload = async () => {
     try {
-      const items: Observation[] = observations?.items ?? [];
+      const items: Observation[] = data?.items ?? [];
 
       const headers: (keyof Observation)[] = ["timestamp", "device_id"];
       if (filters.taxonomyLevel === "family") {
@@ -126,7 +130,10 @@ function RouteComponent() {
           const filtered: Record<string, string | number | undefined> = {};
           for (let i = 0; i < headers.length; i++) {
             const h = headers[i];
-            filtered[h] = obj[h];
+            filtered[h] =
+              obj[h] instanceof Date
+                ? (obj[h] as Date).toISOString()
+                : (obj[h] as string | number | undefined);
           }
           return filtered;
         });
@@ -250,7 +257,7 @@ function RouteComponent() {
       {/* Table */}
       <DataTable
         columns={columns}
-        data={observations?.items ?? []}
+        data={data?.items ?? []}
         isLoading={isLoading}
         sorting={sorting}
         onSortingChange={handleSortingChange}
