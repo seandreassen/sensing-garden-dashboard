@@ -9,11 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
-import { useHubs } from "@/lib/hooks/useHubs";
 
-function HubFilter() {
-  const { data: hubs } = useHubs();
+interface HubFilterProps {
+  deploymentId: string;
+}
+
+function HubFilter({ deploymentId }: HubFilterProps) {
+  const { data } = useDeployment({ deployment_id: deploymentId });
   const { updateFilters, hub: hubId } = useFilters();
 
   return (
@@ -23,7 +27,7 @@ function HubFilter() {
         Active Hubs
       </Label>
       <Select
-        value={hubId ?? ""}
+        value={data?.devices.find((hub) => hub.device_id === hubId)?.name ?? ""}
         onValueChange={(value) => updateFilters({ hub: value ?? undefined })}
       >
         <SelectTrigger id="filter-hub" className={filterSelectClass}>
@@ -33,9 +37,9 @@ function HubFilter() {
           <SelectItem value="" className="text-muted-foreground">
             All Hubs
           </SelectItem>
-          {hubs?.map((hub) => (
+          {data?.devices.map((hub) => (
             <SelectItem key={hub.device_id} value={hub.device_id}>
-              {hub.device_id}
+              {hub.name}
             </SelectItem>
           ))}
         </SelectContent>

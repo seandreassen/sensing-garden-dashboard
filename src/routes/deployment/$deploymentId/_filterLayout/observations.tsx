@@ -59,6 +59,7 @@ function RouteComponent() {
     selected_taxa: selectedTaxa,
     sort_by: sorting[0].id as keyof Observation,
     sort_desc: sorting[0].desc,
+    limit: 10,
   });
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
