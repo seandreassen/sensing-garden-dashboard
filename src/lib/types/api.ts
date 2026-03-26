@@ -27,13 +27,44 @@ interface EnvironmentData {
 interface EnvironmentResponse extends PaginatedResponse<EnvironmentData> {}
 
 interface Deployment {
-  id: string;
-  active: boolean;
-  location?: { lat: number; lng: number };
+  name: string;
+  description: string;
+  deployment_id: string;
+  start_time: Date;
+  end_time?: Date;
+  model_id?: string;
+  location_name?: string;
+  location?: Location;
+  image_url?: string;
+}
+
+interface DeploymentsResponse {
+  deployments: Deployment[];
+  count: number;
+  next_token: string;
+}
+
+interface DeploymentDevice {
+  device_id: string;
+  deployment_id: string;
   name?: string;
-  place?: string;
-  hub_count?: number;
-  last_updated?: string;
+  location?: Location;
+}
+
+interface DeploymentResponse {
+  deployment: Deployment;
+  devices: DeploymentDevice[];
+}
+
+interface GetDeploymentsParameters {
+  limit?: number;
+  next_token?: string;
+  sort_by?: keyof Deployment;
+  sort_desc?: boolean;
+}
+
+interface GetDeploymentParameters {
+  deployment_id: string;
 }
 
 interface DeviceIdProps {
@@ -69,15 +100,6 @@ interface Hub {
 
 interface DevicesResponse extends PaginatedResponse<Hub> {}
 
-interface QueryParameters {
-  startTime?: string;
-  endTime?: string;
-  hubId?: string;
-  limit?: number;
-  sortBy?: string;
-  sortDesc?: boolean;
-}
-
 // Should be removed - migrate to useFilters()
 type TaxonomyLevel = "family" | "genus" | "species";
 
@@ -90,12 +112,15 @@ export type {
   EnvironmentData,
   EnvironmentResponse,
   Deployment,
+  DeploymentsResponse,
+  DeploymentResponse,
+  GetDeploymentsParameters,
+  GetDeploymentParameters,
   DeviceIdProps,
   Observation,
   ObservationsResponse,
   ObservationCountResponse,
   DevicesResponse,
-  QueryParameters,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,

@@ -25,9 +25,9 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
               activeOptions={{ exact: false }}
               className={cn(
                 buttonVariants({ variant: "nav", size: "lg" }),
-                "text-sm uppercase rounded-none",
+                "rounded-none text-sm uppercase",
                 deployment.id === deploymentId &&
-                  "text-primary hover:text-primary border-primary! border-b-2",
+                  "border-b-2 border-primary! text-primary hover:text-primary",
               )}
             >
               {deployment.id}

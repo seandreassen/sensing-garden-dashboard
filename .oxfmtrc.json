@@ -6,6 +6,7 @@
   },
   "experimentalTailwindcss": {
     "stylesheet": "./src/index.css",
+    "functions": ["cn"],
     "attributes": ["className"]
   },
   "ignorePatterns": ["index.html", "src/routeTree.gen.ts"]

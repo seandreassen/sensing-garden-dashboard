@@ -9,7 +9,7 @@ import { GoogleMaps } from "@/components/map/GoogleMaps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { aggregateByTaxonomy, aggregateByTime, pickBucket } from "@/lib/aggregation";
 import { useFilterContext } from "@/lib/filters/filterState";
-import { useDeploymentCoordinates, useDeploymentCenter } from "@/lib/hooks/useDeployments";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
@@ -22,8 +22,7 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ov
 
 function RouteComponent() {
   const { deploymentId } = Route.useParams();
-  const coordinates = useDeploymentCoordinates(deploymentId);
-  const center = useDeploymentCenter(deploymentId);
+  const { data: deploymentData } = useDeployment({ deployment_id: deploymentId });
   const { filters } = useFilterContext();
   const { startDate, endDate, hub } = useFilters();
 
@@ -99,7 +98,12 @@ function RouteComponent() {
             </p>
           </CardHeader>
           <CardContent>
-            <GoogleMaps key={deploymentId} initialLocations={coordinates} center={center} />
+            <GoogleMaps
+              initialLocations={deploymentData?.devices
+                .map((device) => device.location)
+                .filter((location) => !!location)}
+              center={deploymentData?.deployment.location}
+            />
           </CardContent>
         </Card>
       </div>
