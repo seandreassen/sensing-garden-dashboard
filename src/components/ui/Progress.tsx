@@ -8,7 +8,7 @@ function Progress({ className, children, value, ...props }: ProgressPrimitive.Ro
       value={value}
       data-slot="progress"
       className={cn(
-        "bg-muted h-1 rounded-full relative flex w-full items-center overflow-x-hidden",
+        "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-muted",
         className,
       )}
       {...props}

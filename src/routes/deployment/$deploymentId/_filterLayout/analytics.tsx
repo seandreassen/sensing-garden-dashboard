@@ -6,7 +6,7 @@ import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
 import { aggregateHeatmap } from "@/lib/heatmapAggregation";
-import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { useEnvironment } from "@/lib/hooks/useEnvironment";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
 
@@ -18,30 +18,37 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/an
 });
 
 function RouteComponent() {
-  const { startDate, endDate, hub, rangePreset, taxonomyLevel, minConfidence } = useFilters();
+  const { deploymentId } = Route.useParams();
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa, rangePreset } =
+    useFilters();
 
   const {
     data: envResult,
     isLoading: envLoading,
     isError,
     error,
-  } = useEnvironmentData({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+  } = useEnvironment({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
   });
+
   const { data: obsResult, isLoading: obsLoading } = useObservations({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
-    limit: 500,
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
   });
 
   const envItems = useMemo(() => {
     const startMs = new Date(startDate).getTime();
     const endMs = new Date(endDate).getTime();
 
-    return (envResult ?? []).filter((item) => {
+    return (envResult?.items ?? []).filter((item) => {
       const timestampMs = new Date(item.timestamp).getTime();
       const matchesHub = !hub || item.device_id === hub;
       return matchesHub && timestampMs >= startMs && timestampMs <= endMs;
@@ -60,7 +67,7 @@ function RouteComponent() {
         minConfidence,
         taxonomyLevel,
       ),
-    [obsItems, envItems, startDate, endDate, rangePreset, minConfidence, taxonomyLevel],
+    [obsItems, envItems, startDate, endDate, minConfidence, taxonomyLevel, rangePreset],
   );
   if (envLoading && obsLoading) {
     return <div>Loading data...</div>;
@@ -81,15 +88,15 @@ function RouteComponent() {
         <h2 className="p-4 text-xl font-semibold">Environmental Data</h2>
 
         <div className="rounded p-4">
-          <EnvironmentalConditionsChart />
+          <EnvironmentalConditionsChart deploymentId={deploymentId} />
         </div>
 
         <div className="rounded p-4">
-          <AirPollutionChart />
+          <AirPollutionChart deploymentId={deploymentId} />
         </div>
 
         <div className="rounded p-4">
-          <AirQualityIndicesChart />
+          <AirQualityIndicesChart deploymentId={deploymentId} />
         </div>
       </div>
     </div>

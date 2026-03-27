@@ -38,7 +38,7 @@ function HeatmapHeader({
           {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
             <div
               key={ratio}
-              className="h-4 w-6 rounded-sm"
+              className="h-4 w-6 rounded"
               style={{
                 backgroundColor: cellColorFromRatio(ratio),
                 outline: "1px solid rgba(255,255,255,0.06)",

@@ -7,6 +7,7 @@ import { DataTable } from "@/components/observationTable/DataTable";
 import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservations } from "@/lib/hooks/useObservations";
+import type { Observation } from "@/lib/types/api";
 
 /**
  * Calls data with useObservations hook with parameters from url
@@ -26,15 +27,20 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 });
 
 function RouteComponent() {
-  const { hub, startDate, endDate } = useFilters();
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
 
-  const { data: observations, isLoading } = useObservations({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
-    sortBy: sorting[0]?.id,
-    sortDesc: sorting[0]?.desc,
+  const { deploymentId } = Route.useParams();
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
+  const { data, isLoading } = useObservations({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    sort_by: sorting[0].id as keyof Observation,
+    sort_desc: sorting[0].desc,
     limit: 10,
   });
 
@@ -52,7 +58,7 @@ function RouteComponent() {
       {/* Table */}
       <DataTable
         columns={columns}
-        data={observations?.items ?? []}
+        data={data?.items ?? []}
         isLoading={isLoading}
         sorting={sorting}
         onSortingChange={handleSortingChange}
