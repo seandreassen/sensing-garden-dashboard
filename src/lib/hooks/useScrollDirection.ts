@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 type ScrollDirection = "up" | "down" | null;
 
 const LOCK_MS = 400;
+const SCROLL_THRESHOLD = 10;
+const WHEEL_THRESHOLD = 5;
 
 function useScrollDirection() {
   const [direction, setDirection] = useState<ScrollDirection>(null);
@@ -30,7 +32,7 @@ function useScrollDirection() {
 
         if (now > lockedUntil.current) {
           setScrolled((prev) => {
-            const next = y > 10;
+            const next = y > SCROLL_THRESHOLD;
             if (next !== prev) {
               lockedUntil.current = now + LOCK_MS;
             }
@@ -48,8 +50,32 @@ function useScrollDirection() {
       });
     };
 
+    const onWheel = (event: WheelEvent) => {
+      const canScroll = el.scrollHeight - el.clientHeight > 0;
+      const scrollingUp = event.deltaY < -WHEEL_THRESHOLD;
+
+      if (!scrollingUp || canScroll) {
+        return;
+      }
+
+      setDirection("up");
+      setScrolled((prev) => {
+        if (!prev) {
+          return prev;
+        }
+
+        lockedUntil.current = performance.now() + LOCK_MS;
+        return false;
+      });
+    };
+
     el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
+    el.addEventListener("wheel", onWheel, { passive: true });
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      el.removeEventListener("wheel", onWheel);
+    };
   }, []);
 
   return { direction, scrolled };
