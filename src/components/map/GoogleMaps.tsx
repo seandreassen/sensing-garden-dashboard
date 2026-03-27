@@ -1,7 +1,8 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { env } from "@/env";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import type { Location } from "@/lib/types/api";
 
 import { MapWithDrop } from "./MapWithDrop";
@@ -22,13 +23,19 @@ function handleDragStart(e: React.DragEvent<HTMLSpanElement>) {
 }
 
 interface GoogleMapsProps {
-  initialLocations?: Location[];
-  center?: Location;
+  deploymentId: string;
   allowDragAndDrop?: boolean;
 }
 
-function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }: GoogleMapsProps) {
-  const [locations, setLocations] = useState<Location[]>(initialLocations);
+function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps) {
+  const { data } = useDeployment({ deployment_id: deploymentId });
+
+  const [locations, setLocations] = useState<Location[]>([]);
+  useEffect(() => {
+    setLocations(
+      data?.devices.map((device) => device.location).filter((location) => !!location) ?? [],
+    );
+  }, [data]);
 
   return (
     <>
@@ -51,7 +58,7 @@ function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }:
             <MapWithDrop
               locations={locations}
               setLocations={setLocations}
-              center={center}
+              center={data?.deployment.location}
               allowDragAndDrop={allowDragAndDrop}
             />
           </APIProvider>

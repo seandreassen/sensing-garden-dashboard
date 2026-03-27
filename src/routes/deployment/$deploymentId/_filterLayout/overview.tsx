@@ -6,7 +6,6 @@ import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
 import { TopTaxa } from "@/components/charts/TopTaxa";
 import { GoogleMaps } from "@/components/map/GoogleMaps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { useDeployment } from "@/lib/hooks/useDeployment";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
   head: () => ({
@@ -17,7 +16,6 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ov
 
 function RouteComponent() {
   const { deploymentId } = Route.useParams();
-  const { data: deploymentData } = useDeployment({ deployment_id: deploymentId });
 
   return (
     <div className="flex flex-col gap-5">
@@ -56,12 +54,7 @@ function RouteComponent() {
             </p>
           </CardHeader>
           <CardContent>
-            <GoogleMaps
-              initialLocations={deploymentData?.devices
-                .map((device) => device.location)
-                .filter((location) => !!location)}
-              center={deploymentData?.deployment.location}
-            />
+            <GoogleMaps deploymentId={deploymentId} />
           </CardContent>
         </Card>
       </div>
