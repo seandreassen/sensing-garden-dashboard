@@ -12,8 +12,9 @@ This document outlines the workflow and coding standards for contributing to the
 ### Getting Started
 
 1. **Clone** the repository.
-2. **Install:** Run `pnpm i` in the root folder to install dependencies.
-3. **Run:** Run `pnpm dev` to start the local development server.
+2. **Environment:** Add environment variables to `.env`.
+3. **Install:** Run `pnpm i` in the root folder to install dependencies.
+4. **Run:** Run `pnpm dev` to start the local development server.
 
 ### Tooling
 
@@ -45,7 +46,7 @@ We exclusively use **Lucide icons**. All Lucide icons are already installed. Fin
 
 ### Data Fetching
 
-When fetching data, use [TanStack Query](https://tanstack.com/query/latest). Create a hook for your query, placed under `src/lib/hooks/`. Look at the documentation for detailed info, or check `src/lib/hooks/useHubs.ts` for a simple example. Types used to get data from the Sensing Garden backend API are placed in `src/lib/types/api.ts`.
+When fetching data, use [TanStack Query](https://tanstack.com/query/latest). Create a hook for your query, placed under `src/lib/hooks/`. Look at the documentation for detailed info, or check `src/lib/hooks/useObservations.ts` for a simple example. Types used to get data from the Sensing Garden backend API are placed in `src/lib/types/api.ts`.
 
 ### Other
 
