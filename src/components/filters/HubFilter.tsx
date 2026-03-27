@@ -27,11 +27,13 @@ function HubFilter({ deploymentId }: HubFilterProps) {
         Active Hubs
       </Label>
       <Select
-        value={data?.devices.find((hub) => hub.device_id === hubId)?.name ?? ""}
+        value={hubId ?? ""}
         onValueChange={(value) => updateFilters({ hub: value ?? undefined })}
       >
         <SelectTrigger id="filter-hub" className={filterSelectClass}>
-          <SelectValue placeholder="All Hubs" />
+          <SelectValue placeholder="All Hubs">
+            {data?.devices.find((hub) => hub.device_id === hubId)?.name}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="" className="text-muted-foreground">

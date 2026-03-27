@@ -1,16 +1,12 @@
-interface PaginatedResponse<T> {
-  items: T[];
-  count?: number;
-  next_token?: string | null;
-}
-
 interface Location {
   lat: number;
   long: number;
   alt?: number;
 }
 
-interface EnvironmentData {
+interface Environment {
+  timestamp: string;
+  device_id: string;
   pm1p0?: number;
   pm2p5?: number;
   pm4p0?: number;
@@ -19,12 +15,25 @@ interface EnvironmentData {
   ambient_temperature?: number;
   voc_index?: number;
   nox_index?: number;
-  timestamp: string;
-  device_id: string;
-  location?: { lat?: number; long?: number; alt?: number };
+  location?: Location;
 }
 
-interface EnvironmentResponse extends PaginatedResponse<EnvironmentData> {}
+interface EnvironmentResponse {
+  items: Environment[];
+  count: number;
+  next_token?: string;
+}
+
+interface GetEnvironmentParameters {
+  start_time?: string;
+  end_time?: string;
+  device_id?: string[];
+  deployment_id?: string;
+  limit?: number;
+  next_token?: string;
+  sort_by?: keyof Environment;
+  sort_desc?: boolean;
+}
 
 interface Deployment {
   name: string;
@@ -112,6 +121,29 @@ interface GetObservationsTimeSeriesParameters {
   interval_unit: IntervalUnit;
 }
 
+interface EnvironmentTimeSeriesResponse {
+  temperature: number[];
+  humidity: number[];
+  pm1p0: number[];
+  pm2p5: number[];
+  pm4p0: number[];
+  pm10: number[];
+  voc: number[];
+  nox: number[];
+  start_time: Date;
+  interval_length: number;
+  interval_unit: IntervalUnit;
+}
+
+interface GetEnvironmentTimeSeriesParameters {
+  start_time: string;
+  end_time: string;
+  device_id?: string[];
+  deployment_id?: string;
+  interval_length: number;
+  interval_unit: IntervalUnit;
+}
+
 interface DeviceIdProps {
   value?: string;
 }
@@ -142,8 +174,8 @@ interface ObservationCountResponse {
 }
 
 interface GetObservationsParameters {
-  start_time: string;
-  end_time: string;
+  start_time?: string;
+  end_time?: string;
   device_id?: string[];
   deployment_id?: string;
   model_id?: string;
@@ -157,8 +189,8 @@ interface GetObservationsParameters {
 }
 
 interface GetObservationCountParameters {
-  start_time: string;
-  end_time: string;
+  start_time?: string;
+  end_time?: string;
   device_id?: string[];
   deployment_id?: string;
   model_id?: string;
@@ -166,13 +198,6 @@ interface GetObservationCountParameters {
   taxonomy_level?: TaxonomyLevel;
   selected_taxa?: string[];
 }
-
-interface Hub {
-  device_id: string;
-  created: Date;
-}
-
-interface DevicesResponse extends PaginatedResponse<Hub> {}
 
 // Should be removed - migrate to useFilters()
 
@@ -182,8 +207,9 @@ type WorkspaceTab = "overview" | "analytics" | "observations";
 
 export type {
   Location,
-  EnvironmentData,
+  Environment,
   EnvironmentResponse,
+  GetEnvironmentParameters,
   Deployment,
   DeploymentsResponse,
   DeploymentResponse,
@@ -194,13 +220,14 @@ export type {
   IntervalUnit,
   ObservationsTimeSeriesResponse,
   GetObservationsTimeSeriesParameters,
+  EnvironmentTimeSeriesResponse,
+  GetEnvironmentTimeSeriesParameters,
   DeviceIdProps,
   Observation,
   ObservationsResponse,
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
-  DevicesResponse,
   TaxonomyLevel,
   DatePreset,
   WorkspaceTab,

@@ -30,7 +30,7 @@ function formatXLabel(value: string): string {
 
 function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
   const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
-  const interval_unit = Math.max(
+  const intervalLength = Math.max(
     Math.round(
       (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60) / 100,
     ),
@@ -44,7 +44,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
     min_confidence: minConfidence,
     taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
-    interval_length: interval_unit,
+    interval_length: intervalLength,
     interval_unit: "h",
   });
 
@@ -69,7 +69,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
       <AreaChart
         data={data.counts.map((count, index) => ({
           count,
-          time: addHours(data.start_time, index * interval_unit).toISOString(),
+          time: addHours(data.start_time, index * intervalLength).toISOString(),
         }))}
         margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
       >

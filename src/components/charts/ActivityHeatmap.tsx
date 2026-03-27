@@ -159,7 +159,7 @@ function ActivityHeatmap({ grid, taxonomyLabel, isLoading }: ActivityHeatmapProp
                     key={`${cell.row}-${cell.col}`}
                     type="button"
                     data-heatmap-cell={`${cell.row}-${cell.col}`}
-                    className="h-7 appearance-none rounded border border-white/[0.06] bg-transparent p-0 outline-none focus-visible:ring-0 focus-visible:outline-none"
+                    className="h-7 appearance-none rounded-sm border border-white/[0.06] bg-transparent p-0 outline-none focus-visible:ring-0 focus-visible:outline-none"
                     style={{ backgroundColor: cellColor(cell.count, grid.maxCount) }}
                     aria-label={`${cell.label}: ${cell.count} detections`}
                     onMouseEnter={(e) => activateCell(cell, e.currentTarget)}

@@ -15,9 +15,7 @@ function useTaxaCount(queryParameters?: GetTaxaCountParameters) {
 
       const res = await fetch(
         `${env.VITE_API_BASE_URL}/classifications/taxa_count?${params.toString()}`,
-        {
-          headers: getHeaders(),
-        },
+        { headers: getHeaders() },
       );
 
       return (await res.json()) as TaxaCountResponse;
