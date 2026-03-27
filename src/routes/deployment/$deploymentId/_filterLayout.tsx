@@ -47,7 +47,7 @@ function LayoutComponent() {
         <Separator />
         <FiltersRow deploymentId={deploymentId} />
         <Separator />
-        <TabSelector />
+        <TabSelector deploymentId={deploymentId} />
         <Separator />
       </div>
 
