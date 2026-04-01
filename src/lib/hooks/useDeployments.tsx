@@ -17,6 +17,10 @@ function useDeployments(queryParameters?: GetDeploymentsParameters) {
         headers: getHeaders(),
       });
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch deployments: ${res.status} ${res.statusText}`);
+      }
+
       const data = (await res.json()) as DeploymentsResponse;
       return {
         ...data,

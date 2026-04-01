@@ -12,6 +12,10 @@ function useDeployment({ deployment_id }: GetDeploymentParameters) {
         headers: getHeaders(),
       });
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch deployment: ${res.status} ${res.statusText}`);
+      }
+
       const data = (await res.json()) as DeploymentResponse;
       return {
         ...data,

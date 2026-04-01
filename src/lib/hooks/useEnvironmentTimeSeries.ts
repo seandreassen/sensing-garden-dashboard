@@ -21,6 +21,10 @@ function useEnvironmentTimeSeries(queryParams: GetEnvironmentTimeSeriesParameter
         { headers: getHeaders() },
       );
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch environment time series: ${res.status} ${res.statusText}`);
+      }
+
       const data = (await res.json()) as EnvironmentTimeSeriesResponse;
       return {
         ...data,

@@ -17,6 +17,10 @@ function useEnvironment(queryParams?: GetEnvironmentParameters) {
         headers: getHeaders(),
       });
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch environment data: ${res.status} ${res.statusText}`);
+      }
+
       return (await res.json()) as EnvironmentResponse;
     },
   });
