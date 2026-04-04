@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1775070163417" clover="3.2.0">
-  <project timestamp="1775070163417" name="All files">
-    <metrics statements="1117" coveredstatements="2" conditionals="682" coveredconditionals="0" methods="386" coveredmethods="1" elements="2185" coveredelements="3" complexity="0" loc="1117" ncloc="1117" packages="17" files="86" classes="86"/>
+<coverage generated="1775309537300" clover="3.2.0">
+  <project timestamp="1775309537300" name="All files">
+    <metrics statements="1060" coveredstatements="2" conditionals="639" coveredconditionals="0" methods="365" coveredmethods="1" elements="2064" coveredelements="3" complexity="0" loc="1060" ncloc="1060" packages="14" files="77" classes="77"/>
     <package name="components">
       <metrics statements="99" coveredstatements="1" conditionals="47" coveredconditionals="0" methods="14" coveredmethods="1"/>
       <file name="ExportData.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/components/ExportData.tsx">
@@ -1333,99 +1333,6 @@
       <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="api.ts" path="/home/seandreassen/dev/sensing-garden-dashboard/src/lib/types/api.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      </file>
-    </package>
-    <package name="routes">
-      <metrics statements="8" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="4" coveredmethods="0"/>
-      <file name="__root.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/__root.tsx">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-      </file>
-      <file name="index.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/index.tsx">
-        <metrics statements="6" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="19" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="22" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="25" count="0" type="stmt"/>
-      </file>
-    </package>
-    <package name="routes.deployment.$deploymentId">
-      <metrics statements="7" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="0"/>
-      <file name="$.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/$.tsx">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-      </file>
-      <file name="_filterLayout.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout.tsx">
-        <metrics statements="5" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-      </file>
-    </package>
-    <package name="routes.deployment.$deploymentId._filterLayout">
-      <metrics statements="42" coveredstatements="0" conditionals="31" coveredconditionals="0" methods="14" coveredmethods="0"/>
-      <file name="analytics.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout/analytics.tsx">
-        <metrics statements="22" coveredstatements="0" conditionals="23" coveredconditionals="0" methods="6" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="51" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="53" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="54" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="72" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="75" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
-      </file>
-      <file name="index.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout/index.tsx">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-      </file>
-      <file name="info.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout/info.tsx">
-        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-      </file>
-      <file name="observations.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout/observations.tsx">
-        <metrics statements="11" coveredstatements="0" conditionals="8" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="48" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
-      </file>
-      <file name="overview.tsx" path="/home/seandreassen/dev/sensing-garden-dashboard/src/routes/deployment/$deploymentId/_filterLayout/overview.tsx">
-        <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
       </file>
     </package>
   </project>

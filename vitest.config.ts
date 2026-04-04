@@ -7,6 +7,8 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [react()],
   test: {
+    include: ["tests/**/*.test.{ts,tsx}"],
+    exclude: ["tests/e2e/**/*.test.{ts,tsx}"],
     browser: {
       enabled: true,
       provider: playwright(),
@@ -15,7 +17,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/env.ts", "src/main.tsx", "src/routeTree.gen.ts"],
+      exclude: ["src/env.ts", "src/main.tsx", "src/routeTree.gen.ts", "src/routes/**/*.{ts,tsx}"],
     },
   },
   resolve: {
