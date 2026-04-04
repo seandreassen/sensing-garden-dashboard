@@ -1,6 +1,25 @@
 import { expect, test } from "@playwright/test";
 
 test("shows correct info page", async ({ page }) => {
+  await page.route("**/api/deployments/dep-123*", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        deployment: {
+          deployment_id: "dep-123",
+          name: "Test Deployment",
+          description: "A test deployment",
+          start_time: "2025-01-01",
+          end_time: null,
+          model_id: "model-1",
+          location_name: "Test Location",
+        },
+        devices: [{ device_id: "device-1", deployment_id: "dep-123" }],
+      }),
+    });
+  });
+
   await page.route("**/api/deployments*", async (route) => {
     await route.fulfill({
       status: 200,
@@ -26,25 +45,6 @@ test("shows correct info page", async ({ page }) => {
             end_time: "2026-01-01",
           },
         ],
-      }),
-    });
-  });
-
-  await page.route("**/api/deployments/dep-123", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        deployment: {
-          deployment_id: "dep-123",
-          name: "Test Deployment",
-          description: "A test deployment",
-          start_time: "2025-01-01",
-          end_time: null,
-          model_id: "model-1",
-          location_name: "Test Location",
-        },
-        devices: [{ device_id: "device-1", deployment_id: "dep-123" }],
       }),
     });
   });
