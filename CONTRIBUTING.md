@@ -23,7 +23,7 @@ This document outlines the workflow and coding standards for contributing to the
 
 ### Testing
 
-The first time you run tests using `pnpm test`, `pnpm coverage`, etc., you might need to follow some instructions to finish the installation of playwright. If so, these instructions will be shown in the terminal. Also remember to always check that all tests pass with `pnpm test` and generate a new coverage report with `pnpm coverage` after making changes.
+The first time you run tests using `pnpm test`, `pnpm coverage`, etc., you might need to follow some instructions to finish the installation of playwright. If so, these instructions will be shown in the terminal. Also remember to always check that all tests pass with `pnpm test` after making changes. Additionally, a coverage report can be generated and viewed using `pnpm coverage`.
 
 ## Coding Standards
 
