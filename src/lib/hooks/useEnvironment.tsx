@@ -2,28 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
 import { getHeaders } from "@/lib/headers";
-import { addGlobalQueryParameters } from "@/lib/queryParameters";
-import type { EnvironmentResponse, QueryParameters } from "@/lib/types/api";
+import { addQueryParameters } from "@/lib/queryParameters";
+import type { EnvironmentResponse, GetEnvironmentParameters } from "@/lib/types/api";
 
-function useEnvironmentData(queryParams: QueryParameters) {
+function useEnvironment(queryParams?: GetEnvironmentParameters) {
   return useQuery({
     queryKey: ["environment", queryParams],
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      addGlobalQueryParameters(params, queryParams);
+      addQueryParameters(params, queryParams);
 
       const res = await fetch(`${env.VITE_API_BASE_URL}/environment?${params.toString()}`, {
         headers: getHeaders(),
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to fetch observation count: ${res.status}`);
+        throw new Error(`Failed to fetch environment data: ${res.status} ${res.statusText}`);
       }
 
-      return ((await res.json()) as EnvironmentResponse).items;
+      return (await res.json()) as EnvironmentResponse;
     },
   });
 }
 
-export { useEnvironmentData };
+export { useEnvironment };

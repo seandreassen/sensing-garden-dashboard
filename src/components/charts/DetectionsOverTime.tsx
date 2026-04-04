@@ -1,3 +1,4 @@
+import { addHours } from "date-fns";
 import {
   Area,
   AreaChart,
@@ -8,11 +9,11 @@ import {
   YAxis,
 } from "recharts";
 
-import type { TimePoint } from "@/lib/aggregation";
+import { useFilters } from "@/lib/hooks/useFilters";
+import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
 
 interface DetectionsOverTimeProps {
-  data: TimePoint[];
-  isLoading?: boolean;
+  deploymentId: string;
 }
 
 function formatXLabel(value: string): string {
@@ -27,7 +28,26 @@ function formatXLabel(value: string): string {
   return value;
 }
 
-function DetectionsOverTime({ data, isLoading }: DetectionsOverTimeProps) {
+function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
+  const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
+  const intervalLength = Math.max(
+    Math.round(
+      (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60) / 100,
+    ),
+    1,
+  );
+  const { data, isLoading } = useObservationsTimeSeries({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    interval_length: intervalLength,
+    interval_unit: "h",
+  });
+
   if (isLoading) {
     return (
       <div className="flex h-[300px] items-center justify-center">
@@ -36,7 +56,7 @@ function DetectionsOverTime({ data, isLoading }: DetectionsOverTimeProps) {
     );
   }
 
-  if (data.length === 0) {
+  if (!data || data.counts.length === 0) {
     return (
       <div className="flex h-[300px] items-center justify-center">
         <span className="text-sm text-muted-foreground">No data for selected filters</span>
@@ -46,7 +66,13 @@ function DetectionsOverTime({ data, isLoading }: DetectionsOverTimeProps) {
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <AreaChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+      <AreaChart
+        data={data.counts.map((count, index) => ({
+          count,
+          time: addHours(data.start_time, index * intervalLength).toISOString(),
+        }))}
+        margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+      >
         <defs>
           <linearGradient id="detectionsFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity={0.3} />

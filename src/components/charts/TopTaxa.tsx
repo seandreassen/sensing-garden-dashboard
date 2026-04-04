@@ -9,11 +9,11 @@ import {
   YAxis,
 } from "recharts";
 
-import type { TaxonCount } from "@/lib/aggregation";
+import { useFilters } from "@/lib/hooks/useFilters";
+import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 
 interface TopTaxaProps {
-  data: TaxonCount[];
-  isLoading?: boolean;
+  deploymentId: string;
 }
 
 const BAR_COLORS = [
@@ -24,7 +24,19 @@ const BAR_COLORS = [
   "var(--color-chart-5)",
 ];
 
-function TopTaxa({ data, isLoading }: TopTaxaProps) {
+function TopTaxa({ deploymentId }: TopTaxaProps) {
+  const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
+  const { data, isLoading } = useTaxaCount({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    sort_desc: true,
+  });
+
   if (isLoading) {
     return (
       <div>
@@ -35,7 +47,7 @@ function TopTaxa({ data, isLoading }: TopTaxaProps) {
     );
   }
 
-  if (data.length === 0) {
+  if (!data || data.counts.length === 0) {
     return (
       <div>
         <div className="flex h-75 items-center justify-center">
@@ -50,7 +62,11 @@ function TopTaxa({ data, isLoading }: TopTaxaProps) {
   return (
     <div>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+        <BarChart
+          data={data.counts}
+          layout="vertical"
+          margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
           <XAxis
             type="number"
@@ -61,7 +77,7 @@ function TopTaxa({ data, isLoading }: TopTaxaProps) {
           />
           <YAxis
             type="category"
-            dataKey="name"
+            dataKey="taxa"
             tick={{ fill: "var(--color-foreground)", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
@@ -77,7 +93,7 @@ function TopTaxa({ data, isLoading }: TopTaxaProps) {
             }}
           />
           <Bar dataKey="count" name="Detections" radius={[0, 4, 4, 0]} barSize={20}>
-            {data.map((_, index) => (
+            {data.counts.map((_, index) => (
               <Cell key={index} fill={BAR_COLORS[index % BAR_COLORS.length]} />
             ))}
           </Bar>

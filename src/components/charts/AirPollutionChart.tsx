@@ -1,3 +1,4 @@
+import { addHours } from "date-fns";
 import { Wind } from "lucide-react";
 import { useState, useMemo } from "react";
 import {
@@ -11,26 +12,34 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { useEnvironmentTimeSeries } from "@/lib/hooks/useEnvironmentTimeSeries";
 import { useFilters } from "@/lib/hooks/useFilters";
 
-function AirPollutionChart() {
+interface AirPollutionChartProps {
+  deploymentId: string;
+}
+
+function AirPollutionChart({ deploymentId }: AirPollutionChartProps) {
   const { startDate, endDate, hub } = useFilters();
-  const {
-    data: rawData = [],
-    isError,
-    isLoading,
-    error,
-  } = useEnvironmentData({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+  const intervalLength = Math.max(
+    Math.round(
+      (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60) / 100,
+    ),
+    1,
+  );
+  const { data, isError, isLoading, error } = useEnvironmentTimeSeries({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    interval_length: intervalLength,
+    interval_unit: "h",
   });
 
   const [enabledPollutants, setEnabledPollutants] = useState({
-    pm1: true,
-    pm25: true,
-    pm4: false,
+    pm1p0: true,
+    pm2p5: true,
+    pm4p0: false,
     pm10: false,
   });
 
@@ -38,25 +47,21 @@ function AirPollutionChart() {
     setEnabledPollutants((prev) => ({ ...prev, [pollutant]: !prev[pollutant] }));
   };
 
-  const environmentalData = useMemo(() => {
-    const seen = new Set<string>();
-    return rawData
-      .filter((item) => {
-        const dateKey = new Date(item.timestamp).toLocaleString();
-        if (seen.has(dateKey)) {
-          return false;
-        }
-        seen.add(dateKey);
-        return true;
-      })
-      .map((item) => ({
-        date: new Date(item.timestamp).toLocaleString(),
-        pm1: item.pm1p0,
-        pm25: item.pm2p5,
-        pm4: item.pm4p0,
-        pm10: item.pm10p0,
-      }));
-  }, [rawData]);
+  const environmentData = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data?.pm1p0.map((pm1p0, i) => {
+      return {
+        date: addHours(data.start_time, i * data.interval_length).toLocaleString(),
+        pm1p0,
+        pm2p5: data.pm2p5[i],
+        pm4p0: data.pm4p0[i],
+        pm10: data.pm10[i],
+      };
+    });
+  }, [data]);
 
   if (isLoading) {
     return <div>Loading environmental data...</div>;
@@ -66,9 +71,9 @@ function AirPollutionChart() {
   }
 
   const pollutants = [
-    { key: "pm1" as const, label: "PM1.0", color: "#8becff", enabled: enabledPollutants.pm1 },
-    { key: "pm25" as const, label: "PM2.5", color: "#44c1ff", enabled: enabledPollutants.pm25 },
-    { key: "pm4" as const, label: "PM4.0", color: "#226fff", enabled: enabledPollutants.pm4 },
+    { key: "pm1p0" as const, label: "PM1.0", color: "#8becff", enabled: enabledPollutants.pm1p0 },
+    { key: "pm2p5" as const, label: "PM2.5", color: "#44c1ff", enabled: enabledPollutants.pm2p5 },
+    { key: "pm4p0" as const, label: "PM4.0", color: "#226fff", enabled: enabledPollutants.pm4p0 },
     { key: "pm10" as const, label: "PM10", color: "#000ea3", enabled: enabledPollutants.pm10 },
   ];
 
@@ -112,7 +117,7 @@ function AirPollutionChart() {
       {activePollutants.length > 0 ? (
         <div className="rounded border border-border p-4" style={{ backgroundColor: "#1a1a1a" }}>
           <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={environmentalData}>
+            <LineChart data={environmentData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" strokeOpacity={0.3} />
               <XAxis
                 dataKey="date"

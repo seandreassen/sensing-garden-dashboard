@@ -5,12 +5,20 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 
-function TotalInsectCountCard() {
-  const { startDate, endDate, hub } = useFilters();
-  const { data: count, isLoading } = useObservationCount({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+interface TotalInsectCountCardProps {
+  deploymentId: string;
+}
+
+function TotalInsectCountCard({ deploymentId }: TotalInsectCountCardProps) {
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
+  const { data, isLoading } = useObservationCount({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
   });
 
   return (
@@ -28,7 +36,7 @@ function TotalInsectCountCard() {
             <Spinner />
           </div>
         ) : (
-          <span className="mt-2 text-4xl font-semibold">{count ?? 0}</span>
+          <span className="mt-2 text-4xl font-semibold">{data?.count ?? 0}</span>
         )}
       </CardContent>
     </Card>
