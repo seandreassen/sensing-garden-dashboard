@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
-    "coverage": "vitest run --coverage",
+    "coverage": "pnpm coverage:generate && pnpm coverage:serve",
+    "coverage:generate": "vitest run --coverage",
+    "coverage:serve": "serve coverage",
     "dev": "vite",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
@@ -54,6 +56,7 @@
     "lint-staged": "^16.4.0",
     "oxfmt": "^0.33.0",
     "oxlint": "^1.56.0",
+    "serve": "^14.2.6",
     "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.2.2",
     "typescript": "~5.9.3",
