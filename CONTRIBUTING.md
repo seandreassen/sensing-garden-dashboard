@@ -21,6 +21,12 @@ This document outlines the workflow and coding standards for contributing to the
 - **VS Code:** Install the recommended extensions from `.vscode/extensions.json`. Project settings in `.vscode/settings.json` are meant to simplify and speed up development.
 - **Git Hooks:** We use `sipmle-git-hooks` for pre-commit hooks. Linting and formatting are automatically enforced on every commit. If a commit fails, resolve the linting errors before retrying.
 
+### Testing
+
+The first time you run tests using `pnpm test`, `pnpm coverage`, etc., you might need to follow some instructions to finish the installation of playwright. If so, these instructions will be shown in the terminal. Also remember to always check that all tests pass with `pnpm test` after making changes. Additionally, a coverage report can be generated and viewed using `pnpm coverage`.
+
+The coverage report will be generated at `coverage/`, and a more detailed list of e2e test results will be generated at `test-results/`.
+
 ## Coding Standards
 
 ### Components
@@ -63,10 +69,14 @@ When fetching data, use [TanStack Query](https://tanstack.com/query/latest). Cre
   - `components/`: React components
     - `ui/`: Generic reusable components
   - `lib/`: Shared utility functions
+- `tests/`: Tests
+  - `component/`: Component tests
+  - `e2e/`: End-to-end tests
 
 ## Contributing
 
 - **Branching:** Use descriptive branch names (e.g., `feat/login`, `fix/broken-slider`).
 - **Commit Messages:** Follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - **Pull Request:** Create a pull request with your changes. Target branch should be `dev` unless you have a good reason for not selecting it.
+- **Testing:** Ensure all tests pass after making your changes.
 - **Review:** All pull requests must be reviewed by at least 1 other team member.

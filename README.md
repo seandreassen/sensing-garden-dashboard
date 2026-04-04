@@ -10,6 +10,9 @@ Web app visualizing data from the Sensing Garden project.
   - `components/`: React components
     - `ui/`: Generic reusable components
   - `lib/`: Shared utility functions
+- `tests/`: Tests
+  - `component/`: Component tests
+  - `e2e/`: End-to-end tests
 
 ## Quick start
 
