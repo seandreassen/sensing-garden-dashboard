@@ -23,7 +23,7 @@ test("shows correct info page", async ({ page }) => {
             id: "dep-12345",
             name: "Test Deployment 3",
             start_time: "2025-01-01",
-            end_time: null,
+            end_time: "2026-01-01",
           },
         ],
       }),
