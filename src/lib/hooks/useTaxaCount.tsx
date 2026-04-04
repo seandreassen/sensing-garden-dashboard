@@ -18,6 +18,10 @@ function useTaxaCount(queryParameters?: GetTaxaCountParameters) {
         { headers: getHeaders() },
       );
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch taxa count: ${res.status} ${res.statusText}`);
+      }
+
       return (await res.json()) as TaxaCountResponse;
     },
   });

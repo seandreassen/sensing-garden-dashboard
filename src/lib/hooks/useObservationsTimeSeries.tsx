@@ -21,6 +21,12 @@ function useObservationsTimeSeries(queryParameters: GetObservationsTimeSeriesPar
         { headers: getHeaders() },
       );
 
+      if (!res.ok) {
+        throw new Error(
+          `Failed to fetch observations time series: ${res.status} ${res.statusText}`,
+        );
+      }
+
       const data = (await res.json()) as ObservationsTimeSeriesResponse;
       return {
         ...data,

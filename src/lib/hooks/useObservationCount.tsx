@@ -18,6 +18,10 @@ function useObservationCount(queryParams?: GetObservationCountParameters) {
         { headers: getHeaders() },
       );
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch observation count: ${res.status} ${res.statusText}`);
+      }
+
       return (await res.json()) as ObservationCountResponse;
     },
   });

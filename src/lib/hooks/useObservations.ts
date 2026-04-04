@@ -17,6 +17,10 @@ function useObservations(queryParams?: GetObservationsParameters) {
         headers: getHeaders(),
       });
 
+      if (!res.ok) {
+        throw new Error(`Failed to fetch observations: ${res.status} ${res.statusText}`);
+      }
+
       const data = (await res.json()) as ObservationsResponse;
       return {
         ...data,

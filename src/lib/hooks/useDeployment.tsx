@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
 import { getHeaders } from "@/lib/headers";
-import type { DeploymentResponse, GetDeploymentParameters } from "@/lib/types/api";
+import type { GetSelectedDeploymentParameters, SelectedDeploymentResponse } from "@/lib/types/api";
 
-function useDeployment({ deployment_id }: GetDeploymentParameters) {
+function useDeployment({ deployment_id }: GetSelectedDeploymentParameters) {
   return useQuery({
     queryKey: ["deployment", deployment_id],
     queryFn: async () => {
@@ -12,7 +12,11 @@ function useDeployment({ deployment_id }: GetDeploymentParameters) {
         headers: getHeaders(),
       });
 
-      const data = (await res.json()) as DeploymentResponse;
+      if (!res.ok) {
+        throw new Error(`Failed to fetch deployment: ${res.status} ${res.statusText}`);
+      }
+
+      const data = (await res.json()) as SelectedDeploymentResponse;
       return {
         ...data,
         deployment: {
@@ -20,7 +24,7 @@ function useDeployment({ deployment_id }: GetDeploymentParameters) {
           start_time: new Date(data.deployment.start_time),
           end_time: data.deployment.end_time ? new Date(data.deployment.end_time) : undefined,
         },
-      } as DeploymentResponse;
+      } as SelectedDeploymentResponse;
     },
   });
 }
