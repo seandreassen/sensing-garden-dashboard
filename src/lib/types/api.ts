@@ -60,7 +60,7 @@ interface DeploymentDevice {
   location?: Location;
 }
 
-interface DeploymentResponse {
+interface SelectedDeploymentResponse {
   deployment: Deployment;
   devices: DeploymentDevice[];
 }
@@ -72,7 +72,7 @@ interface GetDeploymentsParameters {
   sort_desc?: boolean;
 }
 
-interface GetDeploymentParameters {
+interface GetSelectedDeploymentParameters {
   deployment_id: string;
 }
 
@@ -212,9 +212,9 @@ export type {
   GetEnvironmentParameters,
   Deployment,
   DeploymentsResponse,
-  DeploymentResponse,
+  SelectedDeploymentResponse,
   GetDeploymentsParameters,
-  GetDeploymentParameters,
+  GetSelectedDeploymentParameters,
   TaxaCountResponse,
   GetTaxaCountParameters,
   IntervalUnit,
