@@ -43,6 +43,7 @@ function RouteComponent() {
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
   });
 
   useEffect(() => {
@@ -50,6 +51,11 @@ function RouteComponent() {
       setNextToken(data.next_token ?? null);
     }
   }, [data?.next_token]);
+
+  useEffect(() => {
+    setCursorStack([""]);
+    setPageIndex(0);
+  }, [sorting, startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa]);
 
   const onPageChange = (direction: string) => {
     if (direction === "forward" && nextToken) {
@@ -64,8 +70,6 @@ function RouteComponent() {
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     const newSorting = typeof updater === "function" ? updater(sorting) : updater;
     setSorting(newSorting);
-    setCursorStack([""]);
-    setPageIndex(0);
   };
 
   return isLoading ? (
