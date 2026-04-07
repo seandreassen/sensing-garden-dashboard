@@ -44,7 +44,6 @@ function DataTable<TData extends Observation, TValue>({
   onPageChange,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
-
   const [columnVisibility, setColumnVisibility] = useState({
     family: false,
     family_confidence: false,

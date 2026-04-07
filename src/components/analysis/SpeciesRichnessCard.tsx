@@ -2,16 +2,24 @@ import { GitBranchIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
-import { useFamilyCount } from "@/lib/hooks/useFamilyCount";
 import { useFilters } from "@/lib/hooks/useFilters";
+import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 
-function SpeciesRichnessCard() {
-  const { startDate, endDate, hub, taxonomyLevel } = useFilters();
-  const { data: count, isLoading } = useFamilyCount({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
-    limit: 500,
+interface SpeciesRichnessCardProps {
+  deploymentId: string;
+}
+
+function SpeciesRichnessCard({ deploymentId }: SpeciesRichnessCardProps) {
+  const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
+  const { data, isLoading } = useTaxaCount({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    sort_desc: true,
   });
 
   const label = (() => {
@@ -38,7 +46,7 @@ function SpeciesRichnessCard() {
             <Spinner />
           </div>
         ) : (
-          <span className="mt-2 text-4xl font-semibold">{count ?? 0}</span>
+          <span className="mt-2 text-4xl font-semibold">{data?.counts.length ?? 0}</span>
         )}
       </CardContent>
     </Card>

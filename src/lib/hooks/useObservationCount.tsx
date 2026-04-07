@@ -2,16 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
 import { getHeaders } from "@/lib/headers";
-import { addGlobalQueryParameters } from "@/lib/queryParameters";
-import type { ObservationCountResponse, QueryParameters } from "@/lib/types/api";
+import { addQueryParameters } from "@/lib/queryParameters";
+import type { GetObservationCountParameters, ObservationCountResponse } from "@/lib/types/api";
 
-function useObservationCount(queryParams: QueryParameters) {
+function useObservationCount(queryParams?: GetObservationCountParameters) {
   return useQuery({
-    queryKey: ["observations-count", queryParams],
+    queryKey: ["observation-count", queryParams],
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      addGlobalQueryParameters(params, queryParams);
+      addQueryParameters(params, queryParams);
 
       const res = await fetch(
         `${env.VITE_API_BASE_URL}/classifications/count?${params.toString()}`,
@@ -19,12 +19,10 @@ function useObservationCount(queryParams: QueryParameters) {
       );
 
       if (!res.ok) {
-        throw new Error(`Failed to fetch observation count: ${res.status}`);
+        throw new Error(`Failed to fetch observation count: ${res.status} ${res.statusText}`);
       }
 
-      const data = (await res.json()) as ObservationCountResponse;
-
-      return data.count;
+      return (await res.json()) as ObservationCountResponse;
     },
   });
 }

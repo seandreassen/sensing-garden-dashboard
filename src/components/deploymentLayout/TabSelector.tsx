@@ -4,6 +4,7 @@ import { ExportData } from "@/components/ExportData";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 import type { FileRoutesByTo } from "@/routeTree.gen";
+
 const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
   { label: "Overview", route: "/deployment/$deploymentId/overview" },
   { label: "Analytics", route: "/deployment/$deploymentId/analytics" },
@@ -11,11 +12,15 @@ const tabs: { label: string; route: keyof FileRoutesByTo }[] = [
   { label: "Info", route: "/deployment/$deploymentId/info" },
 ] as const;
 
-function TabSelector() {
+interface TabSelectorProps {
+  deploymentId: string;
+}
+
+function TabSelector({ deploymentId }: TabSelectorProps) {
   return (
-    <div className="flex flex-row bg-popover py-3">
+    <div className="flex items-center justify-between bg-popover px-6 py-3">
       <nav>
-        <ul className="flex flex-auto list-none gap-2 px-6">
+        <ul className="flex flex-auto list-none gap-2">
           {tabs.map((tab) => (
             <li key={tab.route} className="flex">
               <Link
@@ -33,9 +38,7 @@ function TabSelector() {
           ))}
         </ul>
       </nav>
-      <span className="flex flex-auto justify-end pr-8" aria-label="Export data button">
-        <ExportData />
-      </span>
+      <ExportData deploymentId={deploymentId} />
     </div>
   );
 }

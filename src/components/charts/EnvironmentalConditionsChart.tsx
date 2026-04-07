@@ -1,3 +1,4 @@
+import { addHours } from "date-fns";
 import { Thermometer, Droplet } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
@@ -11,20 +12,28 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { useEnvironmentTimeSeries } from "@/lib/hooks/useEnvironmentTimeSeries";
 import { useFilters } from "@/lib/hooks/useFilters";
 
-function EnvironmentalConditionsChart() {
+interface EnvironmentalConditionsChartProps {
+  deploymentId: string;
+}
+
+function EnvironmentalConditionsChart({ deploymentId }: EnvironmentalConditionsChartProps) {
   const { startDate, endDate, hub } = useFilters();
-  const {
-    data: rawData = [],
-    isError,
-    isLoading,
-    error,
-  } = useEnvironmentData({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+  const intervalLength = Math.max(
+    Math.round(
+      (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60) / 100,
+    ),
+    1,
+  );
+  const { data, isError, isLoading, error } = useEnvironmentTimeSeries({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    interval_length: intervalLength,
+    interval_unit: "h",
   });
 
   const [enabledMetrics, setEnabledMetrics] = useState({
@@ -36,23 +45,19 @@ function EnvironmentalConditionsChart() {
     setEnabledMetrics((prev) => ({ ...prev, [metric]: !prev[metric] }));
   };
 
-  const environmentalData = useMemo(() => {
-    const seen = new Set<string>();
-    return rawData
-      .filter((item) => {
-        const dateKey = new Date(item.timestamp).toLocaleString();
-        if (seen.has(dateKey)) {
-          return false;
-        }
-        seen.add(dateKey);
-        return true;
-      })
-      .map((item) => ({
-        date: new Date(item.timestamp).toLocaleString(),
-        temperature: item.ambient_temperature,
-        humidity: item.ambient_humidity,
-      }));
-  }, [rawData]);
+  const environmentData = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data?.temperature.map((temperature, i) => {
+      return {
+        date: addHours(data.start_time, i * data.interval_length).toLocaleString(),
+        temperature,
+        humidity: data.humidity[i],
+      };
+    });
+  }, [data]);
 
   if (isLoading) {
     return <div>Loading environmental data...</div>;
@@ -123,7 +128,7 @@ function EnvironmentalConditionsChart() {
       {activeMetrics.length > 0 ? (
         <div className="rounded border border-border p-4" style={{ backgroundColor: "#1a1a1a" }}>
           <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={environmentalData}>
+            <LineChart data={environmentData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" strokeOpacity={0.3} />
               <XAxis
                 dataKey="date"

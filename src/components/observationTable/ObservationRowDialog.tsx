@@ -53,8 +53,8 @@ type ObservationRowDialogProps = {
 function ObservationRowDialog({ onClose, observationData, openStatus }: ObservationRowDialogProps) {
   return (
     <Dialog open={openStatus} onOpenChange={onClose}>
-      <DialogContent className={cn("flex flex-col !max-h-6/7 lg: sm:!max-w-1/2  col-1 mx-auto ")}>
-        <DialogHeader className={cn("pb-4 pt-2 sticky border-b ")}>
+      <DialogContent className={cn("lg: col-1 mx-auto flex !max-h-6/7 flex-col sm:!max-w-1/2")}>
+        <DialogHeader className={cn("sticky border-b pt-2 pb-4")}>
           <DialogTitle>Observation details</DialogTitle>
           <DialogDescription className="text-xs">
             {observationData?.device_id} {/* Swap to observation ID when possible.*/}
@@ -76,7 +76,7 @@ function ObservationRowDialog({ onClose, observationData, openStatus }: Observat
 
           <EnvironmentDataPerObservation aria-label="Environmental conditions" />
         </div>
-        <DialogFooter className={cn("sm:flex-col ")}>
+        <DialogFooter className={cn("sm:flex-col")}>
           <ConfirmObservation />
         </DialogFooter>
       </DialogContent>

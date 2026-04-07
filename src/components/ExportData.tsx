@@ -22,16 +22,21 @@ const fetchImageBlob = async (url: string): Promise<Blob | null> => {
   }
 };
 
-function ExportData() {
-  const filters = useFilters();
-  const { hub, startDate, endDate } = useFilters();
+interface ExportDataProps {
+  deploymentId: string;
+}
 
-  const { data: observations, isLoading } = useObservations({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+function ExportData({ deploymentId }: ExportDataProps) {
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
+  const { data, isLoading } = useObservations({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
     limit: 10,
-    sortDesc: true,
   });
 
   const [downloadCSV, setDownloadCSV] = useState(true);
@@ -40,14 +45,14 @@ function ExportData() {
 
   const handleDownload = async () => {
     try {
-      const items: Observation[] = observations?.items ?? [];
+      const items: Observation[] = data?.items ?? [];
 
       const headers: (keyof Observation)[] = ["timestamp", "device_id"];
-      if (filters.taxonomyLevel === "family") {
+      if (taxonomyLevel === "family") {
         headers.push("family", "family_confidence");
-      } else if (filters.taxonomyLevel === "genus") {
+      } else if (taxonomyLevel === "genus") {
         headers.push("genus", "genus_confidence");
-      } else if (filters.taxonomyLevel === "species") {
+      } else if (taxonomyLevel === "species") {
         headers.push("species", "species_confidence");
       }
 
@@ -96,7 +101,10 @@ function ExportData() {
           const filtered: Record<string, string | number | undefined> = {};
           for (let i = 0; i < headers.length; i++) {
             const h = headers[i];
-            filtered[h] = obj[h];
+            filtered[h] =
+              obj[h] instanceof Date
+                ? (obj[h] as Date).toISOString()
+                : (obj[h] as string | number | undefined);
           }
           return filtered;
         });

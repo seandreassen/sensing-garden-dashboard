@@ -1,78 +1,71 @@
-import { useNavigate } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { MapPinIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Separator } from "@/components/ui/Separator";
 import type { Deployment } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 
-function DeploymentCard({ active, id, name, place, hub_count, last_updated }: Deployment) {
-  const navigate = useNavigate();
+import { Badge } from "./Badge";
 
-  const handleCardClicked = () => {
-    navigate({ to: "/deployment/$deploymentId", params: { deploymentId: id } });
-  };
+interface DeploymentCardProps {
+  deployment: Deployment;
+}
 
-  const handleEditClicked = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate({ to: "/deployment/$deploymentId", params: { deploymentId: id } });
-  };
+function DeploymentCard({ deployment }: DeploymentCardProps) {
+  const { name, deployment_id, start_time, end_time, location_name } = deployment;
+  const active = !end_time || end_time > new Date();
 
   return (
-    <button
-      type="button"
-      className="flex h-52 w-full cursor-pointer flex-col rounded-sm border border-white/10 bg-neutral-900 px-5 py-4 text-left transition-colors hover:border-green-700 hover:shadow-[0_0_0_1px_var(--color-green-700)]"
-      onClick={handleCardClicked}
+    <Link
+      to="/deployment/$deploymentId/overview"
+      params={{ deploymentId: deployment_id }}
+      className={buttonVariants({ variant: "none", size: "none" })}
     >
-      {/* Header: Title + Status badge */}
-      <div className="mb-1 flex items-center justify-between gap-2">
-        <h3 className="truncate text-base font-bold text-card-foreground">{name ?? id}</h3>
-        <span
-          className={cn(
-            "flex shrink-0 items-center gap-1.5 rounded border px-2.5 py-1 text-xs font-semibold uppercase",
-            active
-              ? "border-green-700 bg-green-950/50 text-green-400"
-              : "border-red-700 bg-red-950/50 text-red-400",
-          )}
-        >
-          <span
-            className={cn("h-1.5 w-1.5 rounded-full", active ? "bg-green-400" : "bg-red-400")}
-          />
-          {active ? "Active" : "Inactive"}
-        </span>
-      </div>
+      <Card className="h-46 w-full">
+        <CardHeader className="flex flex-col gap-1">
+          <div className="flex w-full items-center justify-between">
+            <CardTitle className="truncate text-lg text-card-foreground">{name}</CardTitle>
+            <Badge
+              className={cn(
+                "flex items-center gap-2",
+                active
+                  ? "border-primary/30! bg-primary/15 text-primary"
+                  : "border-destructive/30! bg-destructive/15 text-destructive",
+              )}
+            >
+              <span
+                className={cn("size-1.5 rounded-full", active ? "bg-primary" : "bg-destructive")}
+              />
+              <p className="uppercase">{active ? "Active" : "Inactive"}</p>
+            </Badge>
+          </div>
 
-      {/* Location */}
-      <div className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <MapPin className="h-3.5 w-3.5 shrink-0" />
-        <span className="truncate">{place ?? "—"}</span>
-      </div>
+          <div className="ml-2 flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPinIcon className="size-4" />
+            <p className="truncate">{location_name ?? "-"}</p>
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Separator />
 
-      {/* Divider */}
-      <hr className="mb-3 border-white/10" />
+          <div className="flex items-center justify-between">
+            <Badge className="flex items-center gap-2 bg-accent">
+              <span className="text-muted-foreground/50">ID</span>
+              <p className="text-muted-foreground">{deployment_id}</p>
+            </Badge>
+            <p className="text-sm text-muted-foreground">X hubs</p>
+          </div>
 
-      {/* ID badge + hub count */}
-      <div className="mb-3 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 rounded border border-white/15 px-2 py-1 text-xs text-muted-foreground">
-          <span className="font-medium text-muted-foreground/50">ID</span>
-          {id}
-        </span>
-        {hub_count !== undefined && (
-          <span className="text-sm text-muted-foreground">{hub_count} hubs</span>
-        )}
-      </div>
+          <Separator />
 
-      {/* Last updated */}
-      <p className="mb-3 text-sm text-muted-foreground">
-        {last_updated ? `Last updated: ${last_updated}` : ""}
-      </p>
-
-      {/* Edit button — always at bottom */}
-      <div className="mt-auto">
-        <Button size="sm" className="w-full" onClick={handleEditClicked}>
-          Edit deployment
-        </Button>
-      </div>
-    </button>
+          <p className="text-xs text-muted-foreground">
+            {start_time.toLocaleDateString()} - {end_time?.toLocaleDateString()}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 

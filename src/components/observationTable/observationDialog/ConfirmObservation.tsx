@@ -20,18 +20,14 @@ import { Button } from "@/components/ui/Button";
 function ConfirmObservation() {
   return (
     <div className="flex flex-row gap-4">
-      <Button size="none" variant="confirm" className="flex flex-1 flex-col rounded-sm border py-4">
+      <Button size="none" variant="confirm" className="flex flex-1 flex-col rounded border py-4">
         <div className="flex flex-col items-center gap-1">
           <CircleCheckIcon className="basis-1/2" />
           <p className="basis-1/2 font-semibold"> CONFIRM ID</p>
           {/*Placeholder value*/}
         </div>
       </Button>
-      <Button
-        size="none"
-        variant="uncertain"
-        className="flex flex-1 flex-col rounded-sm border py-4"
-      >
+      <Button size="none" variant="uncertain" className="flex flex-1 flex-col rounded border py-4">
         <div className="flex flex-col items-center gap-1">
           <CircleAlertIcon className="basis-1/2" />
           <p className="basis-1/2 font-semibold"> UNCERTAIN</p>
@@ -41,7 +37,7 @@ function ConfirmObservation() {
       <Button
         size="none"
         variant="destructive"
-        className="flex flex-1 flex-col rounded-sm border py-4"
+        className="flex flex-1 flex-col rounded border py-4"
       >
         <div className="flex flex-col items-center gap-1">
           <CircleXIcon className="basis-1/2" />

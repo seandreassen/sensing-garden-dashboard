@@ -8,17 +8,8 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useObservations } from "@/lib/hooks/useObservations";
+import type { Observation } from "@/lib/types/api";
 
-/**
- * Calls data with useObservations hook with parameters from url
- * Sorting state set in `handleSortingChange` in child `DataTable`
- * Adds a download button which supports csv, json and zipped folder of iages.
- *
- * @status - Incomplete lacks pagination, date filtering, and showing confidence as bar only for select species.
- *
- * @todo - Implement pagination, date filtering, and show confidence for only selected taxonomy.
- *
- */
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/observations")({
   head: () => ({
     meta: [{ title: "Observations | Sensing Garden Dashboard" }],
@@ -27,32 +18,38 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 });
 
 function RouteComponent() {
-  const { hub, startDate, endDate } = useFilters();
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [nextToken, setNextToken] = useState<string | undefined>();
   const [cursorStack, setCursorStack] = useState<string[]>([""]);
   const currentToken = cursorStack[pageIndex];
-  const { data: observations, isLoading } = useObservations({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
-    sortBy: sorting[0]?.id,
-    sortDesc: sorting[0]?.desc,
+  const { deploymentId } = Route.useParams();
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
+  const { data, isLoading } = useObservations({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    sort_by: sorting[0].id as keyof Observation,
+    sort_desc: sorting[0].desc,
     limit: 10,
-    nextToken: currentToken,
+    next_token: currentToken,
   });
+
   const { data: totalCount } = useObservationCount({
-    startTime: startDate,
-    endTime: endDate,
-    hubId: hub,
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
   });
 
   useEffect(() => {
-    if (observations?.next_token !== undefined) {
-      setNextToken(observations.next_token ?? null);
+    if (data?.next_token !== undefined) {
+      setNextToken(data.next_token ?? null);
     }
-  }, [observations?.next_token]);
+  }, [data?.next_token]);
 
   const onPageChange = (direction: string) => {
     if (direction === "forward" && nextToken) {
@@ -67,7 +64,7 @@ function RouteComponent() {
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     const newSorting = typeof updater === "function" ? updater(sorting) : updater;
     setSorting(newSorting);
-    setCursorStack([]);
+    setCursorStack([""]);
     setPageIndex(0);
   };
 
@@ -80,13 +77,13 @@ function RouteComponent() {
       {/* Table */}
       <DataTable
         columns={columns}
-        data={observations?.items ?? []}
+        data={data?.items ?? []}
         isLoading={isLoading}
         sorting={sorting}
         onSortingChange={handleSortingChange}
         pageIndex={pageIndex}
         onPageChange={(direction) => onPageChange(direction)}
-        rowCount={typeof totalCount === "number" ? totalCount : 0}
+        rowCount={typeof totalCount?.count === "number" ? totalCount.count : 0}
       />
     </div>
   );
