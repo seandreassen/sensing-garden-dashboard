@@ -13,11 +13,11 @@ import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
 import { getInterval, getTickFormat } from "@/lib/timeSeries";
 
-interface DetectionsOverTimeProps {
+interface ObservationsChartProps {
   deploymentId: string;
 }
 
-function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
+function ObservationsChart({ deploymentId }: ObservationsChartProps) {
   const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
   const { intervalLength, intervalUnit } = getInterval(new Date(startDate), new Date(endDate));
   const { data, isLoading } = useObservationsTimeSeries({
@@ -65,7 +65,6 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
           count,
           time: addInterval(data.start_time, index * data.interval_length).getTime(),
         }))}
-        className="mt-2 mr-2 -ml-4"
       >
         <defs>
           <linearGradient id="detectionsFill" x1="0" y1="0" x2="0" y2="1">
@@ -86,6 +85,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
           tickLine={false}
         />
         <YAxis
+          width={40}
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
           axisLine={false}
           tickLine={false}
@@ -114,4 +114,4 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
   );
 }
 
-export { DetectionsOverTime };
+export { ObservationsChart };

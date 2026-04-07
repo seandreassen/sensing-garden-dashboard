@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
 import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
-import { DetectionsOverTime } from "@/components/charts/DetectionsOverTime";
+import { ObservationsCard } from "@/components/charts/ObservationsCard";
 import { TopTaxa } from "@/components/charts/TopTaxa";
 import { GoogleMaps } from "@/components/map/GoogleMaps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -24,17 +24,7 @@ function RouteComponent() {
         <SpeciesRichnessCard deploymentId={deploymentId} />
       </div>
       <div className="grid grid-cols-3 gap-6">
-        <Card className="col-span-2">
-          <CardHeader className="flex flex-col">
-            <CardTitle className="text-lg">Insect detections over time</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Daily detection count over the selected period
-            </p>
-          </CardHeader>
-          <CardContent>
-            <DetectionsOverTime deploymentId={deploymentId} />
-          </CardContent>
-        </Card>
+        <ObservationsCard deploymentId={deploymentId} />
         <Card>
           <CardHeader className="flex flex-col">
             <CardTitle className="text-lg">Top families</CardTitle>
