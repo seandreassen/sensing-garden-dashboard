@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
 import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
-import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
+import { EnvironmentalConditionsCard } from "@/components/charts/EnvironmentalConditionsCard";
 import { aggregateHeatmap } from "@/lib/heatmapAggregation";
 import { useEnvironment } from "@/lib/hooks/useEnvironment";
 import { useFilters } from "@/lib/hooks/useFilters";
@@ -83,21 +83,14 @@ function RouteComponent() {
         taxonomyLabel={taxonomyLevel}
         isLoading={obsLoading || envLoading}
       />
+      <EnvironmentalConditionsCard deploymentId={deploymentId} />
 
-      <div className="flex flex-col border border-border">
-        <h2 className="p-4 text-xl font-semibold">Environmental Data</h2>
+      <div className="rounded p-4">
+        <AirPollutionChart deploymentId={deploymentId} />
+      </div>
 
-        <div className="rounded p-4">
-          <EnvironmentalConditionsChart deploymentId={deploymentId} />
-        </div>
-
-        <div className="rounded p-4">
-          <AirPollutionChart deploymentId={deploymentId} />
-        </div>
-
-        <div className="rounded p-4">
-          <AirQualityIndicesChart deploymentId={deploymentId} />
-        </div>
+      <div className="rounded p-4">
+        <AirQualityIndicesChart deploymentId={deploymentId} />
       </div>
     </div>
   );

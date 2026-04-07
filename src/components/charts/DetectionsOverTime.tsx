@@ -79,7 +79,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
           type="number"
           domain={["dataMin", "dataMax"]}
           scale="time"
-          minTickGap={20}
+          minTickGap={30}
           tickFormatter={formatTick}
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
           axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
