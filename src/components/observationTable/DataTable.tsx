@@ -23,6 +23,7 @@ import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  limit: number;
   data: TData[];
   nextToken?: string | null;
   isLoading?: boolean;
@@ -42,6 +43,7 @@ function DataTable<TData extends Observation, TValue>({
   rowCount,
   pageIndex,
   onPageChange,
+  limit,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
   const [columnVisibility, setColumnVisibility] = useState({
@@ -92,8 +94,9 @@ function DataTable<TData extends Observation, TValue>({
     /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
   }
   const paginationButtons: JSX.Element = (
-    <div className="flex items-center justify-start space-x-2 px-3 py-4">
+    <div className="flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
       <Button
+        className="w-18"
         variant="outline"
         size="sm"
         onClick={() => onPageChange("backward")}
@@ -101,12 +104,19 @@ function DataTable<TData extends Observation, TValue>({
       >
         Previous
       </Button>
-      <span className="text-xs">
-        Rows {pageIndex * 10 + 1}-
-        {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * 10} of {rowCount}
-        Page {pageIndex + 1} of {table.getPageCount()}
+      <span className="flex flex-col items-center text-xs">
+        <span>
+          Page <span className="font-bold text-primary">{`${pageIndex + 1} `}</span>
+          of {table.getPageCount()}
+        </span>
+        <span>
+          Rows {pageIndex * limit + 1}-
+          {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit} of{" "}
+          {rowCount}
+        </span>
       </span>
       <Button
+        className="w-18"
         variant="outline"
         size="sm"
         onClick={() => onPageChange("forward")}
@@ -129,7 +139,7 @@ function DataTable<TData extends Observation, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead className="bg-muted px-4 py-4 text-lg" key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -143,13 +153,13 @@ function DataTable<TData extends Observation, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="cursor-pointer"
+                className="cursor-pointer text-wrap"
                 onClick={() => openModal(row.original)} //Opens modal with correct row's info onclick.
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell className="wrap-break-word" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

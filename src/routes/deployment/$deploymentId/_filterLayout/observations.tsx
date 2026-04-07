@@ -18,6 +18,7 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 });
 
 function RouteComponent() {
+  const limit: number = 10;
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [nextToken, setNextToken] = useState<string | undefined>();
@@ -35,7 +36,7 @@ function RouteComponent() {
     selected_taxa: selectedTaxa,
     sort_by: sorting[0].id as keyof Observation,
     sort_desc: sorting[0].desc,
-    limit: 10,
+    limit: limit,
     next_token: currentToken,
   });
 
@@ -81,6 +82,7 @@ function RouteComponent() {
       {/* Table */}
       <DataTable
         columns={columns}
+        limit={limit}
         data={data?.items ?? []}
         isLoading={isLoading}
         sorting={sorting}
