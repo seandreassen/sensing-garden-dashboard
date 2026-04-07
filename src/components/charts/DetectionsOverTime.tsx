@@ -1,4 +1,4 @@
-import { addHours } from "date-fns";
+import { addDays, addHours, format } from "date-fns";
 import {
   Area,
   AreaChart,
@@ -11,31 +11,15 @@ import {
 
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
+import { getInterval, getTickFormat } from "@/lib/timeSeries";
 
 interface DetectionsOverTimeProps {
   deploymentId: string;
 }
 
-function formatXLabel(value: string): string {
-  if (value.includes("T")) {
-    const [, time] = value.split("T");
-    return time ?? value;
-  }
-  const parts = value.split("-");
-  if (parts.length === 3) {
-    return `${parts[1]}/${parts[2]}`;
-  }
-  return value;
-}
-
 function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
   const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
-  const intervalLength = Math.max(
-    Math.round(
-      (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60) / 100,
-    ),
-    1,
-  );
+  const { intervalLength, intervalUnit } = getInterval(new Date(startDate), new Date(endDate));
   const { data, isLoading } = useObservationsTimeSeries({
     start_time: startDate,
     end_time: endDate,
@@ -45,12 +29,12 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
     taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
     interval_length: intervalLength,
-    interval_unit: "h",
+    interval_unit: intervalUnit,
   });
 
   if (isLoading) {
     return (
-      <div className="flex h-[300px] items-center justify-center">
+      <div className="flex h-75 items-center justify-center">
         <span className="text-sm text-muted-foreground">Loading chart...</span>
       </div>
     );
@@ -58,20 +42,30 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
 
   if (!data || data.counts.length === 0) {
     return (
-      <div className="flex h-[300px] items-center justify-center">
+      <div className="flex h-75 items-center justify-center">
         <span className="text-sm text-muted-foreground">No data for selected filters</span>
       </div>
     );
   }
+
+  const addInterval = data.interval_unit === "h" ? addHours : addDays;
+  const tickFormat = getTickFormat(
+    data.start_time,
+    data.interval_unit,
+    data.interval_length,
+    data.counts.length,
+  );
+  const formatTick = (value: number) =>
+    tickFormat ? format(new Date(value), tickFormat) : new Date(value).toLocaleString();
 
   return (
     <ResponsiveContainer width="100%" height={300}>
       <AreaChart
         data={data.counts.map((count, index) => ({
           count,
-          time: addHours(data.start_time, index * intervalLength).toISOString(),
+          time: addInterval(data.start_time, index * data.interval_length).getTime(),
         }))}
-        margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+        className="mt-2 mr-2 -ml-4"
       >
         <defs>
           <linearGradient id="detectionsFill" x1="0" y1="0" x2="0" y2="1">
@@ -82,11 +76,14 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
         <XAxis
           dataKey="time"
-          tickFormatter={formatXLabel}
+          type="number"
+          domain={["dataMin", "dataMax"]}
+          scale="time"
+          minTickGap={20}
+          tickFormatter={formatTick}
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
           axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
           tickLine={false}
-          interval="preserveStartEnd"
         />
         <YAxis
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
@@ -102,13 +99,7 @@ function DetectionsOverTime({ deploymentId }: DetectionsOverTimeProps) {
             color: "var(--color-foreground)",
             fontSize: "13px",
           }}
-          labelFormatter={(label) => {
-            const str = String(label);
-            if (str.includes("T")) {
-              return str.replace("T", " ");
-            }
-            return str;
-          }}
+          labelFormatter={(label) => new Date(label).toLocaleString()}
         />
         <Area
           type="monotone"

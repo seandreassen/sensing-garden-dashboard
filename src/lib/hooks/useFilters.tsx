@@ -16,20 +16,20 @@ function useFilters() {
       case "24h":
         return {
           preset: "24h",
-          start: subHours(now, 24).toISOString(),
-          end: now.toISOString(),
+          start: subHours(now, 24),
+          end: now,
         };
       case "30d":
         return {
           preset: "30d",
-          start: subDays(now, 30).toISOString(),
-          end: now.toISOString(),
+          start: subDays(now, 30),
+          end: now,
         };
       case "3m":
         return {
           preset: "3m",
-          start: subMonths(now, 3).toISOString(),
-          end: now.toISOString(),
+          start: subMonths(now, 3),
+          end: now,
         };
       // @ts-ignore - Fallthrough case is on purpose
       case "custom":
@@ -38,20 +38,21 @@ function useFilters() {
           search.startDate &&
           !isNaN(Date.parse(search.startDate)) &&
           search.endDate &&
-          !isNaN(Date.parse(search.endDate))
+          !isNaN(Date.parse(search.endDate)) &&
+          new Date(search.endDate) > new Date(search.startDate)
         ) {
           return {
             preset: "custom",
-            start: startOfDay(new Date(search.startDate)).toISOString(),
-            end: endOfDay(new Date(search.endDate)).toISOString(),
+            start: startOfDay(new Date(search.startDate)),
+            end: endOfDay(new Date(search.endDate)),
           };
         }
       default:
       case "7d": // 7d is last because it's the default, needs to be after default and custom if incorrectly formatted
         return {
           preset: "7d",
-          start: subDays(now, 7).toISOString(),
-          end: now.toISOString(),
+          start: subDays(now, 7),
+          end: now,
         };
     }
   }, [search.rangePreset, search.startDate, search.endDate]);
@@ -60,8 +61,8 @@ function useFilters() {
     () => ({
       ...search,
       rangePreset: range.preset,
-      startDate: range.start,
-      endDate: range.end,
+      startDate: range.start.toISOString(),
+      endDate: range.end.toISOString(),
       taxonomyLevel: search.taxonomyLevel ?? filtersDefault.taxonomyLevel,
       minConfidence: search.minConfidence ?? filtersDefault.minConfidence,
       selectedTaxa: search.selectedTaxa ?? filtersDefault.selectedTaxa,
