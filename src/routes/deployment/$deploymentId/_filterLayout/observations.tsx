@@ -19,11 +19,8 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 
 function RouteComponent() {
   const limit: number = 10;
-  const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: false }]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: true }]);
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const [nextToken, setNextToken] = useState<string | undefined>();
-  const [cursorStack, setCursorStack] = useState<string[]>([""]);
-  const currentToken = cursorStack[pageIndex];
   const { deploymentId } = Route.useParams();
   const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
   const { data, isLoading } = useObservations({
@@ -37,7 +34,7 @@ function RouteComponent() {
     sort_by: sorting[0].id as keyof Observation,
     sort_desc: sorting[0].desc,
     limit: limit,
-    next_token: currentToken,
+    next_token: `{"offset":${limit * pageIndex}}`,
   });
 
   const { data: totalCount } = useObservationCount({
@@ -48,19 +45,11 @@ function RouteComponent() {
   });
 
   useEffect(() => {
-    if (data?.next_token !== undefined) {
-      setNextToken(data.next_token ?? null);
-    }
-  }, [data?.next_token]);
-
-  useEffect(() => {
-    setCursorStack([""]);
     setPageIndex(0);
   }, [sorting, startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa]);
 
   const onPageChange = (direction: string) => {
-    if (direction === "forward" && nextToken) {
-      setCursorStack((prev) => [...prev.slice(0, pageIndex + 1), nextToken]);
+    if (direction === "forward" && data?.next_token) {
       setPageIndex((i) => i + 1);
     }
     if (direction === "backward" && pageIndex >= 1) {
