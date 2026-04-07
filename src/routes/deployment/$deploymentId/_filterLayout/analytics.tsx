@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
-import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
+import { AirPollutionCard } from "@/components/charts/AirPollutionCard";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsCard } from "@/components/charts/EnvironmentalConditionsCard";
 import { aggregateHeatmap } from "@/lib/heatmapAggregation";
@@ -84,10 +84,7 @@ function RouteComponent() {
         isLoading={obsLoading || envLoading}
       />
       <EnvironmentalConditionsCard deploymentId={deploymentId} />
-
-      <div className="rounded p-4">
-        <AirPollutionChart deploymentId={deploymentId} />
-      </div>
+      <AirPollutionCard deploymentId={deploymentId} />
 
       <div className="rounded p-4">
         <AirQualityIndicesChart deploymentId={deploymentId} />
