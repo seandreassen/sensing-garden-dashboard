@@ -56,7 +56,7 @@ function EnvironmentalConditionsCard({ deploymentId }: EnvironmentalConditionsCa
         </CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent>
+      <CardContent className="flex flex-col gap-4">
         <ToggleMetricsRow metrics={metrics} toggleMetric={toggleMetric} />
         <EnvironmentalConditionsChart
           timeSeries={timeSeries}

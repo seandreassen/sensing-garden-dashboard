@@ -17,7 +17,6 @@ interface AirPollutionCardProps {
 function AirPollutionCard({ deploymentId }: AirPollutionCardProps) {
   const { startDate, endDate, hub } = useFilters();
   const { intervalLength, intervalUnit } = getInterval(new Date(startDate), new Date(endDate));
-
   const timeSeries = useEnvironmentTimeSeries({
     start_time: startDate,
     end_time: endDate,
@@ -79,7 +78,7 @@ function AirPollutionCard({ deploymentId }: AirPollutionCardProps) {
         </CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent className="space-y-4">
+      <CardContent className="flex flex-col gap-4">
         <ToggleMetricsRow metrics={metrics} toggleMetric={togglePollutant} />
         <AirPollutionChart timeSeries={timeSeries} metrics={metrics} />
       </CardContent>

@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
 import { AirPollutionCard } from "@/components/charts/AirPollutionCard";
-import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
+import { AirQualityIndicesCard } from "@/components/charts/AirQualityIndicesCard";
 import { EnvironmentalConditionsCard } from "@/components/charts/EnvironmentalConditionsCard";
 import { aggregateHeatmap } from "@/lib/heatmapAggregation";
 import { useEnvironment } from "@/lib/hooks/useEnvironment";
@@ -85,10 +85,7 @@ function RouteComponent() {
       />
       <EnvironmentalConditionsCard deploymentId={deploymentId} />
       <AirPollutionCard deploymentId={deploymentId} />
-
-      <div className="rounded p-4">
-        <AirQualityIndicesChart deploymentId={deploymentId} />
-      </div>
+      <AirQualityIndicesCard deploymentId={deploymentId} />
     </div>
   );
 }

@@ -79,7 +79,6 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
             pm10: data.pm10[i],
           };
         })}
-        className="mt-2 mr-2 -ml-4"
       >
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
         <XAxis
@@ -94,7 +93,7 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
           tickLine={false}
         />
         <YAxis
-          domain={[0, "dataMax"]}
+          domain={[0, "auto"]}
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
           axisLine={false}
           tickLine={false}

@@ -72,7 +72,6 @@ function EnvironmentalConditionsChart({ timeSeries, metrics }: EnvironmentalCond
           temperature,
           humidity: data.humidity[i],
         }))}
-        className="mt-2 mr-2 -ml-4"
       >
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
         <XAxis
