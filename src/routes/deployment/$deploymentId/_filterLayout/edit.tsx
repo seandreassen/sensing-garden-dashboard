@@ -1,9 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { EditDescriptionCard } from "@/components/deploymentEditor/EditDescriptionCard";
+import { EditNameCard } from "@/components/deploymentEditor/EditNameCard";
+
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/edit")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <div>Hello "/deployment/$deploymentId/_filterLayout/edit"!</div>;
+  return (
+    <div className="grid grid-cols-3 gap-5">
+      <div className="flex flex-col gap-5">
+        <EditNameCard initialValue="deez" />
+        <EditNameCard />
+        <EditNameCard />
+      </div>
+      <div className="flex flex-col gap-5">
+        <EditNameCard />
+        <EditDescriptionCard />
+        <EditNameCard />
+      </div>
+      <div className="flex flex-col gap-5">
+        <EditNameCard />
+        <EditNameCard />
+        <EditNameCard />
+      </div>
+    </div>
+  );
 }

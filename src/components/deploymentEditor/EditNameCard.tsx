@@ -1,14 +1,10 @@
 import { PencilIcon } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
 
-function useTrackedValue(initialValue: string) {
-  const [value, setValue] = useState(initialValue);
-  const isDirty = value !== initialValue;
-  return { value, setValue, isDirty };
-}
+import { useTrackedValue } from "./useTrackedValue";
 
 function EditNameCard({
   initialValue = "",
