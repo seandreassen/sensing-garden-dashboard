@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { EditDateRangeCard } from "@/components/deploymentEditor/EditDateRangeCard";
 import { EditDescriptionCard } from "@/components/deploymentEditor/EditDescriptionCard";
+import { EditImageCard } from "@/components/deploymentEditor/EditImageCard";
 import { EditNameCard } from "@/components/deploymentEditor/EditNameCard";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/edit")({
@@ -23,7 +24,7 @@ function RouteComponent() {
       </div>
       <div className="flex flex-col gap-5">
         <EditNameCard />
-        <EditNameCard />
+        <EditImageCard />
         <EditNameCard />
       </div>
     </div>
