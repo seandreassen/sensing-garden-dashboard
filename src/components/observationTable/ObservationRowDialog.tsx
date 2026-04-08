@@ -74,7 +74,10 @@ function ObservationRowDialog({ onClose, observationData, openStatus }: Observat
             observationData={observationData}
           />
 
-          <EnvironmentDataPerObservation aria-label="Environmental conditions" />
+          <EnvironmentDataPerObservation
+            aria-label="Environmental conditions"
+            observationData={observationData}
+          />
         </div>
         <DialogFooter className={cn("sm:flex-col")}>
           <ConfirmObservation />
