@@ -5,6 +5,8 @@ import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
 import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
 import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
 import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
+import { TaxaTreemap } from "@/components/charts/TaxaTreemap";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { aggregateHeatmap } from "@/lib/heatmapAggregation";
 import { useEnvironment } from "@/lib/hooks/useEnvironment";
 import { useFilters } from "@/lib/hooks/useFilters";
@@ -99,6 +101,18 @@ function RouteComponent() {
           <AirQualityIndicesChart deploymentId={deploymentId} />
         </div>
       </div>
+
+      <Card className="w-full self-start lg:w-1/2">
+        <CardHeader className="flex flex-col">
+          <CardTitle className="text-lg">Taxa treemap</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Detection count by selected taxonomy level
+          </p>
+        </CardHeader>
+        <CardContent>
+          <TaxaTreemap deploymentId={deploymentId} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
