@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import { getHeaders } from "@/lib/headers";
-import { addQueryParameters } from "@/lib/queryParameters";
 import type { EnvironmentResponse, GetEnvironmentParameters } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
+import { addQueryParameters } from "@/lib/utils/queryParameters";
 
 function useEnvironment(queryParams?: GetEnvironmentParameters) {
   return useQuery({

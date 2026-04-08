@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import { getHeaders } from "@/lib/headers";
-import { addQueryParameters } from "@/lib/queryParameters";
 import type { GetObservationsParameters, ObservationsResponse } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
+import { addQueryParameters } from "@/lib/utils/queryParameters";
 
 function useObservations(queryParams?: GetObservationsParameters) {
   return useQuery({
