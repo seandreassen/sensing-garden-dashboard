@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import { getHeaders } from "@/lib/headers";
 import type { GetSelectedDeploymentParameters, SelectedDeploymentResponse } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
 
 function useDeployment({ deployment_id }: GetSelectedDeploymentParameters) {
   return useQuery({
