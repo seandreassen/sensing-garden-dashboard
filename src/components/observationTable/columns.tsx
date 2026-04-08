@@ -42,7 +42,7 @@ const columns: ColumnDef<Observation>[] = [
       return (
         <Button
           className={cn("[font-size:inherit]")}
-          variant="ghost"
+          variant="outline"
           onClick={() => column.toggleSorting(sorted === "asc")}
         >
           Timestamp
