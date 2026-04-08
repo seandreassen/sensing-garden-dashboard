@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import { getHeaders } from "@/lib/headers";
 import type { Deployment, DeploymentDevice } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
 
 const JSON_HEADERS = { ...getHeaders(), "Content-Type": "application/json" };
 

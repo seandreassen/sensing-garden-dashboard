@@ -95,8 +95,8 @@ function EditPage({
         <div className="flex flex-col gap-5">
           <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
           <EditDateRangeCard
-            initialStartDate={deployment.start_time ?? ""}
-            initialEndDate={deployment.end_time ?? ""}
+            initialStartDate={deployment.start_time ? deployment.start_time.toISOString() : ""}
+            initialEndDate={deployment.end_time ? deployment.end_time.toISOString() : ""}
             onChange={(start, end) => {
               setStartDate(start);
               setEndDate(end);

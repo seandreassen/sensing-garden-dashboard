@@ -7,7 +7,6 @@ import { PinIcon } from "@/components/map/PinIcon";
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { env } from "@/env";
-import { useHubs } from "@/lib/hooks/useHubs";
 import type { Location } from "@/lib/types/api";
 
 import { InlineField } from "./InlineField";
@@ -37,30 +36,25 @@ function NewDeviceRow({
   onConfirm: (device: Device) => void;
   onCancel: () => void;
 }) {
-  const { data: hubs } = useHubs();
   const [deviceId, setDeviceId] = useState("");
   const [name, setName] = useState("");
 
-  const available = hubs?.filter((h) => !existingDeviceIds.has(h.device_id)) ?? [];
+  const isDuplicate = existingDeviceIds.has(deviceId);
 
   return (
     <div className="flex flex-col gap-1 rounded border border-ring px-2 py-2">
-      <select
+      <input
         value={deviceId}
         onChange={(e) => setDeviceId(e.target.value)}
+        placeholder="Device ID"
         className="h-8 w-full border-none bg-accent px-2 text-sm outline-none"
-      >
-        <option value="">Select a device…</option>
-        {available.map((h) => (
-          <option key={h.device_id} value={h.device_id}>
-            {h.device_id}
-          </option>
-        ))}
-      </select>
+      />
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && deviceId && onConfirm({ device_id: deviceId, name })}
+        onKeyDown={(e) =>
+          e.key === "Enter" && deviceId && !isDuplicate && onConfirm({ device_id: deviceId, name })
+        }
         placeholder="Name"
         className="h-8 w-full border-none bg-accent px-2 text-sm outline-none"
       />
@@ -71,8 +65,8 @@ function NewDeviceRow({
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => deviceId && onConfirm({ device_id: deviceId, name })}
-          disabled={!deviceId}
+          onClick={() => deviceId && !isDuplicate && onConfirm({ device_id: deviceId, name })}
+          disabled={!deviceId || isDuplicate}
         >
           <CheckIcon className="h-3.5 w-3.5" />
         </Button>
@@ -116,7 +110,7 @@ function EditDevicesMapCard({
     const nextLocs = typeof updater === "function" ? updater(currentLocs) : updater;
     update(
       devices.map((d) => {
-        const locIndex = located.indexOf(d);
+        const locIndex = located.findIndex((l) => l.device_id === d.device_id);
         if (locIndex === -1) {
           return d;
         }

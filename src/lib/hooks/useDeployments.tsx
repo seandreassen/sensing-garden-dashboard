@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import { getHeaders } from "@/lib/headers";
 import type { DeploymentDetail, DeploymentsResponse } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
 
 function useDeployments() {
   return useQuery({
@@ -40,7 +40,14 @@ function useDeployment(deploymentId: string) {
         deployment: Omit<DeploymentDetail, "devices">;
         devices: DeploymentDetail["devices"];
       };
-      return { ...data.deployment, devices: data.devices };
+      return {
+        ...data.deployment,
+        start_time: new Date(data.deployment.start_time as unknown as string),
+        end_time: data.deployment.end_time
+          ? new Date(data.deployment.end_time as unknown as string)
+          : undefined,
+        devices: data.devices,
+      };
     },
   });
 }
