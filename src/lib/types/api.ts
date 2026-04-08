@@ -45,19 +45,23 @@ interface Deployment {
   location_name?: string;
   location?: Location;
   image_url?: string;
+  hub_count?: number;
+}
+
+interface DeploymentDevice {
+  device_id: string;
+  name?: string;
+  location?: Location;
+}
+
+interface DeploymentDetail extends Deployment {
+  devices: DeploymentDevice[];
 }
 
 interface DeploymentsResponse {
   deployments: Deployment[];
   count: number;
   next_token: string;
-}
-
-interface DeploymentDevice {
-  device_id: string;
-  deployment_id: string;
-  name?: string;
-  location?: Location;
 }
 
 interface SelectedDeploymentResponse {
@@ -205,11 +209,15 @@ export type {
   EnvironmentResponse,
   GetEnvironmentParameters,
   Deployment,
+  DeploymentDevice,
+  DeploymentDetail,
   DeploymentsResponse,
   SelectedDeploymentResponse,
   GetDeploymentsParameters,
   GetSelectedDeploymentParameters,
+  TaxaCount,
   TaxaCountResponse,
+  TaxonomyLevel,
   GetTaxaCountParameters,
   IntervalUnit,
   ObservationsTimeSeriesResponse,
@@ -222,5 +230,4 @@ export type {
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
-  TaxonomyLevel,
 };

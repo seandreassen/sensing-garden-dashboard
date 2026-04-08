@@ -1,60 +1,16 @@
-import { PencilIcon, PlusIcon, Trash2Icon, XIcon, CheckIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon, XIcon, CheckIcon } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
 import type { Location } from "@/lib/types/api";
 
+import { InlineField } from "./InlineField";
+
 interface Device {
   device_id: string;
   name: string;
   location?: Location;
-}
-
-function InlineField({
-  value,
-  onChange,
-  placeholder,
-  isDirty,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  isDirty?: boolean;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus();
-    }
-  }, [isEditing]);
-
-  if (isEditing) {
-    return (
-      <input
-        ref={inputRef}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onBlur={() => setIsEditing(false)}
-        onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
-        placeholder={placeholder}
-        className="h-8 w-full border-none bg-accent px-2 text-sm outline-none"
-      />
-    );
-  }
-
-  return (
-    <Button
-      variant="ghost"
-      className={`h-8 w-full justify-start text-sm ${isDirty ? "text-primary" : ""}`}
-      onClick={() => setIsEditing(true)}
-    >
-      <span className="truncate">{value || placeholder}</span>
-      <PencilIcon className="ml-auto h-3 w-3 shrink-0" />
-    </Button>
-  );
 }
 
 function NewDeviceRow({

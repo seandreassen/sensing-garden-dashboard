@@ -12,7 +12,7 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
   const { data: deployments } = useDeployments();
 
   const activeDeployments =
-    deployments?.deployments.filter(
+    deployments?.filter(
       (deployment) => !deployment.end_time || deployment.end_time > new Date(),
     ) ?? [];
 
