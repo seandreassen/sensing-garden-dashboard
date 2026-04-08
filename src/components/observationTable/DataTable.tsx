@@ -137,7 +137,7 @@ function DataTable<TData extends Observation, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="bg-muted px-4 py-4 text-mdplus" key={header.id}>
+                  <TableHead className="bg-muted p-4 text-base" key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
