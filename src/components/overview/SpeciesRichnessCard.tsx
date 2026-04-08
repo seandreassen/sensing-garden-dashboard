@@ -1,6 +1,6 @@
 import { GitBranchIcon } from "lucide-react";
 
-import { SpeciesRichness } from "@/components/analysis/SpeciesRichness";
+import { SpeciesRichness } from "@/components/overview/SpeciesRichness";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { useFilters } from "@/lib/hooks/useFilters";
 

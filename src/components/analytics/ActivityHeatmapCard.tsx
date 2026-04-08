@@ -1,4 +1,4 @@
-import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
+import { ActivityHeatmap } from "@/components/analytics/ActivityHeatmap";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 

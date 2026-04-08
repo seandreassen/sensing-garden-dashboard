@@ -2,10 +2,10 @@ import { addHours } from "date-fns";
 
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/Tooltip";
-import { getCellColor, getRowBuckets } from "@/lib/heatmap";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
 import { cn } from "@/lib/utils";
+import { getCellColor, getRowBuckets } from "@/lib/utils/heatmap";
 
 interface ActivityHeatmapChartProps {
   deploymentId: string;

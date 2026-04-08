@@ -1,4 +1,4 @@
-import type { TimeSeriesDataKey, Metric } from "@/components/charts/types";
+import type { TimeSeriesDataKey, Metric } from "@/components/analytics/types";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 

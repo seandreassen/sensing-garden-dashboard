@@ -1,14 +1,14 @@
 import { WindIcon } from "lucide-react";
 import { useState } from "react";
 
-import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
-import { ToggleMetricsRow } from "@/components/charts/ToggleMetricsRow";
-import type { Metric } from "@/components/charts/types";
+import { AirPollutionChart } from "@/components/analytics/AirPollutionChart";
+import { ToggleMetricsRow } from "@/components/analytics/ToggleMetricsRow";
+import type { Metric } from "@/components/analytics/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import { useEnvironmentTimeSeries } from "@/lib/hooks/useEnvironmentTimeSeries";
 import { useFilters } from "@/lib/hooks/useFilters";
-import { getInterval } from "@/lib/timeSeries";
+import { getInterval } from "@/lib/utils/timeSeries";
 
 interface AirPollutionCardProps {
   deploymentId: string;

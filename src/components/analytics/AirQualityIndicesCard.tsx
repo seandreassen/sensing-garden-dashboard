@@ -1,14 +1,14 @@
 import { ActivityIcon } from "lucide-react";
 import { useState } from "react";
 
-import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
-import { ToggleMetricsRow } from "@/components/charts/ToggleMetricsRow";
-import type { Metric } from "@/components/charts/types";
+import { AirQualityIndicesChart } from "@/components/analytics/AirQualityIndicesChart";
+import { ToggleMetricsRow } from "@/components/analytics/ToggleMetricsRow";
+import type { Metric } from "@/components/analytics/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import { useEnvironmentTimeSeries } from "@/lib/hooks/useEnvironmentTimeSeries";
 import { useFilters } from "@/lib/hooks/useFilters";
-import { getInterval } from "@/lib/timeSeries";
+import { getInterval } from "@/lib/utils/timeSeries";
 
 interface AirQualityIndicesCardProps {
   deploymentId: string;

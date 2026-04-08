@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ActivityHeatmapCard } from "@/components/charts/ActivityHeatmapCard";
-import { AirPollutionCard } from "@/components/charts/AirPollutionCard";
-import { AirQualityIndicesCard } from "@/components/charts/AirQualityIndicesCard";
-import { EnvironmentalConditionsCard } from "@/components/charts/EnvironmentalConditionsCard";
+import { ActivityHeatmapCard } from "@/components/analytics/ActivityHeatmapCard";
+import { AirPollutionCard } from "@/components/analytics/AirPollutionCard";
+import { AirQualityIndicesCard } from "@/components/analytics/AirQualityIndicesCard";
+import { EnvironmentalConditionsCard } from "@/components/analytics/EnvironmentalConditionsCard";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
   head: () => ({

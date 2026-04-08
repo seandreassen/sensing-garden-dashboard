@@ -1,6 +1,6 @@
 import { CameraIcon } from "lucide-react";
 
-import { TotalInsectCount } from "@/components/analysis/TotalInsectCount";
+import { TotalInsectCount } from "@/components/overview/TotalInsectCount";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
 interface TotalInsectCountCardProps {

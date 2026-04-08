@@ -10,25 +10,22 @@ import {
   YAxis,
 } from "recharts";
 
-import type { TimeSeries, Metric, TimeSeriesDataKey } from "@/components/charts/types";
-import { getTickFormat } from "@/lib/timeSeries";
+import type { TimeSeries, Metric } from "@/components/analytics/types";
+import { getTickFormat } from "@/lib/utils/timeSeries";
 
-interface AirPollutionChartProps<T extends TimeSeriesDataKey> {
+interface EnvironmentalConditionsChartProps {
   timeSeries: TimeSeries;
-  metrics: Metric<T>[];
+  metrics: Metric[];
 }
 
-function AirPollutionChart<T extends TimeSeriesDataKey>({
-  timeSeries,
-  metrics,
-}: AirPollutionChartProps<T>) {
+function EnvironmentalConditionsChart({ timeSeries, metrics }: EnvironmentalConditionsChartProps) {
   const { data, isError, isLoading, error } = timeSeries;
   const activeMetrics = metrics.filter((metric) => metric.enabled);
 
   if (isLoading) {
     return (
       <div className="flex h-75 items-center justify-center">
-        <span className="text-sm text-muted-foreground">Loading air quality data...</span>
+        <span className="text-sm text-muted-foreground">Loading environmental data...</span>
       </div>
     );
   }
@@ -62,7 +59,7 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
     data.start_time,
     data.interval_unit,
     data.interval_length,
-    data.pm1p0.length,
+    data.temperature.length,
   );
   const formatTick = (value: number) =>
     tickFormat ? format(new Date(value), tickFormat) : new Date(value).toLocaleString();
@@ -70,15 +67,11 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
   return (
     <ResponsiveContainer width="100%" height={280}>
       <LineChart
-        data={data.pm1p0.map((pm1p0, i) => {
-          return {
-            time: addInterval(data.start_time, i * data.interval_length).getTime(),
-            pm1p0,
-            pm2p5: data.pm2p5[i],
-            pm4p0: data.pm4p0[i],
-            pm10: data.pm10[i],
-          };
-        })}
+        data={data.temperature.map((temperature, i) => ({
+          time: addInterval(data.start_time, i * data.interval_length).getTime(),
+          temperature,
+          humidity: data.humidity[i],
+        }))}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
         <XAxis
@@ -93,14 +86,28 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
           tickLine={false}
         />
         <YAxis
-          domain={[0, "auto"]}
+          yAxisId="left"
           tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
           axisLine={false}
           tickLine={false}
           label={{
-            value: "μg/m³",
+            value: "Temperature (°C)",
             angle: -90,
             position: "insideLeft",
+            style: { fontSize: 12, fill: "var(--color-muted-foreground)" },
+          }}
+        />
+        <YAxis
+          yAxisId="right"
+          orientation="right"
+          domain={[0, 100]}
+          tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
+          axisLine={false}
+          tickLine={false}
+          label={{
+            value: "Humidity (%)",
+            angle: 90,
+            position: "insideRight",
             style: { fontSize: 12, fill: "var(--color-muted-foreground)" },
           }}
         />
@@ -118,6 +125,7 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
         {activeMetrics.map((metric) => (
           <Line
             key={metric.key}
+            yAxisId={metric.key === "temperature" ? "left" : "right"}
             type="monotone"
             dataKey={metric.key}
             stroke={metric.color}
@@ -131,4 +139,4 @@ function AirPollutionChart<T extends TimeSeriesDataKey>({
   );
 }
 
-export { AirPollutionChart };
+export { EnvironmentalConditionsChart };

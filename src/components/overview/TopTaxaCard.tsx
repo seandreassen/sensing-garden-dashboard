@@ -1,4 +1,4 @@
-import { TopTaxa } from "@/components/charts/TopTaxa";
+import { TopTaxa } from "@/components/overview/TopTaxa";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import { useFilters } from "@/lib/hooks/useFilters";

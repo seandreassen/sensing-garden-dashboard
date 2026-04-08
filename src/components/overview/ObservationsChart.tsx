@@ -11,7 +11,7 @@ import {
 
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
-import { getInterval, getTickFormat } from "@/lib/timeSeries";
+import { getInterval, getTickFormat } from "@/lib/utils/timeSeries";
 
 interface ObservationsChartProps {
   deploymentId: string;

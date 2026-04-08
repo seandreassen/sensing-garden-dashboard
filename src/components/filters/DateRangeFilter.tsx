@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import type { RangePreset } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { RangePreset } from "@/lib/utils/filters";
 
 const presets: { value: RangePreset; label: string }[] = [
   { value: "24h", label: "Last 24 Hours" },

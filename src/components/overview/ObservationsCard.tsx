@@ -1,4 +1,4 @@
-import { ObservationsChart } from "@/components/charts/ObservationsChart";
+import { ObservationsChart } from "@/components/overview/ObservationsChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import { cn } from "@/lib/utils";

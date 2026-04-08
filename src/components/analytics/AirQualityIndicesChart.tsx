@@ -10,8 +10,8 @@ import {
   YAxis,
 } from "recharts";
 
-import type { TimeSeries, Metric, TimeSeriesDataKey } from "@/components/charts/types";
-import { getTickFormat } from "@/lib/timeSeries";
+import type { TimeSeries, Metric, TimeSeriesDataKey } from "@/components/analytics/types";
+import { getTickFormat } from "@/lib/utils/timeSeries";
 
 interface AirQualityIndicesChartProps<T extends TimeSeriesDataKey> {
   timeSeries: TimeSeries;

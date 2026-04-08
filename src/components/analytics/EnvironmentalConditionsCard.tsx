@@ -1,13 +1,13 @@
 import { DropletIcon, ThermometerIcon } from "lucide-react";
 import { useState } from "react";
 
-import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
-import { ToggleMetricsRow } from "@/components/charts/ToggleMetricsRow";
+import { EnvironmentalConditionsChart } from "@/components/analytics/EnvironmentalConditionsChart";
+import { ToggleMetricsRow } from "@/components/analytics/ToggleMetricsRow";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import { useEnvironmentTimeSeries } from "@/lib/hooks/useEnvironmentTimeSeries";
 import { useFilters } from "@/lib/hooks/useFilters";
-import { getInterval } from "@/lib/timeSeries";
+import { getInterval } from "@/lib/utils/timeSeries";
 
 interface EnvironmentalConditionsCardProps {
   deploymentId: string;

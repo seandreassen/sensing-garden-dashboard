@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
 import { endOfDay, startOfDay, subDays, subHours, subMonths } from "date-fns";
 import { useMemo } from "react";
 
-import { filtersDefault, type Filters } from "@/lib/filters";
+import { filtersDefault, type Filters } from "@/lib/utils/filters";
 
 function useFilters() {
   const search = useSearch({ from: "/deployment/$deploymentId/_filterLayout" });

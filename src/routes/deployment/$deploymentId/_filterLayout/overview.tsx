@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { SpeciesRichnessCard } from "@/components/analysis/SpeciesRichnessCard";
-import { TotalInsectCountCard } from "@/components/analysis/TotalInsectCountCard";
-import { ObservationsCard } from "@/components/charts/ObservationsCard";
-import { TopTaxaCard } from "@/components/charts/TopTaxaCard";
 import { GoogleMaps } from "@/components/map/GoogleMaps";
+import { ObservationsCard } from "@/components/overview/ObservationsCard";
+import { SpeciesRichnessCard } from "@/components/overview/SpeciesRichnessCard";
+import { TopTaxaCard } from "@/components/overview/TopTaxaCard";
+import { TotalInsectCountCard } from "@/components/overview/TotalInsectCountCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/overview")({
