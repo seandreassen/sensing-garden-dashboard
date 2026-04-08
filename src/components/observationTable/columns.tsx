@@ -31,7 +31,10 @@ const columns: ColumnDef<Observation>[] = [
     cell: ({ row, table }) => {
       const isDesc = table.getState().sorting[0]?.desc;
       const rowCount = table.getRowCount();
-      const id = isDesc ? Number(row.id) + 1 : rowCount - Number(row.id);
+      const { pageSize, pageIndex } = table.getState().pagination;
+      const id = isDesc
+        ? Number(row.id) + pageSize * pageIndex + 1
+        : rowCount - pageSize * pageIndex - Number(row.id);
       return <div className="flex max-w-40 flex-col text-wrap">{id}</div>;
     },
   },

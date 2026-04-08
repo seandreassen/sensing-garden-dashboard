@@ -63,11 +63,11 @@ function RouteComponent() {
   };
 
   return isLoading ? (
-    <div className="flex h-275 items-center justify-between">
+    <div className="flex h-275 w-full items-center justify-center">
       <Spinner className="size-8" />
     </div>
   ) : (
-    <div className="flex h-275 w-full items-center justify-center">
+    <div className="flex h-full w-full justify-center">
       {/* Table */}
       <DataTable
         columns={columns}

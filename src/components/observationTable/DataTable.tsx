@@ -79,6 +79,10 @@ function DataTable<TData extends Observation, TValue>({
     state: {
       sorting,
       columnVisibility,
+      pagination: {
+        pageIndex: pageIndex,
+        pageSize: limit,
+      },
     },
   });
   const [open, setOpen] = useState<boolean>(false);
