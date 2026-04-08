@@ -4,7 +4,7 @@ import { ArrowUpDownIcon, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Progress } from "@/components/ui/Progress";
 import type { Observation } from "@/lib/types/api";
-
+import { cn } from "@/lib/utils";
 /**
 * Columns: Image, Hub, Family, Genus, Species and timestamp.
 * 
@@ -27,7 +27,7 @@ const columns: ColumnDef<Observation>[] = [
     ),
   },
   {
-    header: "ID" /*This is just a temporary solution before observations get a unique id.*/,
+    header: "ID",
     cell: ({ row, table }) => {
       const isDesc = table.getState().sorting[0]?.desc;
       const rowCount = table.getRowCount();
@@ -40,7 +40,11 @@ const columns: ColumnDef<Observation>[] = [
     header: ({ column }) => {
       const sorted = column.getIsSorted();
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(sorted === "asc")}>
+        <Button
+          className={cn("[font-size:inherit]")}
+          variant="ghost"
+          onClick={() => column.toggleSorting(sorted === "asc")}
+        >
           Timestamp
           {sorted === "asc" ? (
             <ArrowUpIcon className="ml-2 h-4 w-4" />

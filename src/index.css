@@ -26,6 +26,7 @@
   --color-chart-3: oklch(0.627 0.194 149.214);
   --color-chart-4: oklch(0.527 0.154 150.069);
   --color-chart-5: oklch(0.448 0.119 151.328);
+  --text-mdplus: 16px;
 }
 
 @layer base {

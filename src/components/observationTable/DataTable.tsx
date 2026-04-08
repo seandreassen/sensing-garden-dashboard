@@ -7,7 +7,6 @@ import {
   type OnChangeFn,
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
-import type { JSX } from "react";
 
 import { ObservationRowDialog } from "@/components/observationTable/ObservationRowDialog";
 import { Button } from "@/components/ui/Button";
@@ -56,8 +55,6 @@ function DataTable<TData extends Observation, TValue>({
   });
 
   useEffect(() => {
-    const taxonomy: string = taxonomyLevel;
-    const confidence = `${taxonomyLevel}_confidence`;
     setColumnVisibility({
       family: false,
       family_confidence: false,
@@ -65,10 +62,11 @@ function DataTable<TData extends Observation, TValue>({
       genus_confidence: false,
       species: false,
       species_confidence: false,
-      [taxonomy]: true,
-      [confidence]: true,
+      [taxonomyLevel]: true,
+      [`${taxonomyLevel}_confidence`]: true,
     });
   }, [taxonomyLevel]);
+
   const table = useReactTable({
     data,
     columns,
@@ -93,7 +91,7 @@ function DataTable<TData extends Observation, TValue>({
   {
     /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
   }
-  const paginationButtons: JSX.Element = (
+  const paginationButtons = (
     <div className="flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
       <Button
         className="w-18"
@@ -139,7 +137,7 @@ function DataTable<TData extends Observation, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="bg-muted px-4 py-4 text-lg" key={header.id}>
+                  <TableHead className="bg-muted px-4 py-4 text-mdplus" key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
