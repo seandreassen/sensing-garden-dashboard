@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 
-import { ObservationRowDialog } from "@/components/observationTable/ObservationRowDialog";
+import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
 import { Button } from "@/components/ui/Button";
 import {
   Table,

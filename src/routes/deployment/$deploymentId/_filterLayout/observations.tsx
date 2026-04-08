@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 
-import { columns } from "@/components/observationTable/columns";
-import { DataTable } from "@/components/observationTable/DataTable";
+import { columns } from "@/components/observations/columns";
+import { DataTable } from "@/components/observations/DataTable";
 import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
