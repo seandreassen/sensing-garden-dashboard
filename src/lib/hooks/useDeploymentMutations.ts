@@ -32,7 +32,8 @@ function useCreateDeployment() {
       if (!res.ok) {
         throw new Error(`Failed to create deployment: ${res.status}`);
       }
-      return (await res.json()) as Deployment;
+      const data = (await res.json()) as { deployment: Deployment };
+      return data.deployment;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments"] }),
   });

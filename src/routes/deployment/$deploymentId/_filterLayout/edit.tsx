@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { EditDateRangeCard } from "@/components/deploymentEditor/EditDateRangeCard";
@@ -9,7 +9,7 @@ import { EditImageCard } from "@/components/deploymentEditor/EditImageCard";
 import { EditNameCard } from "@/components/deploymentEditor/EditNameCard";
 import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
-import { useDeploymentMutations } from "@/lib/hooks/useDeploymentMutations";
+import { useDeploymentMutations, useDeleteDeployment } from "@/lib/hooks/useDeploymentMutations";
 import { useDeployment } from "@/lib/hooks/useDeployments";
 import type { DeploymentDetail } from "@/lib/types/api";
 
@@ -40,6 +40,8 @@ function EditPage({
   deployment: DeploymentDetail;
 }) {
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
+  const deleteDeployment = useDeleteDeployment();
+  const navigate = useNavigate();
 
   const initialDevices: Device[] = deployment.devices.map((d) => ({
     device_id: d.device_id,
@@ -53,6 +55,12 @@ function EditPage({
   const [endDate, setEndDate] = useState<string | null | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [devices, setDevices] = useState<Device[] | undefined>();
+
+  function handleDelete() {
+    deleteDeployment.mutate(deploymentId, {
+      onSuccess: () => void navigate({ to: "/" }),
+    });
+  }
 
   function handleSave() {
     saveDeployment({
@@ -68,7 +76,10 @@ function EditPage({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <Button variant="destructive" onClick={handleDelete} disabled={deleteDeployment.isPending}>
+          {deleteDeployment.isPending ? "Deleting…" : "Delete"}
+        </Button>
         <Button onClick={handleSave} disabled={isSaving}>
           {isSaving ? "Saving…" : "Save"}
         </Button>
