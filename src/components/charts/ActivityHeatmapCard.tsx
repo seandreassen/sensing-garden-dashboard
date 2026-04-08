@@ -1,5 +1,6 @@
 import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Separator } from "@/components/ui/Separator";
 
 interface ActivityHeatmapCardProps {
   deploymentId: string;
@@ -7,11 +8,12 @@ interface ActivityHeatmapCardProps {
 
 function ActivityHeatmapCard({ deploymentId }: ActivityHeatmapCardProps) {
   return (
-    <Card>
+    <Card className="p-4">
       <CardHeader>
-        <CardTitle className="text-lg">Activity Heatmap</CardTitle>
+        <CardTitle className="text-lg capitalize">Activity heatmap</CardTitle>
         <CardDescription>Detections by hour of day over the selected period</CardDescription>
       </CardHeader>
+      <Separator />
       <CardContent>
         <ActivityHeatmap deploymentId={deploymentId} />
       </CardContent>

@@ -54,7 +54,7 @@ function AirQualityIndicesCard({ deploymentId }: AirQualityIndicesCardProps) {
   return (
     <Card className="p-4">
       <CardHeader>
-        <CardTitle className="text-lg font-bold uppercase">Air Quality Indices</CardTitle>
+        <CardTitle className="text-lg capitalize">Air quality indices</CardTitle>
         <CardDescription>VOC and NOx index measurements over selected period</CardDescription>
       </CardHeader>
       <Separator />

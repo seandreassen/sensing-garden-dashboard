@@ -20,7 +20,7 @@ function ToggleMetricsRow<T extends TimeSeriesDataKey>({
             key={metric.key}
             onClick={() => toggleMetric(metric.key)}
             className={cn(
-              "border delay-300",
+              "border",
               metric.enabled
                 ? "border-primary/30! bg-primary/15 text-primary"
                 : "text-muted-foreground hover:border-primary/20",

@@ -68,8 +68,8 @@ function ObservationsChart({ deploymentId }: ObservationsChartProps) {
       >
         <defs>
           <linearGradient id="detectionsFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity={0.3} />
-            <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
+            <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -104,7 +104,7 @@ function ObservationsChart({ deploymentId }: ObservationsChartProps) {
         <Area
           type="monotone"
           dataKey="count"
-          stroke="var(--color-chart-2)"
+          stroke="var(--color-primary)"
           strokeWidth={2}
           fill="url(#detectionsFill)"
           name="Detections"

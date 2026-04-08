@@ -1,32 +1,15 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-
+import { Progress } from "@/components/ui/Progress";
 import { useFilters } from "@/lib/hooks/useFilters";
+import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 
 interface TopTaxaProps {
   deploymentId: string;
 }
 
-const BAR_COLORS = [
-  "var(--color-chart-1)",
-  "var(--color-chart-2)",
-  "var(--color-chart-3)",
-  "var(--color-chart-4)",
-  "var(--color-chart-5)",
-];
-
 function TopTaxa({ deploymentId }: TopTaxaProps) {
   const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
-  const { data, isLoading } = useTaxaCount({
+  const { data, isError, isLoading, error } = useTaxaCount({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
@@ -36,69 +19,67 @@ function TopTaxa({ deploymentId }: TopTaxaProps) {
     selected_taxa: selectedTaxa,
     sort_desc: true,
   });
+  const {
+    data: countData,
+    isError: isCountError,
+    isLoading: isCountLoading,
+    error: countError,
+  } = useObservationCount({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+  });
 
-  if (isLoading) {
+  if (isLoading || isCountLoading) {
     return (
-      <div>
-        <div className="flex h-75 items-center justify-center">
-          <span className="text-sm text-muted-foreground">Loading chart...</span>
-        </div>
+      <div className="flex h-75 items-center justify-center">
+        <span className="text-sm text-muted-foreground">Loading top taxa...</span>
       </div>
     );
   }
 
-  if (!data || data.counts.length === 0) {
+  if (isError || isCountError) {
     return (
-      <div>
-        <div className="flex h-75 items-center justify-center">
-          <span className="text-sm text-muted-foreground">
-            No taxonomy data for selected filters
-          </span>
-        </div>
+      <div className="flex h-75 items-center justify-center">
+        <span className="text-sm text-muted-foreground">
+          Error: {error?.message ?? countError?.message}
+        </span>
+      </div>
+    );
+  }
+
+  if (!data || data.counts.length === 0 || !countData) {
+    return (
+      <div className="flex h-75 items-center justify-center">
+        <span className="text-sm text-muted-foreground">No data for selected filters</span>
       </div>
     );
   }
 
   return (
-    <div>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={data.counts}
-          layout="vertical"
-          margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
-          <XAxis
-            type="number"
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-            allowDecimals={false}
-          />
-          <YAxis
-            type="category"
-            dataKey="taxa"
-            tick={{ fill: "var(--color-foreground)", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-            width={120}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "var(--color-card)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "6px",
-              color: "var(--color-foreground)",
-              fontSize: "13px",
-            }}
-          />
-          <Bar dataKey="count" name="Detections" radius={[0, 4, 4, 0]} barSize={20}>
-            {data.counts.map((_, index) => (
-              <Cell key={index} fill={BAR_COLORS[index % BAR_COLORS.length]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="flex flex-col gap-6">
+      {data.counts.slice(0, 5).map((taxaCount, index) => {
+        const percentage = (taxaCount.count / countData.count) * 100;
+        return (
+          <div key={taxaCount.taxa} className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-muted-foreground">{index + 1}</span>
+                <p>{taxaCount.taxa}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span>{taxaCount.count}</span>
+                <span className="text-xs text-muted-foreground">({percentage.toFixed(1)}%)</span>
+              </div>
+            </div>
+            <Progress className="h-1.5 bg-border" value={percentage} />
+          </div>
+        );
+      })}
     </div>
   );
 }

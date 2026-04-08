@@ -50,7 +50,7 @@ function EnvironmentalConditionsCard({ deploymentId }: EnvironmentalConditionsCa
   return (
     <Card className="p-4">
       <CardHeader>
-        <CardTitle className="text-lg font-bold uppercase">Environmental Conditions</CardTitle>
+        <CardTitle className="text-lg capitalize">Environmental conditions</CardTitle>
         <CardDescription>
           Temperature and humidity measurements over selected period
         </CardDescription>

@@ -82,7 +82,7 @@ function ActivityHeatmap({ deploymentId }: ActivityHeatmapChartProps) {
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-2">
-        <div className="flex gap-1 pl-16">
+        <div className="flex gap-1 pl-11">
           {hours.map((hour) => (
             <div key={hour} className="flex-1 text-center text-xs text-muted-foreground">
               {String(hour).padStart(2, "0")}
@@ -91,7 +91,7 @@ function ActivityHeatmap({ deploymentId }: ActivityHeatmapChartProps) {
         </div>
         {cells.map((row, rowIdx) => (
           <div key={rowIdx} className="flex items-center gap-1">
-            <div className="w-14 shrink-0 pr-2 text-right text-xs text-muted-foreground">
+            <div className="w-10 shrink-0 pr-2 text-right text-xs text-muted-foreground">
               {buckets[rowIdx].label}
             </div>
             {row.map((cell) => (

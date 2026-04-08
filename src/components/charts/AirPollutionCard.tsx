@@ -72,7 +72,7 @@ function AirPollutionCard({ deploymentId }: AirPollutionCardProps) {
   return (
     <Card className="p-4">
       <CardHeader>
-        <CardTitle className="text-lg font-bold uppercase">Air Pollution</CardTitle>
+        <CardTitle className="text-lg capitalize">Air pollution</CardTitle>
         <CardDescription>
           Particulate matter concentrations (μg/m³) over selected period
         </CardDescription>
