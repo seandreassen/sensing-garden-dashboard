@@ -1,14 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
 
-import { ActivityHeatmap } from "@/components/charts/ActivityHeatmap";
+import { ActivityHeatmapCard } from "@/components/charts/ActivityHeatmapCard";
 import { AirPollutionCard } from "@/components/charts/AirPollutionCard";
 import { AirQualityIndicesCard } from "@/components/charts/AirQualityIndicesCard";
 import { EnvironmentalConditionsCard } from "@/components/charts/EnvironmentalConditionsCard";
-import { aggregateHeatmap } from "@/lib/heatmapAggregation";
-import { useEnvironment } from "@/lib/hooks/useEnvironment";
-import { useFilters } from "@/lib/hooks/useFilters";
-import { useObservations } from "@/lib/hooks/useObservations";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
   head: () => ({
@@ -19,70 +14,10 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/an
 
 function RouteComponent() {
   const { deploymentId } = Route.useParams();
-  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa, rangePreset } =
-    useFilters();
-
-  const {
-    data: envResult,
-    isLoading: envLoading,
-    isError,
-    error,
-  } = useEnvironment({
-    start_time: startDate,
-    end_time: endDate,
-    device_id: hub ? [hub] : undefined,
-    deployment_id: deploymentId,
-  });
-
-  const { data: obsResult, isLoading: obsLoading } = useObservations({
-    start_time: startDate,
-    end_time: endDate,
-    device_id: hub ? [hub] : undefined,
-    deployment_id: deploymentId,
-    min_confidence: minConfidence,
-    taxonomy_level: taxonomyLevel,
-    selected_taxa: selectedTaxa,
-  });
-
-  const envItems = useMemo(() => {
-    const startMs = new Date(startDate).getTime();
-    const endMs = new Date(endDate).getTime();
-
-    return (envResult?.items ?? []).filter((item) => {
-      const timestampMs = new Date(item.timestamp).getTime();
-      const matchesHub = !hub || item.device_id === hub;
-      return matchesHub && timestampMs >= startMs && timestampMs <= endMs;
-    });
-  }, [envResult, hub, startDate, endDate]);
-  const obsItems = useMemo(() => obsResult?.items ?? [], [obsResult?.items]);
-
-  const heatmapGrid = useMemo(
-    () =>
-      aggregateHeatmap(
-        obsItems,
-        envItems,
-        startDate,
-        endDate,
-        rangePreset,
-        minConfidence,
-        taxonomyLevel,
-      ),
-    [obsItems, envItems, startDate, endDate, minConfidence, taxonomyLevel, rangePreset],
-  );
-  if (envLoading && obsLoading) {
-    return <div>Loading data...</div>;
-  }
-  if (isError && error) {
-    return <div>Error: {error.message}</div>;
-  }
 
   return (
     <div className="flex flex-col gap-6">
-      <ActivityHeatmap
-        grid={heatmapGrid}
-        taxonomyLabel={taxonomyLevel}
-        isLoading={obsLoading || envLoading}
-      />
+      <ActivityHeatmapCard deploymentId={deploymentId} />
       <EnvironmentalConditionsCard deploymentId={deploymentId} />
       <AirPollutionCard deploymentId={deploymentId} />
       <AirQualityIndicesCard deploymentId={deploymentId} />

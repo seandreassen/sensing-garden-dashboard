@@ -1,187 +1,118 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { addHours } from "date-fns";
 
-import { Spinner } from "@/components/ui/Spinner";
-import type { HeatmapCell, HeatmapGrid } from "@/lib/heatmapAggregation";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/Tooltip";
+import { getCellColor, getRowBuckets } from "@/lib/heatmap";
+import { useFilters } from "@/lib/hooks/useFilters";
+import { useObservationsTimeSeries } from "@/lib/hooks/useObservationsTimeSeries";
+import { cn } from "@/lib/utils";
 
-import { cellColor, findDefaultCell, getModeCopy } from "./activityHeatmapColors";
-import { CellTooltip, HeatmapHeader } from "./activityHeatmapParts";
-
-interface ActivityHeatmapProps {
-  grid: HeatmapGrid;
-  taxonomyLabel: string;
-  isLoading?: boolean;
+interface ActivityHeatmapChartProps {
+  deploymentId: string;
 }
 
-function ActivityHeatmap({ grid, taxonomyLabel, isLoading }: ActivityHeatmapProps) {
-  const [activeCell, setActiveCell] = useState<HeatmapCell | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0, flipped: false });
-  const [isPointerInside, setIsPointerInside] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  const setTooltipForCell = useCallback((cell: HeatmapCell, target?: HTMLElement | null) => {
-    if (!gridRef.current) {
-      return;
-    }
-
-    const element =
-      target ??
-      gridRef.current.querySelector<HTMLElement>(`[data-heatmap-cell="${cell.row}-${cell.col}"]`);
-
-    if (!element) {
-      return;
-    }
-
-    const gridRect = gridRef.current.getBoundingClientRect();
-    const cellRect = element.getBoundingClientRect();
-    const centerX = cellRect.left + cellRect.width / 2 - gridRect.left;
-    const cellTop = cellRect.top - gridRect.top;
-    const flipped = cellTop < 160;
-    const y = flipped ? cellRect.bottom - gridRect.top + 8 : cellTop - 8;
-
-    setTooltipPos({ x: centerX, y, flipped });
-  }, []);
-
-  const activateCell = useCallback(
-    (cell: HeatmapCell, target?: HTMLElement | null) => {
-      setActiveCell(cell);
-      setTooltipForCell(cell, target);
-    },
-    [setTooltipForCell],
-  );
-
-  useEffect(() => {
-    if (grid.cells.length === 0) {
-      setActiveCell(null);
-      return;
-    }
-
-    const nextCell = findDefaultCell(grid.cells);
-    if (!nextCell) {
-      setActiveCell(null);
-      return;
-    }
-
-    setActiveCell(nextCell);
-
-    const frame = window.requestAnimationFrame(() => {
-      setTooltipForCell(nextCell);
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [grid.cells, setTooltipForCell]);
-
-  useEffect(() => {
-    if (!activeCell) {
-      return;
-    }
-
-    const handleResize = () => {
-      setTooltipForCell(activeCell);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeCell, setTooltipForCell]);
+function ActivityHeatmap({ deploymentId }: ActivityHeatmapChartProps) {
+  const { startDate, endDate, hub, taxonomyLevel, selectedTaxa, minConfidence } = useFilters();
+  const { data, isError, isLoading, error } = useObservationsTimeSeries({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+    interval_length: 1,
+    interval_unit: "h",
+  });
 
   if (isLoading) {
     return (
-      <div className="flex h-[400px] items-center justify-center rounded border border-border bg-card">
-        <Spinner className="size-6" />
+      <div className="flex h-64 items-center justify-center">
+        <span className="text-sm text-muted-foreground">Loading heatmap...</span>
       </div>
     );
   }
 
-  if (grid.cells.length === 0) {
+  if (isError) {
     return (
-      <div className="flex h-[400px] items-center justify-center rounded border border-border bg-card">
+      <div className="flex h-64 items-center justify-center">
+        <span className="text-sm text-muted-foreground">Error: {error.message}</span>
+      </div>
+    );
+  }
+
+  if (!data || data.counts.length === 0) {
+    return (
+      <div className="flex h-64 items-center justify-center">
         <span className="text-sm text-muted-foreground">No data for selected filters</span>
       </div>
     );
   }
 
-  const cols = grid.colLabels.length;
-  const modeCopy = getModeCopy(grid.mode);
-  const showEnvironmentalData = grid.mode === "date-hour";
+  // ----- Very unreadable aggregation logic here -----
+  // (AI-made because I don't want to waste time making temporary code readable)
+  // Don't worry too much about it, seems to work fine
+  // TODO: Request and use a new endpoint that handles this aggregation
+  const buckets = getRowBuckets(new Date(startDate), new Date(endDate));
+  const hours = Array.from({ length: 18 }, (_, i) => i + 5);
+  const bucketHourMap = new Map<number, Map<number, number>>();
+  let maxCount = 0;
+  for (let i = 0; i < data.counts.length; i++) {
+    const time = addHours(data.start_time, i);
+    const hr = time.getHours();
+    const bIdx = buckets.findLastIndex((b) => time >= b.heatmapStart);
+    if (hours.includes(hr) && bIdx !== -1) {
+      const hrMap = bucketHourMap.get(bIdx) ?? bucketHourMap.set(bIdx, new Map()).get(bIdx);
+      const val = (hrMap?.get(hr) ?? 0) + data.counts[i];
+      hrMap?.set(hr, val);
+      if (val > maxCount) {
+        maxCount = val;
+      }
+    }
+  }
+  const cells = buckets.map((b, i) =>
+    hours.map((hr) => ({
+      rowLabel: b.label,
+      hour: hr,
+      count: bucketHourMap.get(i)?.get(hr) ?? 0,
+    })),
+  );
+  // ----- End of unreadable aggregation logic -----
 
   return (
-    <div className="flex flex-col gap-4 rounded border border-border bg-card p-6">
-      <HeatmapHeader mode={grid.mode} taxonomyLabel={taxonomyLabel} maxCount={grid.maxCount} />
-
-      <div
-        className="relative"
-        ref={gridRef}
-        onMouseEnter={() => setIsPointerInside(true)}
-        onMouseLeave={() => {
-          setIsPointerInside(false);
-          setActiveCell(null);
-        }}
-      >
-        <div className="mb-3 flex items-center justify-between gap-4 text-[11px] text-muted-foreground">
-          <span>{modeCopy.description}</span>
-          <span>{modeCopy.structureHint}</span>
-        </div>
-
-        <div className="flex gap-1">
-          <div className="flex flex-col justify-end gap-1 pt-6 pr-2">
-            {grid.rowLabels.map((label) => (
-              <div
-                key={label}
-                className="flex h-7 items-center text-[11px] font-medium text-muted-foreground"
-              >
-                {label}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-1 flex-col gap-1">
-            <div
-              className="grid gap-1"
-              style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-            >
-              {grid.colLabels.map((label) => (
-                <div
-                  key={label}
-                  className="text-center text-[10px] font-medium text-muted-foreground"
-                >
-                  {label}
-                </div>
-              ))}
+    <TooltipProvider>
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-1 pl-16">
+          {hours.map((hour) => (
+            <div key={hour} className="flex-1 text-center text-xs text-muted-foreground">
+              {String(hour).padStart(2, "0")}
             </div>
-
-            {grid.cells.map((row, rowIdx) => (
-              <div
-                key={rowIdx}
-                className="grid gap-1"
-                style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-              >
-                {row.map((cell) => (
-                  <button
-                    key={`${cell.row}-${cell.col}`}
-                    type="button"
-                    data-heatmap-cell={`${cell.row}-${cell.col}`}
-                    className="h-7 appearance-none rounded-sm border border-white/[0.06] bg-transparent p-0 outline-none focus-visible:ring-0 focus-visible:outline-none"
-                    style={{ backgroundColor: cellColor(cell.count, grid.maxCount) }}
-                    aria-label={`${cell.label}: ${cell.count} detections`}
-                    onMouseEnter={(e) => activateCell(cell, e.currentTarget)}
-                    onFocus={(e) => activateCell(cell, e.currentTarget)}
-                  />
-                ))}
-              </div>
+          ))}
+        </div>
+        {cells.map((row, rowIdx) => (
+          <div key={rowIdx} className="flex items-center gap-1">
+            <div className="w-14 shrink-0 pr-2 text-right text-xs text-muted-foreground">
+              {buckets[rowIdx].label}
+            </div>
+            {row.map((cell) => (
+              <Tooltip key={cell.hour}>
+                <TooltipTrigger
+                  className={cn(buttonVariants({ variant: "outline" }), "flex-1")}
+                  style={{ backgroundColor: getCellColor(cell.count, maxCount) }}
+                  aria-label={`${cell.rowLabel} ${String(cell.hour).padStart(2, "0")}:00 — ${cell.count} detections`}
+                />
+                <TooltipContent>
+                  <p>
+                    {cell.rowLabel}, {String(cell.hour).padStart(2, "0")}:00
+                  </p>
+                  <p className="text-muted-foreground">{cell.count} detections</p>
+                </TooltipContent>
+              </Tooltip>
             ))}
           </div>
-        </div>
-
-        {activeCell && isPointerInside && (
-          <CellTooltip
-            cell={activeCell}
-            showEnvironmentalData={showEnvironmentalData}
-            x={tooltipPos.x}
-            y={tooltipPos.y}
-            flipped={tooltipPos.flipped}
-          />
-        )}
+        ))}
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
 
