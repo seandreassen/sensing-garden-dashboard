@@ -102,17 +102,17 @@ function DataTable<TData extends Observation, TValue>({
       >
         Previous
       </Button>
-      <span className="flex flex-col items-center text-xs">
-        <span>
+      <div className="flex flex-col items-center text-xs">
+        <p>
           Page <span className="font-bold text-primary">{`${pageIndex + 1} `}</span>
           of {table.getPageCount()}
-        </span>
-        <span>
+        </p>
+        <p>
           Rows {pageIndex * limit + 1}-
           {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit} of{" "}
           {rowCount}
-        </span>
-      </span>
+        </p>
+      </div>
       <Button
         className="w-18"
         variant="outline"
