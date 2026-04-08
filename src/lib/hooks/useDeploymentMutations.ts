@@ -184,7 +184,7 @@ function useDeploymentMutations(deploymentId: string) {
         deploymentPatch.end_time = endDate ?? undefined;
       }
       if (image !== undefined) {
-        deploymentPatch.image = image;
+        deploymentPatch.image = image.includes(",") ? image.split(",")[1] : image;
       }
 
       const ops: Promise<unknown>[] = [];

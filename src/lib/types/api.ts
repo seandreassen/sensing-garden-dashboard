@@ -45,6 +45,8 @@ interface Deployment {
   location_name?: string;
   location?: Location;
   image_url?: string;
+  image_key?: string;
+  image_bucket?: string;
   hub_count?: number;
 }
 

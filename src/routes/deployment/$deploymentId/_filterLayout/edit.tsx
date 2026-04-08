@@ -82,7 +82,7 @@ function EditPage({
           />
         </div>
         <div className="flex flex-col gap-5">
-          <EditImageCard initialUrl={deployment.image ?? ""} onChange={setImage} />
+          <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
           <EditDateRangeCard
             initialStartDate={deployment.start_time ?? ""}
             initialEndDate={deployment.end_time ?? ""}
