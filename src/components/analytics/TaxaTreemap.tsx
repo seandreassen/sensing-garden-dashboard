@@ -20,13 +20,7 @@ interface TreemapDatum {
   items?: OtherTaxaItem[];
 }
 
-const TREEMAP_COLORS = [
-  "var(--color-chart-1)",
-  "var(--color-chart-2)",
-  "var(--color-chart-3)",
-  "var(--color-chart-4)",
-  "var(--color-chart-5)",
-];
+const TREEMAP_COLORS = ["#8adf9f", "#62cd7b", "#3db85f", "#238f47", "#1b6c37"];
 const PRIMARY_TAXA_LIMIT = 8;
 const OTHER_PREVIEW_LIMIT = 8;
 const MIN_LABEL_WIDTH = 40;

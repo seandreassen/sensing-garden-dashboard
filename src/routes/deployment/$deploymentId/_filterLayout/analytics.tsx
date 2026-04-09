@@ -4,7 +4,7 @@ import { ActivityHeatmapCard } from "@/components/analytics/ActivityHeatmapCard"
 import { AirPollutionCard } from "@/components/analytics/AirPollutionCard";
 import { AirQualityIndicesCard } from "@/components/analytics/AirQualityIndicesCard";
 import { EnvironmentalConditionsCard } from "@/components/analytics/EnvironmentalConditionsCard";
-import { TaxaTreemap } from "@/components/overview/TaxaTreemap";
+import { TaxaTreemap } from "@/components/analytics/TaxaTreemap";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 
