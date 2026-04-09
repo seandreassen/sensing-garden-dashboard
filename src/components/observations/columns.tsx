@@ -1,10 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDownIcon } from "lucide-react";
+import { ArrowUpDownIcon, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Progress } from "@/components/ui/Progress";
 import type { Observation } from "@/lib/types/api";
-
+import { cn } from "@/lib/utils";
 /**
 * Columns: Image, Hub, Family, Genus, Species and timestamp.
 * 
@@ -19,12 +19,70 @@ const columns: ColumnDef<Observation>[] = [
     header: "Image",
     cell: ({ row }) => (
       <img
-        className="text-align center h-20 w-20 text-wrap"
+        className="h-20 w-20 text-wrap"
         src={row.original.image_url ?? ""}
         aria-label="image of observation"
         loading="lazy"
       />
     ),
+  },
+  {
+    header: "ID",
+    cell: ({ row, table }) => {
+      const isDesc = table.getState().sorting[0]?.desc;
+      const rowCount = table.getRowCount();
+      const { pageSize, pageIndex } = table.getState().pagination;
+      const id = isDesc
+        ? Number(row.id) + pageSize * pageIndex + 1
+        : rowCount - pageSize * pageIndex - Number(row.id);
+      return <div className="flex max-w-40 flex-col text-wrap">{id}</div>;
+    },
+  },
+  {
+    accessorKey: "timestamp",
+    header: ({ column }) => {
+      const sorted = column.getIsSorted();
+      return (
+        <Button
+          className={cn("[font-size:inherit]")}
+          variant="outline"
+          onClick={() => column.toggleSorting(sorted === "asc")}
+        >
+          Timestamp
+          {sorted === "asc" ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : sorted === "desc" ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      );
+    },
+    sortingFn: "datetime",
+
+    cell: ({ row }) => {
+      const value = row.original.timestamp as string | number | Date | null;
+
+      if (!value) {
+        return "—";
+      }
+
+      const date = new Date(value);
+
+      if (isNaN(date.getTime())) {
+        return "Invalid date";
+      }
+
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    },
   },
   {
     header: "Hub",
@@ -95,44 +153,6 @@ const columns: ColumnDef<Observation>[] = [
           <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
-    },
-  },
-  {
-    accessorKey: "timestamp",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Timestamp
-          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    sortingFn: "datetime",
-
-    cell: ({ row }) => {
-      const value = row.original.timestamp as string | number | Date | null;
-
-      if (!value) {
-        return "—";
-      }
-
-      const date = new Date(value);
-
-      if (isNaN(date.getTime())) {
-        return "Invalid date";
-      }
-
-      return date.toLocaleString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
     },
   },
 ];

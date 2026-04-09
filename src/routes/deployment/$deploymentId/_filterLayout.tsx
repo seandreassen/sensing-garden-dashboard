@@ -6,10 +6,9 @@ import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSele
 import { FiltersRow } from "@/components/deploymentLayout/FiltersRow";
 import { TabSelector } from "@/components/deploymentLayout/TabSelector";
 import { Separator } from "@/components/ui/Separator";
-import { filtersDefault, filtersSchema } from "@/lib/filters";
-import { FilterProvider } from "@/lib/filters/FilterContext";
 import { useScrollDirection } from "@/lib/hooks/useScrollDirection";
 import { cn } from "@/lib/utils";
+import { filtersDefault, filtersSchema } from "@/lib/utils/filters";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout")({
   validateSearch: zodValidator(filtersSchema),
@@ -32,7 +31,7 @@ function LayoutComponent() {
   const { scrolled } = useScrollDirection();
 
   return (
-    <FilterProvider>
+    <>
       <Header />
       <div className="sticky top-14 z-50 flex flex-col bg-card backdrop-blur-lg">
         <div
@@ -54,6 +53,6 @@ function LayoutComponent() {
       <div className="flex w-full grow flex-col p-6">
         <Outlet />
       </div>
-    </FilterProvider>
+    </>
   );
 }

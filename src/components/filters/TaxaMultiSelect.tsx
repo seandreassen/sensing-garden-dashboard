@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectTrigger } from "@/components/ui/Select";
-import type { TaxonomyLevel } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { TaxonomyLevel } from "@/lib/utils/filters";
 
 const mockTaxonomy = {
   family: [

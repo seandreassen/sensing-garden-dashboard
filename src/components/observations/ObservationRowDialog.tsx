@@ -1,8 +1,8 @@
-import { ConfirmObservation } from "@/components/observationTable/observationDialog/ConfirmObservation";
-import { EnvironmentDataPerObservation } from "@/components/observationTable/observationDialog/EnvironmentDataPerObservation";
-import { ImageGalleryObservation } from "@/components/observationTable/observationDialog/ImageGalleryObservation";
-import { MetadataCardsRowDialog } from "@/components/observationTable/observationDialog/MetadataCardsRowDialog";
-import { TaxonomyClassificationRowDialog } from "@/components/observationTable/observationDialog/TaxonomyClassificationRowDialog";
+import { ConfirmObservation } from "@/components/observations/observationDialog/ConfirmObservation";
+import { EnvironmentDataPerObservation } from "@/components/observations/observationDialog/EnvironmentDataPerObservation";
+import { ImageGalleryObservation } from "@/components/observations/observationDialog/ImageGalleryObservation";
+import { MetadataCardsRowDialog } from "@/components/observations/observationDialog/MetadataCardsRowDialog";
+import { TaxonomyClassificationRowDialog } from "@/components/observations/observationDialog/TaxonomyClassificationRowDialog";
 import {
   Dialog,
   DialogContent,

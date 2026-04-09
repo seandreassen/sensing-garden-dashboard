@@ -1,8 +1,8 @@
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useRef, useState } from "react";
 
-import { computeMinZoomForLocations } from "@/lib/locationUtils";
 import type { Location } from "@/lib/types/api";
+import { computeMinZoomForLocations } from "@/lib/utils/location";
 
 import { PinIcon } from "./PinIcon";
 

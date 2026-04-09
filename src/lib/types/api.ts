@@ -200,12 +200,6 @@ interface GetObservationCountParameters {
   selected_taxa?: string[];
 }
 
-// Should be removed - migrate to useFilters()
-
-type DatePreset = "all" | "24h" | "7d" | "30d" | "custom";
-
-type WorkspaceTab = "overview" | "analytics" | "observations";
-
 export type {
   Location,
   Environment,
@@ -230,6 +224,4 @@ export type {
   GetObservationsParameters,
   GetObservationCountParameters,
   TaxonomyLevel,
-  DatePreset,
-  WorkspaceTab,
 };
