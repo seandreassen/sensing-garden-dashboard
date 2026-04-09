@@ -106,7 +106,21 @@ const columns: ColumnDef<Observation>[] = [
       const confidence = row.original.family_confidence;
       return (
         <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <Progress
+            className={cn(
+              "md:basis-3/5",
+              confidence >= 1
+                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
+                : confidence >= 0.8
+                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
+                  : confidence >= 0.6
+                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
+                    : confidence >= 0.4
+                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
+                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
+            )}
+            value={confidence * 100}
+          />
           <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
@@ -128,7 +142,21 @@ const columns: ColumnDef<Observation>[] = [
       const confidence = row.original.genus_confidence;
       return (
         <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <Progress
+            className={cn(
+              "md:basis-3/5",
+              confidence >= 1
+                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
+                : confidence >= 0.8
+                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
+                  : confidence >= 0.6
+                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
+                    : confidence >= 0.4
+                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
+                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
+            )}
+            value={confidence * 100}
+          />
           <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
@@ -149,12 +177,25 @@ const columns: ColumnDef<Observation>[] = [
       const confidence = row.original.species_confidence;
       return (
         <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress className="md:basis-3/5" value={confidence * 100} />
+          <Progress
+            className={cn(
+              "md:basis-3/5",
+              confidence >= 1
+                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
+                : confidence >= 0.8
+                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
+                  : confidence >= 0.6
+                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
+                    : confidence >= 0.4
+                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
+                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
+            )}
+            value={confidence * 100}
+          />
           <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
         </div>
       );
     },
   },
 ];
-
 export { columns };
