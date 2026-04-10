@@ -50,14 +50,22 @@ function DeploymentInfoCard() {
       <CardHeader className="flex flex-col">
         <CardTitle className="text-lg">Deployment Information</CardTitle>
         <CardContent className={expanded ? "max-h-64 overflow-y-auto" : undefined}>
-          {displayText}
-          {isTruncated && (
-            <button
-              onClick={() => setExpanded((prev) => !prev)}
-              className="ml-1 text-xs text-muted-foreground underline hover:text-foreground"
-            >
-              {expanded ? "Show less" : "Show more"}
-            </button>
+          {desc ? (
+            <>
+              {displayText}
+              {isTruncated && (
+                <button
+                  onClick={() => setExpanded((prev) => !prev)}
+                  className="ml-1 text-xs text-muted-foreground underline hover:text-foreground"
+                >
+                  {expanded ? "Show less" : "Show more"}
+                </button>
+              )}
+            </>
+          ) : (
+            <p className="col-span-4 text-sm text-muted-foreground">
+              This deployment has no description
+            </p>
           )}
         </CardContent>
       </CardHeader>
