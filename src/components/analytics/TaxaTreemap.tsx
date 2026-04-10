@@ -23,6 +23,7 @@ interface TreemapItem {
 }
 
 const TREEMAP_COLORS = ["#8adf9f", "#62cd7b", "#3db85f", "#238f47", "#1b6c37"];
+const OTHER_TREEMAP_COLOR = "#5aa06f";
 const PRIMARY_TAXA_LIMIT = 8;
 const OTHER_PREVIEW_LIMIT = 8;
 const MIN_LABEL_WIDTH = 40;
@@ -35,13 +36,6 @@ const SECONDARY_FONT_SIZE = 10;
 
 function getTreemapSize(count: number): number {
   return Math.log1p(count);
-}
-
-function getLabelFontSize(width: number, height: number): number {
-  if (width >= 96 && height >= 52) {
-    return PRIMARY_FONT_SIZE;
-  }
-  return SECONDARY_FONT_SIZE;
 }
 
 function truncateLabel(text: string, width: number, fontSize: number): string {
@@ -59,10 +53,6 @@ function truncateLabel(text: string, width: number, fontSize: number): string {
 
   if (text.length <= maxChars) {
     return text;
-  }
-
-  if (maxChars <= 2) {
-    return `${text.slice(0, 1)}\u2026`;
   }
 
   return `${text.slice(0, maxChars - 1)}\u2026`;
@@ -165,13 +155,14 @@ function TaxaTreemapCell({
     return null;
   }
 
-  const fill = TREEMAP_COLORS[index % TREEMAP_COLORS.length];
   const safeName =
     typeof name === "string" ? name : typeof payload?.name === "string" ? payload.name : "";
+  const fill =
+    safeName === "Others" ? OTHER_TREEMAP_COLOR : TREEMAP_COLORS[index % TREEMAP_COLORS.length];
   const detectionCount = count ?? payload?.count ?? 0;
   const showName = width >= MIN_LABEL_WIDTH && height >= MIN_LABEL_HEIGHT;
   const showCount = width >= MIN_COUNT_WIDTH && height >= MIN_COUNT_HEIGHT;
-  const fontSize = getLabelFontSize(width, height);
+  const fontSize = width >= 96 && height >= 52 ? PRIMARY_FONT_SIZE : SECONDARY_FONT_SIZE;
   const label = showName ? truncateLabel(safeName, width, fontSize) : "";
 
   return (
