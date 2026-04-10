@@ -12,8 +12,7 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/in
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col gap-y-1.25">
-      <div>This page is being worked on</div>
+    <div className="flex flex-col gap-y-3">
       <DeploymentInfoCard />
       <GoogleMapsCard />
     </div>
