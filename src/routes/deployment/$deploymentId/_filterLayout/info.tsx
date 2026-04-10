@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DeploymentInfoCard } from "@/components/deployments/DeploymentInfoCard";
+import { DeploymentInfoCard } from "@/components/info/DeploymentInfoCard";
 import { GoogleMapsCard } from "@/components/map/GoogleMapsCard";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/info")({
