@@ -1,5 +1,7 @@
 import { ResponsiveContainer, Tooltip, Treemap } from "recharts";
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Separator } from "@/components/ui/Separator";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 
@@ -12,7 +14,7 @@ interface OtherTaxaItem {
   count: number;
 }
 
-interface TreemapDatum {
+interface TreemapItem {
   [key: string]: string | number | OtherTaxaItem[] | undefined;
   name: string;
   size: number;
@@ -79,53 +81,64 @@ function TaxaTreemap({ deploymentId }: TaxaTreemapProps) {
     sort_desc: true,
   });
 
+  let content: React.ReactNode;
+
   if (isLoading) {
-    return (
+    content = (
       <div className="flex h-75 items-center justify-center">
         <span className="text-sm text-muted-foreground">Loading chart...</span>
       </div>
     );
-  }
-
-  if (!data || data.counts.length === 0) {
-    return (
+  } else if (!data || data.counts.length === 0) {
+    content = (
       <div className="flex h-75 items-center justify-center">
         <span className="text-sm text-muted-foreground">No taxonomy data for selected filters</span>
       </div>
     );
-  }
+  } else {
+    const primaryTaxa = data.counts.slice(0, PRIMARY_TAXA_LIMIT);
+    const otherTaxa = data.counts.slice(PRIMARY_TAXA_LIMIT);
 
-  const primaryTaxa = data.counts.slice(0, PRIMARY_TAXA_LIMIT);
-  const otherTaxa = data.counts.slice(PRIMARY_TAXA_LIMIT);
+    const treemapData: TreemapItem[] = primaryTaxa.map((item) => ({
+      name: item.taxa,
+      size: getTreemapSize(item.count),
+      count: item.count,
+    }));
 
-  const treemapData: TreemapDatum[] = primaryTaxa.map((item) => ({
-    name: item.taxa,
-    size: getTreemapSize(item.count),
-    count: item.count,
-  }));
+    if (otherTaxa.length > 0) {
+      const otherCount = otherTaxa.reduce((sum, item) => sum + item.count, 0);
+      treemapData.push({
+        name: "Others",
+        size: getTreemapSize(otherCount),
+        count: otherCount,
+        items: otherTaxa.map((item) => ({ name: item.taxa, count: item.count })),
+      });
+    }
 
-  if (otherTaxa.length > 0) {
-    const otherCount = otherTaxa.reduce((sum, item) => sum + item.count, 0);
-    treemapData.push({
-      name: "Others",
-      size: getTreemapSize(otherCount),
-      count: otherCount,
-      items: otherTaxa.map((item) => ({ name: item.taxa, count: item.count })),
-    });
+    content = (
+      <ResponsiveContainer width="100%" height={320}>
+        <Treemap
+          data={treemapData}
+          dataKey="size"
+          aspectRatio={4 / 3}
+          stroke="rgba(255,255,255,0.08)"
+          content={<TaxaTreemapCell />}
+        >
+          <Tooltip content={<TaxaTreemapTooltip />} />
+        </Treemap>
+      </ResponsiveContainer>
+    );
   }
 
   return (
-    <ResponsiveContainer width="100%" height={320}>
-      <Treemap
-        data={treemapData}
-        dataKey="size"
-        aspectRatio={4 / 3}
-        stroke="rgba(255,255,255,0.08)"
-        content={<TaxaTreemapCell />}
-      >
-        <Tooltip content={<TaxaTreemapTooltip />} />
-      </Treemap>
-    </ResponsiveContainer>
+    <Card className="w-full self-start p-4 lg:w-1/2">
+      <CardHeader>
+        <CardTitle className="text-lg capitalize">Taxa treemap</CardTitle>
+        <CardDescription>Detection count by selected taxonomy level</CardDescription>
+      </CardHeader>
+      <Separator />
+      <CardContent>{content}</CardContent>
+    </Card>
   );
 }
 
@@ -146,7 +159,7 @@ function TaxaTreemapCell({
   index?: number;
   name?: string;
   count?: number;
-  payload?: TreemapDatum;
+  payload?: TreemapItem;
 }) {
   if (width <= 0 || height <= 0) {
     return null;
@@ -202,7 +215,7 @@ function TaxaTreemapTooltip({
   payload,
 }: {
   active?: boolean;
-  payload?: Array<{ payload: TreemapDatum }>;
+  payload?: Array<{ payload: TreemapItem }>;
 }) {
   if (!active || !payload?.[0]?.payload) {
     return null;
