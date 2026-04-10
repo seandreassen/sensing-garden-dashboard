@@ -1,25 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { Deployment } from "@/lib/types/api";
+import { env } from "@/env";
+import type { DeploymentsResponse, GetDeploymentsParameters } from "@/lib/types/api";
+import { getHeaders } from "@/lib/utils/headers";
+import { addQueryParameters } from "@/lib/utils/queryParameters";
 
-// Bytt ut med ekte API-kall når backend er klar, dette er bare for å mocke dataen, jeg antar at deployments kommer til å ha en active field i databasen
-const mockDeployments: Deployment[] = [
-  { id: "deploy-alpha-001", active: true },
-  { id: "deploy-beta-002", active: true },
-  { id: "deploy-gamma-003", active: true },
-  { id: "deploy-delta-004", active: true },
-  { id: "deploy-epsilon-005", active: true },
-  { id: "deploy-zeta-006", active: true },
-  { id: "deploy-eta-007", active: false },
-  { id: "deploy-theta-008", active: false },
-  { id: "deploy-iota-009", active: false },
-  { id: "deploy-kappa-010", active: false },
-];
-
-function useDeployments() {
+function useDeployments(queryParameters?: GetDeploymentsParameters) {
   return useQuery({
-    queryKey: ["deployments"],
-    queryFn: async () => mockDeployments,
+    queryKey: ["deployments", queryParameters],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      addQueryParameters(params, queryParameters);
+
+      const res = await fetch(`${env.VITE_API_BASE_URL}/deployments?${params.toString()}`, {
+        headers: getHeaders(),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch deployments: ${res.status} ${res.statusText}`);
+      }
+
+      const data = (await res.json()) as DeploymentsResponse;
+      return {
+        ...data,
+        deployments: data.deployments.map((deployment) => ({
+          ...deployment,
+          start_time: new Date(deployment.start_time),
+          end_time: deployment.end_time ? new Date(deployment.end_time) : undefined,
+        })),
+      } as DeploymentsResponse;
+    },
   });
 }
 

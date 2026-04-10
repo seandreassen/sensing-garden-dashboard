@@ -1,10 +1,6 @@
 import { CalendarIcon } from "lucide-react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -13,13 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import type { RangePreset } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { RangePreset } from "@/lib/utils/filters";
 
 const presets: { value: RangePreset; label: string }[] = [
   { value: "24h", label: "Last 24 Hours" },
   { value: "7d", label: "Last 7 Days" },
   { value: "30d", label: "Last 30 Days" },
+  { value: "3m", label: "Last 3 Months" },
   { value: "custom", label: "Custom Range" },
 ];
 
@@ -48,9 +45,9 @@ function DateRangeFilter() {
   };
 
   return (
-    <div className={filterFieldClass}>
+    <div className="flex flex-col gap-2">
       <Label htmlFor="filter-date-range" className={filterLabelClass}>
-        <CalendarIcon className="h-3 w-3" />
+        <CalendarIcon className="size-4" />
         Date Range
       </Label>
       <Select value={rangePreset} onValueChange={(v) => v && handlePresetChange(v)}>

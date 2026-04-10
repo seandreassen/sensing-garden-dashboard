@@ -1,39 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AirPollutionChart } from "@/components/charts/AirPollutionChart";
-import { AirQualityIndicesChart } from "@/components/charts/AirQualityIndicesChart";
-import { EnvironmentalConditionsChart } from "@/components/charts/EnvironmentalConditionsChart";
-import { useEnvironmentData } from "@/lib/hooks/useEnvironmentData";
+import { ActivityHeatmapCard } from "@/components/analytics/ActivityHeatmapCard";
+import { AirPollutionCard } from "@/components/analytics/AirPollutionCard";
+import { AirQualityIndicesCard } from "@/components/analytics/AirQualityIndicesCard";
+import { EnvironmentalConditionsCard } from "@/components/analytics/EnvironmentalConditionsCard";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
+  head: () => ({
+    meta: [{ title: "Analytics | Sensing Garden Dashboard" }],
+  }),
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { isLoading, isError, error } = useEnvironmentData();
-
-  if (isLoading) {
-    return <div>Loading environmental data...</div>;
-  }
-  if (isError && error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const { deploymentId } = Route.useParams();
 
   return (
-    <div className="flex flex-col border">
-      <h2 className="p-2 text-xl font-semibold">Environmental Data</h2>
-
-      <div className="rounded p-4">
-        <EnvironmentalConditionsChart />
-      </div>
-
-      <div className="rounded p-4">
-        <AirPollutionChart />
-      </div>
-
-      <div className="rounded p-4">
-        <AirQualityIndicesChart />
-      </div>
+    <div className="flex flex-col gap-6">
+      <ActivityHeatmapCard deploymentId={deploymentId} />
+      <EnvironmentalConditionsCard deploymentId={deploymentId} />
+      <AirPollutionCard deploymentId={deploymentId} />
+      <AirQualityIndicesCard deploymentId={deploymentId} />
     </div>
   );
 }

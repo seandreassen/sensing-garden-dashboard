@@ -1,10 +1,6 @@
 import { TagIcon } from "lucide-react";
 
-import {
-  filterFieldClass,
-  filterLabelClass,
-  filterSelectClass,
-} from "@/components/filters/filterStyles";
+import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -13,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import type { TaxonomyLevel } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { TaxonomyLevel } from "@/lib/utils/filters";
 
 const levels: { value: TaxonomyLevel; label: string }[] = [
   { value: "family", label: "Family" },
@@ -26,9 +22,9 @@ function TaxonomyFilter() {
   const { updateFilters, taxonomyLevel } = useFilters();
 
   return (
-    <div className={filterFieldClass}>
+    <div className="flex flex-col gap-2">
       <Label htmlFor="filter-taxonomy-level" className={filterLabelClass}>
-        <TagIcon className="h-3 w-3" />
+        <TagIcon className="size-4" />
         Taxonomy Level
       </Label>
       <Select

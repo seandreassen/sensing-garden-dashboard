@@ -1,11 +1,7 @@
 import senseable from "@/assets/senseable.png";
 
 function Logo() {
-  return (
-    <div className="flex items-center justify-center rounded-md">
-      <img src={senseable} alt="logo" className="h-8 w-auto object-contain" />
-    </div>
-  );
+  return <img src={senseable} alt="MIT Senseable City Lab logo" className="h-6 w-auto" />;
 }
 
 export { Logo };
