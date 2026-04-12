@@ -8,7 +8,7 @@ function GoogleMapsCard() {
 
   return (
     <Card className="col-span-2 p-4">
-      <CardHeader className="flex flex-col">
+      <CardHeader>
         <CardTitle className="text-lg">Deployment location</CardTitle>
         <CardDescription>Location of deployment and its contained hubs</CardDescription>
       </CardHeader>
