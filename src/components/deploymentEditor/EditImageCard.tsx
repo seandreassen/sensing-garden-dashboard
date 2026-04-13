@@ -29,12 +29,12 @@ function EditImageCard({
   }
 
   return (
-    <Card>
+    <Card className="flex-1">
       <CardTitle className={`px-4 text-center ${isDirty ? "text-primary" : ""}`}>Image</CardTitle>
-      <div className="flex flex-col gap-3 px-4">
+      <div className="flex flex-1 flex-col gap-3 px-4">
         <button
           type="button"
-          className="relative flex aspect-video w-full cursor-pointer items-center justify-center overflow-hidden rounded border border-input bg-muted"
+          className="relative flex w-full flex-1 cursor-pointer items-center justify-center overflow-hidden rounded border border-input bg-muted"
           onClick={() => fileInputRef.current?.click()}
         >
           {src ? (

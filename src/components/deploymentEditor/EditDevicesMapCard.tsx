@@ -128,57 +128,61 @@ function EditDevicesMapCard({
         </Button>
       </div>
       <div className="flex flex-col gap-2 px-4">
-        {devices.map((device, i) => {
-          return (
-            <div
-              key={device.device_id}
-              draggable={false}
-              className="flex items-center gap-1 rounded border border-input px-2 py-1"
-            >
-              <span
-                draggable
-                onDragStart={(e) => {
-                  e.stopPropagation();
-                  draggingIndex.current = i;
-                  e.dataTransfer.setDragImage(dragImage, 14, 40);
-                }}
-                className="cursor-grab select-none"
+        <div className="flex max-h-64 flex-col gap-2 overflow-y-auto">
+          {adding && (
+            <NewDeviceRow
+              existingDeviceIds={new Set(devices.map((d) => d.device_id))}
+              onConfirm={(device) => {
+                update([...devices, device]);
+                setAdding(false);
+              }}
+              onCancel={() => setAdding(false)}
+            />
+          )}
+          {devices.map((device, i) => {
+            return (
+              <div
+                key={device.device_id}
+                draggable={false}
+                className="flex items-center gap-1 rounded border border-input px-2 py-1"
               >
-                <PinIcon />
-              </span>
-              <div className="flex min-w-0 flex-1 flex-col">
-                <InlineField
-                  value={device.name}
-                  onChange={(name) => update(devices.map((d, j) => (j === i ? { ...d, name } : d)))}
-                  placeholder="Device name"
-                  isDirty={device.name !== (initialDevices[i]?.name ?? "")}
-                />
-                <span className="px-2 text-xs text-muted-foreground">{device.device_id}</span>
+                <span
+                  draggable
+                  onDragStart={(e) => {
+                    e.stopPropagation();
+                    draggingIndex.current = i;
+                    e.dataTransfer.setDragImage(dragImage, 14, 40);
+                  }}
+                  className="cursor-grab select-none"
+                >
+                  <PinIcon />
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <InlineField
+                    value={device.name}
+                    onChange={(name) =>
+                      update(devices.map((d, j) => (j === i ? { ...d, name } : d)))
+                    }
+                    placeholder="Device name"
+                    isDirty={device.name !== (initialDevices[i]?.name ?? "")}
+                  />
+                  <span className="px-2 text-xs text-muted-foreground">{device.device_id}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => update(devices.filter((_, j) => j !== i))}
+                  className="shrink-0 text-destructive hover:text-destructive"
+                >
+                  <Trash2Icon className="h-3.5 w-3.5" />
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => update(devices.filter((_, j) => j !== i))}
-                className="shrink-0 text-destructive hover:text-destructive"
-              >
-                <Trash2Icon className="h-3.5 w-3.5" />
-              </Button>
-            </div>
-          );
-        })}
-        {adding && (
-          <NewDeviceRow
-            existingDeviceIds={new Set(devices.map((d) => d.device_id))}
-            onConfirm={(device) => {
-              update([...devices, device]);
-              setAdding(false);
-            }}
-            onCancel={() => setAdding(false)}
-          />
-        )}
-        {devices.length === 0 && !adding && (
-          <p className="py-2 text-center text-sm text-muted-foreground">No devices yet</p>
-        )}
+            );
+          })}
+          {devices.length === 0 && !adding && (
+            <p className="py-2 text-center text-sm text-muted-foreground">No devices yet</p>
+          )}
+        </div>
         <div className="h-64 w-full">
           {env.VITE_GOOGLE_MAPS_API_KEY ? (
             <APIProvider apiKey={env.VITE_GOOGLE_MAPS_API_KEY}>

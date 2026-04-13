@@ -85,18 +85,22 @@ function EditPage({
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-5">
-        <div className="flex flex-col gap-5">
+        <div className="flex h-full flex-col gap-5">
           <EditNameCard initialValue={deployment.name ?? ""} onChange={setName} />
           <EditDescriptionCard
             initialValue={deployment.description ?? ""}
             onChange={setDescription}
           />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex h-full flex-col gap-5">
           <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
           <EditDateRangeCard
-            initialStartDate={deployment.start_time ? deployment.start_time.toISOString() : ""}
-            initialEndDate={deployment.end_time ? deployment.end_time.toISOString() : ""}
+            initialStartDate={
+              deployment.start_time ? deployment.start_time.toISOString().split("T")[0] : ""
+            }
+            initialEndDate={
+              deployment.end_time ? deployment.end_time.toISOString().split("T")[0] : ""
+            }
             onChange={(start, end) => {
               setStartDate(start);
               setEndDate(end);

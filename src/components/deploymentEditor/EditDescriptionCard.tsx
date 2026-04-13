@@ -52,9 +52,9 @@ function EditDescriptionCard({
   );
 
   return (
-    <Card>
+    <Card className="flex-1">
       <CardTitle className="text-center">Description</CardTitle>
-      <div className="flex h-32 items-center">{inputField}</div>
+      <div className="flex flex-1 items-center">{inputField}</div>
     </Card>
   );
 }
