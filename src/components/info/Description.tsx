@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const COLLAPSED_MAX_HEIGHT = 96; // px
 
 interface DescriptionProps {
-  description: string;
+  description?: string;
 }
 
 function Description({ description }: DescriptionProps) {
