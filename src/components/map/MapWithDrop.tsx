@@ -111,6 +111,15 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
     setLocations((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
   }
 
+  const overviewPosition = center
+    ? { lat: center.lat, lng: center.long }
+    : locations.length > 0
+      ? {
+          lat: locations.reduce((sum, l) => sum + l.lat, 0) / locations.length,
+          lng: locations.reduce((sum, l) => sum + l.long, 0) / locations.length,
+        }
+      : null;
+
   return (
     <div
       ref={mapDivRef}
@@ -125,20 +134,18 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
         mapId="DEMO_MAP_ID"
         onCameraChanged={(ev) => setZoom(ev.detail.zoom)}
       >
-        {center && zoom < minZoom && (
-          <AdvancedMarker position={{ lat: center.lat, lng: center.long }}>
-            <PinIcon />
-          </AdvancedMarker>
-        )}
-        {zoom >= minZoom &&
-          locations.map((loc, i) => (
-            <AdvancedMarker
-              key={i}
-              position={{ lat: loc.lat, lng: loc.long }}
-              draggable={allowDragAndDrop}
-              onDragEnd={(e) => handleDragEnd(i, e)}
-            />
-          ))}
+        {zoom < minZoom
+          ? overviewPosition && (
+              <AdvancedMarker position={overviewPosition}>{center && <PinIcon />}</AdvancedMarker>
+            )
+          : locations.map((loc, i) => (
+              <AdvancedMarker
+                key={i}
+                position={{ lat: loc.lat, lng: loc.long }}
+                draggable={allowDragAndDrop}
+                onDragEnd={(e) => handleDragEnd(i, e)}
+              />
+            ))}
       </Map>
     </div>
   );
