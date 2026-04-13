@@ -111,6 +111,15 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
     setLocations((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
   }
 
+  const overviewPosition = center
+    ? { lat: center.lat, lng: center.long }
+    : locations.length > 0
+      ? {
+          lat: locations.reduce((sum, l) => sum + l.lat, 0) / locations.length,
+          lng: locations.reduce((sum, l) => sum + l.long, 0) / locations.length,
+        }
+      : null;
+
   return (
     <div
       ref={mapDivRef}
@@ -126,19 +135,9 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
         onCameraChanged={(ev) => setZoom(ev.detail.zoom)}
       >
         {zoom < minZoom
-          ? (() => {
-              const overviewPosition = center
-                ? { lat: center.lat, lng: center.long }
-                : locations.length > 0
-                  ? {
-                      lat: locations.reduce((sum, l) => sum + l.lat, 0) / locations.length,
-                      lng: locations.reduce((sum, l) => sum + l.long, 0) / locations.length,
-                    }
-                  : null;
-              return overviewPosition ? (
-                <AdvancedMarker position={overviewPosition}>{center && <PinIcon />}</AdvancedMarker>
-              ) : null;
-            })()
+          ? overviewPosition && (
+              <AdvancedMarker position={overviewPosition}>{center && <PinIcon />}</AdvancedMarker>
+            )
           : locations.map((loc, i) => (
               <AdvancedMarker
                 key={i}
