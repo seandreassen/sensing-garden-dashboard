@@ -205,6 +205,7 @@ export type {
   EnvironmentResponse,
   GetEnvironmentParameters,
   Deployment,
+  DeploymentDevice,
   DeploymentsResponse,
   SelectedDeploymentResponse,
   GetDeploymentsParameters,
