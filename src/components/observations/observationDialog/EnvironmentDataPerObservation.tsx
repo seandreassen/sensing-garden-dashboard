@@ -33,7 +33,8 @@ function EnvironmentDataPerObservation({ observationData }: { observationData?: 
           <CardContent className="flex flex-col items-center gap-1">
             <MapPinIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Location</h2>
-            <p className="basis-1/3 font-bold">"Placeholder park"</p> {/*Placeholder value*/}
+            <p className="basis-1/3 font-bold">{`${observationData?.environment?.location ? observationData.environment.location : "No data"}`}</p>{" "}
+            {/*Placeholder value*/}
           </CardContent>
         </Card>
       </div>
