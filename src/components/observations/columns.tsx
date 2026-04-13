@@ -9,10 +9,7 @@ import { ConfidenceProgressBar } from "./ConfidenceProgessBar";
 
 /**
  * Columns: Image, Hub, Family, Genus, Species and timestamp.
- *
- * @status - incomplete progres sbar should match confidence.
- * @todo - Edit color of progress bar to match confidence satisfaction.
- * @todo - When confirmations status is supported in backend, implement confirmations tatus row.
+ * @status - When confirmations status is supported in backend, implement confirmations tatus row.
  */
 
 const columns: ColumnDef<Observation>[] = [
