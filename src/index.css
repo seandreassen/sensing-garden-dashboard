@@ -21,6 +21,7 @@
   --color-success: oklch(56% 0.1218 155.86);
   --color-warn: oklch(74.74% 0.1796 57.14);
   --color-destructive: oklch(57.85% 0.2138 27.17);
+  --color-caution: oklch(82.318% 0.16705 96.973);
 }
 
 @layer base {
