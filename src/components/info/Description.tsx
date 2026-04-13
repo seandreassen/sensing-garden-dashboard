@@ -10,8 +10,8 @@ interface DescriptionProps {
 }
 
 function Description({ description }: DescriptionProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [isTruncated, setIsTruncated] = useState(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
+  const [isTruncated, setIsTruncated] = useState<boolean>(false);
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
