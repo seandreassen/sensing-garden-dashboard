@@ -4,7 +4,7 @@ import { ActivityHeatmapCard } from "@/components/analytics/ActivityHeatmapCard"
 import { AirPollutionCard } from "@/components/analytics/AirPollutionCard";
 import { AirQualityIndicesCard } from "@/components/analytics/AirQualityIndicesCard";
 import { EnvironmentalConditionsCard } from "@/components/analytics/EnvironmentalConditionsCard";
-import { TaxaTreemap } from "@/components/analytics/TaxaTreemap";
+import { TaxaTreemapCard } from "@/components/analytics/TaxaTreemapCard";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/analytics")({
   head: () => ({
@@ -22,7 +22,7 @@ function RouteComponent() {
       <EnvironmentalConditionsCard deploymentId={deploymentId} />
       <AirPollutionCard deploymentId={deploymentId} />
       <AirQualityIndicesCard deploymentId={deploymentId} />
-      <TaxaTreemap deploymentId={deploymentId} />
+      <TaxaTreemapCard deploymentId={deploymentId} />
     </div>
   );
 }
