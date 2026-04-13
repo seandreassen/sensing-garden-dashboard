@@ -2,17 +2,18 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDownIcon, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { Progress } from "@/components/ui/Progress";
 import type { Observation } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
-/**
-* Columns: Image, Hub, Family, Genus, Species and timestamp.
-* 
-* @status - incomplete progres sbar should match confidence.
-* @todo - Edit color of progress bar to match confidence satisfaction. 
-* @todo - When confirmations status is supported in backend, implement confirmations tatus row.
 
-*/
+import { ConfidenceProgressBar } from "./ConfidenceProgessBar";
+
+/**
+ * Columns: Image, Hub, Family, Genus, Species and timestamp.
+ *
+ * @status - incomplete progres sbar should match confidence.
+ * @todo - Edit color of progress bar to match confidence satisfaction.
+ * @todo - When confirmations status is supported in backend, implement confirmations tatus row.
+ */
 
 const columns: ColumnDef<Observation>[] = [
   {
@@ -60,7 +61,6 @@ const columns: ColumnDef<Observation>[] = [
       );
     },
     sortingFn: "datetime",
-
     cell: ({ row }) => {
       const value = row.original.timestamp as string | number | Date | null;
 
@@ -102,31 +102,8 @@ const columns: ColumnDef<Observation>[] = [
   {
     accessorKey: "family_confidence",
     header: "Confidence",
-    cell: ({ row }) => {
-      const confidence = row.original.family_confidence;
-      return (
-        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress
-            className={cn(
-              "md:basis-3/5",
-              confidence >= 1
-                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
-                : confidence >= 0.8
-                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
-                  : confidence >= 0.6
-                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
-                    : confidence >= 0.4
-                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
-                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
-            )}
-            value={confidence * 100}
-          />
-          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
-        </div>
-      );
-    },
+    cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.family_confidence} />,
   },
-
   {
     accessorKey: "genus",
     header: "Genus",
@@ -138,29 +115,7 @@ const columns: ColumnDef<Observation>[] = [
   {
     accessorKey: "genus_confidence",
     header: "Confidence",
-    cell: ({ row }) => {
-      const confidence = row.original.genus_confidence;
-      return (
-        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress
-            className={cn(
-              "md:basis-3/5",
-              confidence >= 1
-                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
-                : confidence >= 0.8
-                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
-                  : confidence >= 0.6
-                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
-                    : confidence >= 0.4
-                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
-                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
-            )}
-            value={confidence * 100}
-          />
-          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
-        </div>
-      );
-    },
+    cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.genus_confidence} />,
   },
   {
     accessorKey: "species",
@@ -173,29 +128,8 @@ const columns: ColumnDef<Observation>[] = [
   {
     accessorKey: "species_confidence",
     header: "Confidence",
-    cell: ({ row }) => {
-      const confidence = row.original.species_confidence;
-      return (
-        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-          <Progress
-            className={cn(
-              "md:basis-3/5",
-              confidence >= 1
-                ? "border border-green-800/50 **:data-[slot=progress-indicator]:bg-green-800"
-                : confidence >= 0.8
-                  ? "border border-green-500/40 **:data-[slot=progress-indicator]:bg-green-500"
-                  : confidence >= 0.6
-                    ? "border border-orange-500/40 **:data-[slot=progress-indicator]:bg-orange-500"
-                    : confidence >= 0.4
-                      ? "border border-red-400/40 **:data-[slot=progress-indicator]:bg-red-400"
-                      : "border border-red-700/50 **:data-[slot=progress-indicator]:bg-red-700",
-            )}
-            value={confidence * 100}
-          />
-          <span className="py-2 md:basis-1/5">{`${(confidence * 100).toFixed(0)}%`}</span>
-        </div>
-      );
-    },
+    cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.species_confidence} />,
   },
 ];
+
 export { columns };
