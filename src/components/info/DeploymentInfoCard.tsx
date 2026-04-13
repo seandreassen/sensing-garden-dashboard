@@ -11,7 +11,7 @@ function DeploymentInfoCard() {
     deployment_id: deploymentId,
   });
 
-  const description = data?.deployment.description ?? "";
+  const description = data?.deployment.description;
   const name = data?.deployment.name;
 
   if (isLoading) {
