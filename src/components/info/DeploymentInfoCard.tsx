@@ -26,7 +26,7 @@ function DeploymentInfoCard() {
   }
 
   return (
-    <Card>
+    <Card className="h-full overflow-y-auto">
       <CardHeader>
         <CardTitle className="text-lg">Deployment Information for: {name}</CardTitle>
       </CardHeader>
