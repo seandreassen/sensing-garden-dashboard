@@ -6,6 +6,7 @@ import {
   useReactTable,
   type OnChangeFn,
 } from "@tanstack/react-table";
+import { LoaderCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
@@ -25,9 +26,14 @@ interface DataTableProps<TData, TValue> {
   limit: number;
   data: TData[];
   nextToken?: string | null;
-  isLoading?: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage: string | undefined;
   sorting: SortingState;
   rowCount?: number;
+  isCountLoading: boolean;
+  isCountError: boolean;
+  countErrorMessage: string | undefined;
   pageIndex: number;
   onPageChange: (direction: "forward" | "backward") => void;
   onSortingChange: OnChangeFn<SortingState>;
@@ -37,9 +43,13 @@ interface DataTableProps<TData, TValue> {
 function DataTable<TData extends Observation, TValue>({
   columns,
   data,
+  isLoading,
+  isError,
   sorting,
   onSortingChange,
   rowCount,
+  isCountLoading,
+  isCountError,
   pageIndex,
   onPageChange,
   limit,
@@ -102,19 +112,25 @@ function DataTable<TData extends Observation, TValue>({
         variant="outline"
         size="sm"
         onClick={() => onPageChange("backward")}
-        disabled={pageIndex < 1}
+        disabled={isLoading || isError || pageIndex < 1}
       >
         Previous
       </Button>
       <div className="flex flex-col items-center text-xs">
         <p>
-          Page <span className="font-bold text-primary">{`${pageIndex + 1} `}</span>
-          of {table.getPageCount()}
+          Page{" "}
+          <span className="font-bold text-primary">{`${table.getPageCount() === 0 ? 0 : pageIndex + 1} `}</span>
+          of {isCountError ? "?" : isCountLoading ? "..." : table.getPageCount()}
         </p>
         <p>
-          Rows {pageIndex * limit + 1}-
-          {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit} of{" "}
-          {rowCount}
+          {isCountError
+            ? "Error fetching row count."
+            : isCountLoading
+              ? "Loading..."
+              : `Rows ${pageIndex * limit + 1} - 
+            ${pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit}
+            of 
+            ${rowCount}`}
         </p>
       </div>
       <Button
@@ -122,7 +138,7 @@ function DataTable<TData extends Observation, TValue>({
         variant="outline"
         size="sm"
         onClick={() => onPageChange("forward")}
-        disabled={pageIndex >= table.getPageCount() - 1}
+        disabled={isLoading || isError || pageIndex >= table.getPageCount() - 1}
       >
         Next
       </Button>
@@ -152,7 +168,7 @@ function DataTable<TData extends Observation, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && !isError && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 className="cursor-pointer text-wrap"
@@ -170,7 +186,7 @@ function DataTable<TData extends Observation, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {isLoading ? <LoaderCircleIcon /> : isError ? "Failed to load data" : "No results."}
               </TableCell>
             </TableRow>
           )}

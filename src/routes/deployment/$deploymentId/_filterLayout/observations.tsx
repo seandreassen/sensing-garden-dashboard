@@ -23,7 +23,7 @@ function RouteComponent() {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { deploymentId } = Route.useParams();
   const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
-  const { data, isLoading } = useObservations({
+  const { data, isLoading, isError, error } = useObservations({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
@@ -37,7 +37,12 @@ function RouteComponent() {
     next_token: `{"offset":${limit * pageIndex}}`,
   });
 
-  const { data: totalCount } = useObservationCount({
+  const {
+    data: totalCount,
+    isLoading: isCountLoading,
+    isError: isCountError,
+    error: countError,
+  } = useObservationCount({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
@@ -74,11 +79,16 @@ function RouteComponent() {
         limit={limit}
         data={data?.items ?? []}
         isLoading={isLoading}
+        isError={isError}
+        errorMessage={error?.message}
         sorting={sorting}
         onSortingChange={handleSortingChange}
         pageIndex={pageIndex}
         onPageChange={(direction) => onPageChange(direction)}
         rowCount={typeof totalCount?.count === "number" ? totalCount.count : 0}
+        isCountLoading={isCountLoading}
+        isCountError={isCountError}
+        countErrorMessage={countError?.message}
       />
     </div>
   );
