@@ -32,6 +32,15 @@ test("returns daily intervals for long date ranges", () => {
   });
 });
 
+test("handles zero-length date range", () => {
+  const date = new Date("2025-06-01T00:00:00.000Z");
+
+  expect(getInterval(date, date)).toEqual({
+    intervalLength: 1,
+    intervalUnit: "h",
+  });
+});
+
 test("returns expected tick formats based on time span", () => {
   const start = new Date("2025-06-01T00:00:00.000Z");
 

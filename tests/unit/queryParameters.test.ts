@@ -62,3 +62,9 @@ test("skips empty or invalid query parameters", () => {
 
   expect(params.toString()).toBe("");
 });
+
+test("skips min_confidence when value is 0", () => {
+  const params = new URLSearchParams();
+  addQueryParameters(params, { min_confidence: 0 });
+  expect(params.has("min_confidence")).toBe(false);
+});
