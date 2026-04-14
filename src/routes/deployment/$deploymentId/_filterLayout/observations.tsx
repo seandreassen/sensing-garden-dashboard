@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 
 import { columns } from "@/components/observations/columns";
 import { DataTable } from "@/components/observations/DataTable";
-import { Spinner } from "@/components/ui/Spinner";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -67,12 +66,8 @@ function RouteComponent() {
     setSorting(newSorting);
   };
 
-  return isLoading ? (
-    <div className="flex h-275 w-full items-center justify-center">
-      <Spinner className="size-8" />
-    </div>
-  ) : (
-    <div className="flex h-full w-full justify-center">
+  return (
+    <div className="flex w-full justify-center">
       {/* Table */}
       <DataTable
         columns={columns}

@@ -6,7 +6,7 @@ import {
   useReactTable,
   type OnChangeFn,
 } from "@tanstack/react-table";
-import { LoaderCircleIcon } from "lucide-react";
+//import { Spinner } from "@/components/ui/Spinner";
 import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
@@ -106,7 +106,7 @@ function DataTable<TData extends Observation, TValue>({
     /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
   }
   const paginationButtons = (
-    <div className="flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
+    <div className="mb-0 flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
       <Button
         className="w-18"
         variant="outline"
@@ -151,7 +151,7 @@ function DataTable<TData extends Observation, TValue>({
         observationData={observationData}
         openStatus={open}
       />
-      <Table className="w-full table-fixed text-wrap">
+      <Table className="table-fixed text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -185,8 +185,17 @@ function DataTable<TData extends Observation, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {isLoading ? <LoaderCircleIcon /> : isError ? "Failed to load data" : "No results."}
+              <TableCell
+                colSpan={table.getVisibleLeafColumns().length}
+                style={{ height: `${limit * 6}rem` }}
+              >
+                <div className="flex h-full w-full items-center justify-center">
+                  {isLoading
+                    ? "..." //<Spinner/>
+                    : isError
+                      ? "Failed to load data"
+                      : "No classifications found for specified filters."}
+                </div>
               </TableCell>
             </TableRow>
           )}
