@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import { columns } from "@/components/observations/columns";
 import { DataTable } from "@/components/observations/DataTable";
+import { PaginationControls } from "@/components/observations/PaginationControls";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -17,12 +18,16 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 });
 
 function RouteComponent() {
-  const limit: number = 10;
+  const limit: number = 5;
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: true }]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { deploymentId } = Route.useParams();
   const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
-  const { data, isLoading, isError, error } = useObservations({
+  const {
+    data: tableData,
+    isLoading: isTableLoading,
+    isError: isTableError,
+  } = useObservations({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
@@ -40,12 +45,14 @@ function RouteComponent() {
     data: totalCount,
     isLoading: isCountLoading,
     isError: isCountError,
-    error: countError,
   } = useObservationCount({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
     deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
   });
 
   useEffect(() => {
@@ -53,7 +60,7 @@ function RouteComponent() {
   }, [sorting, startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa]);
 
   const onPageChange = (direction: string) => {
-    if (direction === "forward" && data?.next_token) {
+    if (direction === "forward" && tableData?.next_token) {
       setPageIndex((i) => i + 1);
     }
     if (direction === "backward" && pageIndex >= 1) {
@@ -67,23 +74,26 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="w-full overflow-hidden rounded-sm border">
       {/* Table */}
       <DataTable
         columns={columns}
         limit={limit}
-        data={data?.items ?? []}
-        isLoading={isLoading}
-        isError={isError}
-        errorMessage={error?.message}
+        pageIndex={pageIndex}
+        rowCount={totalCount?.count ? totalCount.count : 0}
+        data={tableData?.items ?? []}
+        isLoading={isTableLoading}
+        isError={isTableError}
         sorting={sorting}
         onSortingChange={handleSortingChange}
+      />
+      <PaginationControls
+        limit={limit}
+        isCountLoading={isCountLoading}
         pageIndex={pageIndex}
         onPageChange={(direction) => onPageChange(direction)}
-        rowCount={typeof totalCount?.count === "number" ? totalCount.count : 0}
-        isCountLoading={isCountLoading}
+        rowCount={totalCount?.count ? totalCount.count : 0}
         isCountError={isCountError}
-        countErrorMessage={countError?.message}
       />
     </div>
   );

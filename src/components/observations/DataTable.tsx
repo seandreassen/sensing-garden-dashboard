@@ -6,11 +6,10 @@ import {
   useReactTable,
   type OnChangeFn,
 } from "@tanstack/react-table";
-//import { Spinner } from "@/components/ui/Spinner";
 import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
-import { Button } from "@/components/ui/Button";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Table,
   TableBody,
@@ -25,19 +24,12 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
   data: TData[];
-  nextToken?: string | null;
   isLoading: boolean;
   isError: boolean;
-  errorMessage: string | undefined;
   sorting: SortingState;
-  rowCount?: number;
-  isCountLoading: boolean;
-  isCountError: boolean;
-  countErrorMessage: string | undefined;
+  rowCount: number;
   pageIndex: number;
-  onPageChange: (direction: "forward" | "backward") => void;
   onSortingChange: OnChangeFn<SortingState>;
-  onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
 function DataTable<TData extends Observation, TValue>({
@@ -48,10 +40,7 @@ function DataTable<TData extends Observation, TValue>({
   sorting,
   onSortingChange,
   rowCount,
-  isCountLoading,
-  isCountError,
   pageIndex,
-  onPageChange,
   limit,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
@@ -81,8 +70,8 @@ function DataTable<TData extends Observation, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true, //Shows that filtering, sorting and pagination will not be client side.
     rowCount: rowCount,
+    manualPagination: true, //Shows that filtering, sorting and pagination is done server side.
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
@@ -102,50 +91,8 @@ function DataTable<TData extends Observation, TValue>({
     setOpen(true);
   };
 
-  {
-    /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
-  }
-  const paginationButtons = (
-    <div className="mb-0 flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("backward")}
-        disabled={isLoading || isError || pageIndex < 1}
-      >
-        Previous
-      </Button>
-      <div className="flex flex-col items-center text-xs">
-        <p>
-          Page{" "}
-          <span className="font-bold text-primary">{`${table.getPageCount() === 0 ? 0 : pageIndex + 1} `}</span>
-          of {isCountError ? "?" : isCountLoading ? "..." : table.getPageCount()}
-        </p>
-        <p>
-          {isCountError
-            ? "Error fetching row count."
-            : isCountLoading
-              ? "Loading..."
-              : `Rows ${pageIndex * limit + 1} - 
-            ${pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit}
-            of 
-            ${rowCount}`}
-        </p>
-      </div>
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("forward")}
-        disabled={isLoading || isError || pageIndex >= table.getPageCount() - 1}
-      >
-        Next
-      </Button>
-    </div>
-  );
   return (
-    <div className="overflow-hidden rounded-md border">
+    <>
       <ObservationRowDialog
         onClose={() => setOpen(false)}
         observationData={observationData}
@@ -188,21 +135,21 @@ function DataTable<TData extends Observation, TValue>({
               <TableCell
                 colSpan={table.getVisibleLeafColumns().length}
                 style={{ height: `${limit * 6}rem` }}
+                className="flex h-full w-screen items-center justify-center"
               >
-                <div className="flex h-full w-full items-center justify-center">
-                  {isLoading
-                    ? "..." //<Spinner/>
-                    : isError
-                      ? "Failed to load data"
-                      : "No classifications found for specified filters."}
-                </div>
+                {isLoading ? (
+                  <Spinner className="size-8" />
+                ) : isError ? (
+                  "Failed to load data"
+                ) : (
+                  "No classifications found for specified filters."
+                )}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      {paginationButtons}
-    </div>
+    </>
   );
 }
 export { DataTable };
