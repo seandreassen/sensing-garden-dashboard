@@ -42,7 +42,7 @@ function RouteComponent() {
   });
 
   const {
-    data: totalCount,
+    data: observationCount,
     isLoading: isCountLoading,
     isError: isCountError,
   } = useObservationCount({
@@ -80,7 +80,7 @@ function RouteComponent() {
         columns={columns}
         limit={limit}
         pageIndex={pageIndex}
-        rowCount={totalCount?.count ? totalCount.count : 0}
+        rowCount={observationCount?.count ? observationCount.count : 0}
         data={tableData?.items ?? []}
         isLoading={isTableLoading}
         isError={isTableError}
@@ -92,7 +92,7 @@ function RouteComponent() {
         isCountLoading={isCountLoading}
         pageIndex={pageIndex}
         onPageChange={(direction) => onPageChange(direction)}
-        rowCount={totalCount?.count ? totalCount.count : 0}
+        rowCount={observationCount?.count ? observationCount.count : 0}
         isCountError={isCountError}
       />
     </div>

@@ -71,7 +71,7 @@ function DataTable<TData extends Observation, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     rowCount: rowCount,
-    manualPagination: true, //Shows that filtering, sorting and pagination is done server side.
+    manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
