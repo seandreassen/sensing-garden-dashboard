@@ -71,21 +71,25 @@ const columns: ColumnDef<Observation>[] = [
         return "Invalid date";
       }
 
-      return date.toLocaleString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
+      return (
+        <p className="text-wrap">
+          {date.toLocaleString(undefined, {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })}
+        </p>
+      );
     },
   },
   {
     header: "Hub",
     cell: ({ row }) => {
       const hub = row.original.device_id;
-      return <div className="flex max-w-40 flex-col text-wrap">{hub}</div>;
+      return <p className="flex max-w-40 flex-col text-wrap">{hub}</p>;
     },
   },
   {

@@ -138,11 +138,13 @@ function DataTable<TData extends Observation, TValue>({
                 className="flex h-full"
               >
                 {isLoading ? (
-                  <Spinner className="absolute top-1/2 left-1/2 size-8" />
+                  <Spinner className="absolute top-1/2 left-1/2 size-8 -translate-x-1/2 -translate-y-1/2" />
                 ) : isError ? (
                   "Failed to load data"
                 ) : (
-                  "No classifications found for specified filters."
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    No classifications found for specified filters.
+                  </p>
                 )}
               </TableCell>
             </TableRow>
