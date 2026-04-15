@@ -20,7 +20,7 @@ function PaginationControls({
   const pageCount: number = Math.ceil(rowCount / limit);
 
   return (
-    <div className="mb-0 flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
+    <div className="mb-0 flex justify-center gap-6 border-t border-t-foreground bg-muted px-6 py-4">
       <Button
         className="w-18"
         variant="outline"

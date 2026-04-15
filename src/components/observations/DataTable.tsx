@@ -135,10 +135,10 @@ function DataTable<TData extends Observation, TValue>({
               <TableCell
                 colSpan={table.getVisibleLeafColumns().length}
                 style={{ height: `${limit * 6}rem` }}
-                className="flex h-full w-screen items-center justify-center"
+                className="flex h-full"
               >
                 {isLoading ? (
-                  <Spinner className="size-8" />
+                  <Spinner className="absolute top-1/2 left-1/2 size-8" />
                 ) : isError ? (
                   "Failed to load data"
                 ) : (
