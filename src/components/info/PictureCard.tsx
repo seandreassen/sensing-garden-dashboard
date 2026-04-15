@@ -21,7 +21,7 @@ function PictureCard() {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="h-full w-fit">
       <CardHeader>
         <CardTitle className="text-lg">Deployment Picture</CardTitle>
       </CardHeader>

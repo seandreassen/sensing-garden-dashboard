@@ -7,7 +7,9 @@ function DeploymentPicture({ image_url }: DeploymentPictureProps) {
     return <p className="text-sm text-muted-foreground">This deployment has no picture</p>;
   }
 
-  return <img src={image_url} alt="Deployment" className="w-full rounded-md object-cover" />;
+  return (
+    <img src={image_url} alt="Deployment" className="max-h-64 max-w-lg rounded-md object-contain" />
+  );
 }
 
 export { DeploymentPicture };
