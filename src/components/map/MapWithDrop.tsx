@@ -47,21 +47,12 @@ function computeDefaultView(locations: Location[]) {
 
 interface MapWithDropProps {
   locations: Location[];
-  setLocations?: React.Dispatch<React.SetStateAction<Location[]>>;
-  onDropLocation?: (location: Location) => void;
-  markerLabels?: string[];
+  setLocations: React.Dispatch<React.SetStateAction<Location[]>>;
   center?: Location;
   allowDragAndDrop?: boolean;
 }
 
-function MapWithDrop({
-  locations,
-  setLocations,
-  onDropLocation,
-  markerLabels,
-  center,
-  allowDragAndDrop,
-}: MapWithDropProps) {
+function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapWithDropProps) {
   const map = useMap();
   const mapDivRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
@@ -72,7 +63,7 @@ function MapWithDrop({
   );
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-    if (!allowDragAndDrop && !onDropLocation) {
+    if (!allowDragAndDrop) {
       return;
     }
     e.preventDefault();
@@ -105,12 +96,7 @@ function MapWithDrop({
       return;
     }
 
-    const location = { lat: latLng.lat(), long: latLng.lng() };
-    if (onDropLocation) {
-      onDropLocation(location);
-    } else {
-      setLocations?.((prev) => [...prev, location]);
-    }
+    setLocations((prev) => [...prev, { lat: latLng.lat(), long: latLng.lng() }]);
   }
 
   function handleDragEnd(
@@ -122,15 +108,24 @@ function MapWithDrop({
     }
     const lat = e.latLng.lat();
     const long = e.latLng.lng();
-    setLocations?.((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
+    setLocations((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
   }
+
+  const overviewPosition = center
+    ? { lat: center.lat, lng: center.long }
+    : locations.length > 0
+      ? {
+          lat: locations.reduce((sum, l) => sum + l.lat, 0) / locations.length,
+          lng: locations.reduce((sum, l) => sum + l.long, 0) / locations.length,
+        }
+      : null;
 
   return (
     <div
       ref={mapDivRef}
       className="h-125 w-full"
-      onDragOver={allowDragAndDrop || onDropLocation ? (e) => e.preventDefault() : undefined}
-      onDrop={allowDragAndDrop || onDropLocation ? handleDrop : undefined}
+      onDragOver={allowDragAndDrop ? (e) => e.preventDefault() : undefined}
+      onDrop={allowDragAndDrop ? handleDrop : undefined}
     >
       <Map
         defaultZoom={defaultZoom}
@@ -139,29 +134,18 @@ function MapWithDrop({
         mapId="DEMO_MAP_ID"
         onCameraChanged={(ev) => setZoom(ev.detail.zoom)}
       >
-        {center && zoom < minZoom && (
-          <AdvancedMarker position={{ lat: center.lat, lng: center.long }}>
-            <PinIcon />
-          </AdvancedMarker>
-        )}
-        {zoom >= minZoom &&
-          locations.map((loc, i) => (
-            <AdvancedMarker
-              key={i}
-              position={{ lat: loc.lat, lng: loc.long }}
-              draggable={allowDragAndDrop}
-              onDragEnd={(e) => handleDragEnd(i, e)}
-            >
-              {markerLabels?.[i] && (
-                <div className="flex flex-col items-center">
-                  <div className="rounded bg-white px-1.5 py-0.5 text-xs font-medium shadow">
-                    {markerLabels[i]}
-                  </div>
-                  <PinIcon />
-                </div>
-              )}
-            </AdvancedMarker>
-          ))}
+        {zoom < minZoom
+          ? overviewPosition && (
+              <AdvancedMarker position={overviewPosition}>{center && <PinIcon />}</AdvancedMarker>
+            )
+          : locations.map((loc, i) => (
+              <AdvancedMarker
+                key={i}
+                position={{ lat: loc.lat, lng: loc.long }}
+                draggable={allowDragAndDrop}
+                onDragEnd={(e) => handleDragEnd(i, e)}
+              />
+            ))}
       </Map>
     </div>
   );

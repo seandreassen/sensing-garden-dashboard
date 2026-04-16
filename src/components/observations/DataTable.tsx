@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
-import { Button } from "@/components/ui/Button";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Table,
   TableBody,
@@ -24,24 +24,23 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
   data: TData[];
-  nextToken?: string | null;
-  isLoading?: boolean;
+  isLoading: boolean;
+  isError: boolean;
   sorting: SortingState;
-  rowCount?: number;
+  rowCount: number;
   pageIndex: number;
-  onPageChange: (direction: "forward" | "backward") => void;
   onSortingChange: OnChangeFn<SortingState>;
-  onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
 function DataTable<TData extends Observation, TValue>({
   columns,
   data,
+  isLoading,
+  isError,
   sorting,
   onSortingChange,
   rowCount,
   pageIndex,
-  onPageChange,
   limit,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
@@ -71,8 +70,8 @@ function DataTable<TData extends Observation, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true, //Shows that filtering, sorting and pagination will not be client side.
     rowCount: rowCount,
+    manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
@@ -92,50 +91,14 @@ function DataTable<TData extends Observation, TValue>({
     setOpen(true);
   };
 
-  {
-    /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
-  }
-  const paginationButtons = (
-    <div className="flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("backward")}
-        disabled={pageIndex < 1}
-      >
-        Previous
-      </Button>
-      <div className="flex flex-col items-center text-xs">
-        <p>
-          Page <span className="font-bold text-primary">{`${pageIndex + 1} `}</span>
-          of {table.getPageCount()}
-        </p>
-        <p>
-          Rows {pageIndex * limit + 1}-
-          {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit} of{" "}
-          {rowCount}
-        </p>
-      </div>
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("forward")}
-        disabled={pageIndex >= table.getPageCount() - 1}
-      >
-        Next
-      </Button>
-    </div>
-  );
   return (
-    <div className="overflow-hidden rounded-md border">
+    <>
       <ObservationRowDialog
         onClose={() => setOpen(false)}
         observationData={observationData}
         openStatus={open}
       />
-      <Table className="w-full table-fixed text-wrap">
+      <Table className="table-fixed text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -152,7 +115,7 @@ function DataTable<TData extends Observation, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && !isError && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 className="cursor-pointer text-wrap"
@@ -169,15 +132,24 @@ function DataTable<TData extends Observation, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+              <TableCell
+                colSpan={table.getVisibleLeafColumns().length}
+                style={{ height: `${limit * 6}rem` }}
+                className="flex h-full"
+              >
+                {isLoading ? (
+                  <Spinner className="absolute top-1/2 left-1/2 size-8" />
+                ) : isError ? (
+                  "Failed to load data"
+                ) : (
+                  "No classifications found for specified filters."
+                )}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      {paginationButtons}
-    </div>
+    </>
   );
 }
 export { DataTable };
