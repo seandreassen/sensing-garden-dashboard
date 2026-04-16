@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Card, CardTitle } from "@/components/ui/Card";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
@@ -37,11 +38,6 @@ function EditDateRangeCard({
     onChange?.(startDate, e.target.value);
   }
 
-  function handleHasEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setHasEndDate(e.target.checked);
-    onChange?.(startDate, e.target.checked ? endDate : null);
-  }
-
   const labelClass = "text-sm text-muted-foreground";
   const inputClass =
     "w-full rounded border border-input bg-background px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-ring";
@@ -69,12 +65,13 @@ function EditDateRangeCard({
             <label htmlFor="has-end-date" className={labelClass}>
               End date
             </label>
-            <Input
+            <Checkbox
               id="has-end-date"
-              type="checkbox"
               checked={hasEndDate}
-              onChange={handleHasEndDateChange}
-              className="accent-primary"
+              onCheckedChange={(checked) => {
+                setHasEndDate(!!checked);
+                onChange?.(startDate, checked ? endDate : null);
+              }}
             />
           </div>
           <Input
