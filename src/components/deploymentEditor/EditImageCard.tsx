@@ -10,8 +10,8 @@ function EditImageCard({
   initialUrl?: string;
   onChange?: (value: string) => void;
 }) {
-  const [src, setSrc] = useState(initialUrl);
-  const isDirty = src !== initialUrl;
+  const [src, setSrc] = useState<string>(initialUrl);
+  const isDirty: boolean = src !== initialUrl;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

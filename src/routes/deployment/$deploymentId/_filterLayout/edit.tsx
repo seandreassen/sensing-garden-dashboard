@@ -4,14 +4,17 @@ import { useState } from "react";
 import { EditDateRangeCard } from "@/components/deploymentEditor/EditDateRangeCard";
 import { EditDescriptionCard } from "@/components/deploymentEditor/EditDescriptionCard";
 import { EditDevicesMapCard } from "@/components/deploymentEditor/EditDevicesMapCard";
-import type { Device } from "@/components/deploymentEditor/EditDevicesMapCard";
 import { EditImageCard } from "@/components/deploymentEditor/EditImageCard";
 import { EditNameCard } from "@/components/deploymentEditor/EditNameCard";
 import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useDeploymentMutations, useDeleteDeployment } from "@/lib/hooks/useDeploymentMutations";
-import { useDeployment } from "@/lib/hooks/useDeployments";
-import type { DeploymentDetail } from "@/lib/types/api";
+import type {
+  Deployment,
+  DeploymentDevice,
+  GetSelectedDeploymentParameters,
+} from "@/lib/types/api";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/edit")({
   component: RouteComponent,
@@ -19,9 +22,11 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ed
 
 function RouteComponent() {
   const { deploymentId } = Route.useParams();
-  const { data: deployment, isLoading } = useDeployment(deploymentId);
+  const { data, isLoading } = useDeployment({
+    deployment_id: deploymentId,
+  } as GetSelectedDeploymentParameters);
 
-  if (isLoading || !deployment) {
+  if (isLoading || !data?.deployment) {
     return (
       <div className="flex justify-center py-20">
         <Spinner className="size-8" />
@@ -29,32 +34,30 @@ function RouteComponent() {
     );
   }
 
-  return <EditPage deploymentId={deploymentId} deployment={deployment} />;
+  return (
+    <EditPage deploymentId={deploymentId} deployment={data.deployment} devices={data.devices} />
+  );
 }
 
 function EditPage({
   deploymentId,
   deployment,
+  devices: initialDevices,
 }: {
   deploymentId: string;
-  deployment: DeploymentDetail;
+  deployment: Deployment;
+  devices: DeploymentDevice[];
 }) {
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
   const deleteDeployment = useDeleteDeployment();
   const navigate = useNavigate();
-
-  const initialDevices: Device[] = deployment.devices.map((d) => ({
-    device_id: d.device_id,
-    name: d.name ?? "",
-    location: d.location,
-  }));
 
   const [name, setName] = useState<string | undefined>();
   const [description, setDescription] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | null | undefined>();
   const [image, setImage] = useState<string | undefined>();
-  const [devices, setDevices] = useState<Device[] | undefined>();
+  const [devices, setDevices] = useState<DeploymentDevice[] | undefined>();
 
   function handleDelete() {
     deleteDeployment.mutate(deploymentId, {
@@ -87,13 +90,6 @@ function EditPage({
       <div className="grid grid-cols-3 gap-5">
         <div className="flex h-full flex-col gap-5">
           <EditNameCard initialValue={deployment.name ?? ""} onChange={setName} />
-          <EditDescriptionCard
-            initialValue={deployment.description ?? ""}
-            onChange={setDescription}
-          />
-        </div>
-        <div className="flex h-full flex-col gap-5">
-          <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
           <EditDateRangeCard
             initialStartDate={
               deployment.start_time ? deployment.start_time.toISOString().split("T")[0] : ""
@@ -106,8 +102,15 @@ function EditPage({
               setEndDate(end);
             }}
           />
+          <EditDescriptionCard
+            initialValue={deployment.description ?? ""}
+            onChange={setDescription}
+          />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex h-full flex-col gap-5">
+          <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
+        </div>
+        <div className="flex h-full flex-col gap-5">
           <EditDevicesMapCard initialDevices={initialDevices} onChange={setDevices} />
         </div>
       </div>

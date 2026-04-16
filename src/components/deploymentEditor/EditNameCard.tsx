@@ -3,8 +3,8 @@ import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
-
-import { useTrackedValue } from "./useTrackedValue";
+import { Input } from "@/components/ui/Input";
+import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
 function EditNameCard({
   initialValue = "",
@@ -14,7 +14,7 @@ function EditNameCard({
   onChange?: (value: string) => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const { value, setValue, isDirty } = useTrackedValue(initialValue);
+  const { value, setValue, isDirty } = useDirtyValueTracker(initialValue);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function EditNameCard({
   }, [isEditing]);
 
   const inputField = isEditing ? (
-    <input
+    <Input
       ref={inputRef}
       value={value}
       onChange={(e) => {
@@ -33,12 +33,12 @@ function EditNameCard({
       }}
       onBlur={() => setIsEditing(false)}
       onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
-      className="h-10 w-full border-none bg-accent px-2 py-0 text-center outline-none"
+      className="w-full border-none bg-accent px-2 py-0 text-center outline-none"
     />
   ) : (
     <Button
       className={`w-full justify-center ${isDirty ? "text-primary" : ""}`}
-      variant="ghost"
+      variant="outline"
       onClick={() => setIsEditing(true)}
     >
       {value || "Click to edit"}
@@ -49,7 +49,7 @@ function EditNameCard({
   return (
     <Card>
       <CardTitle className="text-center">Name</CardTitle>
-      <div className="flex h-10 items-center">{inputField}</div>
+      <div className="flex h-10 items-center px-3">{inputField}</div>
     </Card>
   );
 }

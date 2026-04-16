@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-function useTrackedValue(initialValue: string) {
+function useDirtyValueTracker(initialValue: string) {
   const [value, setValue] = useState(initialValue);
   const isDirty = value !== initialValue;
   return { value, setValue, isDirty };
 }
 
-export { useTrackedValue };
+export { useDirtyValueTracker };

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { Card, CardTitle } from "@/components/ui/Card";
-
-import { useTrackedValue } from "./useTrackedValue";
+import { Input } from "@/components/ui/Input";
+import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
 function EditDateRangeCard({
   initialStartDate = "",
@@ -18,12 +18,12 @@ function EditDateRangeCard({
     value: startDate,
     setValue: setStartDate,
     isDirty: isStartDirty,
-  } = useTrackedValue(initialStartDate);
+  } = useDirtyValueTracker(initialStartDate);
   const {
     value: endDate,
     setValue: setEndDate,
     isDirty: isEndDirty,
-  } = useTrackedValue(initialEndDate);
+  } = useDirtyValueTracker(initialEndDate);
 
   const isDirty = isStartDirty || isEndDirty || hasEndDate !== !!initialEndDate;
 
@@ -56,7 +56,7 @@ function EditDateRangeCard({
           <label htmlFor="start-date" className={labelClass}>
             Start date
           </label>
-          <input
+          <Input
             id="start-date"
             type="date"
             value={startDate}
@@ -69,7 +69,7 @@ function EditDateRangeCard({
             <label htmlFor="has-end-date" className={labelClass}>
               End date
             </label>
-            <input
+            <Input
               id="has-end-date"
               type="checkbox"
               checked={hasEndDate}
@@ -77,7 +77,7 @@ function EditDateRangeCard({
               className="accent-primary"
             />
           </div>
-          <input
+          <Input
             type="date"
             value={endDate}
             onChange={handleEndChange}

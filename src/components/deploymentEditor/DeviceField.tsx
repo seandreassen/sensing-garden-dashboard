@@ -1,9 +1,10 @@
+import { Input } from "@base-ui/react";
 import { PencilIcon } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 
-function InlineField({
+function DeviceField({
   value,
   onChange,
   placeholder,
@@ -25,7 +26,7 @@ function InlineField({
 
   if (isEditing) {
     return (
-      <input
+      <Input
         ref={inputRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -49,4 +50,4 @@ function InlineField({
   );
 }
 
-export { InlineField };
+export { DeviceField };

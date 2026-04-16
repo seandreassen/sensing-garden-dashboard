@@ -13,7 +13,7 @@ interface CreateDeploymentBody {
   description?: string;
   deployment_id?: string;
   start_time?: string;
-  end_time?: string;
+  end_time?: string | null;
   model_id?: string;
   location_name?: string;
   location?: { lat: number; long: number };
@@ -150,10 +150,10 @@ interface SaveDeploymentArgs {
   startDate?: string;
   endDate?: string | null;
   image?: string;
-  devices: Array<{ device_id: string; name: string; location?: { lat: number; long: number } }>;
+  devices: Array<{ device_id: string; name?: string; location?: { lat: number; long: number } }>;
   initialDevices: Array<{
     device_id: string;
-    name: string;
+    name?: string;
     location?: { lat: number; long: number };
   }>;
 }
@@ -182,7 +182,7 @@ function useDeploymentMutations(deploymentId: string) {
         deploymentPatch.start_time = startDate;
       }
       if (endDate !== undefined) {
-        deploymentPatch.end_time = endDate ?? undefined;
+        deploymentPatch.end_time = endDate;
       }
       if (image !== undefined) {
         deploymentPatch.image = image.includes(",") ? image.split(",")[1] : image;

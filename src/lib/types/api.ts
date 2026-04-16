@@ -56,10 +56,6 @@ interface DeploymentDevice {
   location?: Location;
 }
 
-interface DeploymentDetail extends Deployment {
-  devices: DeploymentDevice[];
-}
-
 interface DeploymentsResponse {
   deployments: Deployment[];
   count: number;
@@ -212,7 +208,6 @@ export type {
   GetEnvironmentParameters,
   Deployment,
   DeploymentDevice,
-  DeploymentDetail,
   DeploymentsResponse,
   SelectedDeploymentResponse,
   GetDeploymentsParameters,

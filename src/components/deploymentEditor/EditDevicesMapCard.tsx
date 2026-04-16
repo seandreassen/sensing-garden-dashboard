@@ -1,21 +1,15 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { PlusIcon, Trash2Icon, XIcon, CheckIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 
+import { DeviceField } from "@/components/deploymentEditor/DeviceField";
+import { NewDeviceRow } from "@/components/deploymentEditor/NewDeviceRow";
 import { MapWithDrop } from "@/components/map/MapWithDrop";
 import { PinIcon } from "@/components/map/PinIcon";
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { env } from "@/env";
-import type { Location } from "@/lib/types/api";
-
-import { InlineField } from "./InlineField";
-
-interface Device {
-  device_id: string;
-  name: string;
-  location?: Location;
-}
+import type { Location, DeploymentDevice } from "@/lib/types/api";
 
 const dragImage = new Image();
 dragImage.src =
@@ -27,73 +21,25 @@ dragImage.src =
     </svg>`,
   );
 
-function NewDeviceRow({
-  existingDeviceIds,
-  onConfirm,
-  onCancel,
-}: {
-  existingDeviceIds: Set<string>;
-  onConfirm: (device: Device) => void;
-  onCancel: () => void;
-}) {
-  const [deviceId, setDeviceId] = useState("");
-  const [name, setName] = useState("");
-
-  const isDuplicate = existingDeviceIds.has(deviceId);
-
-  return (
-    <div className="flex flex-col gap-1 rounded border border-ring px-2 py-2">
-      <input
-        value={deviceId}
-        onChange={(e) => setDeviceId(e.target.value)}
-        placeholder="Device ID"
-        className="h-8 w-full border-none bg-accent px-2 text-sm outline-none"
-      />
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) =>
-          e.key === "Enter" && deviceId && !isDuplicate && onConfirm({ device_id: deviceId, name })
-        }
-        placeholder="Name"
-        className="h-8 w-full border-none bg-accent px-2 text-sm outline-none"
-      />
-      <div className="flex justify-end gap-1">
-        <Button variant="ghost" size="icon" onClick={onCancel}>
-          <XIcon className="h-3.5 w-3.5" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => deviceId && !isDuplicate && onConfirm({ device_id: deviceId, name })}
-          disabled={!deviceId || isDuplicate}
-        >
-          <CheckIcon className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 function EditDevicesMapCard({
   initialDevices = [],
   onChange,
 }: {
-  initialDevices?: Device[];
-  onChange?: (devices: Device[]) => void;
+  initialDevices?: DeploymentDevice[];
+  onChange?: (devices: DeploymentDevice[]) => void;
 }) {
-  const [devices, setDevices] = useState<Device[]>(initialDevices);
+  const [devices, setDevices] = useState<DeploymentDevice[]>(initialDevices);
   const [adding, setAdding] = useState(false);
   const draggingIndex = useRef<number | null>(null);
   const isDirty = JSON.stringify(devices) !== JSON.stringify(initialDevices);
 
-  function update(next: Device[]) {
+  function update(next: DeploymentDevice[]) {
     setDevices(next);
     onChange?.(next);
   }
 
   const located = devices.filter(
-    (d): d is Device & { location: Location } => d.location !== undefined,
+    (d): d is DeploymentDevice & { location: Location } => d.location !== undefined,
   );
 
   function handleDropLocation(location: Location) {
@@ -120,7 +66,7 @@ function EditDevicesMapCard({
   }
 
   return (
-    <Card>
+    <Card className="flex-1">
       <div className="flex items-center justify-between px-4">
         <CardTitle className={isDirty ? "text-primary" : ""}>Devices</CardTitle>
         <Button variant="ghost" size="icon" onClick={() => setAdding(true)}>
@@ -158,8 +104,8 @@ function EditDevicesMapCard({
                   <PinIcon />
                 </span>
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <InlineField
-                    value={device.name}
+                  <DeviceField
+                    value={device.name ?? ""}
                     onChange={(name) =>
                       update(devices.map((d, j) => (j === i ? { ...d, name } : d)))
                     }
@@ -183,7 +129,7 @@ function EditDevicesMapCard({
             <p className="py-2 text-center text-sm text-muted-foreground">No devices yet</p>
           )}
         </div>
-        <div className="h-64 w-full">
+        <div className="h-2 w-full">
           {env.VITE_GOOGLE_MAPS_API_KEY ? (
             <APIProvider apiKey={env.VITE_GOOGLE_MAPS_API_KEY}>
               <MapWithDrop
@@ -204,4 +150,3 @@ function EditDevicesMapCard({
 }
 
 export { EditDevicesMapCard };
-export type { Device };
