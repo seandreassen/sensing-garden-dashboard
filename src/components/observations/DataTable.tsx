@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/Table";
 import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
+import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
@@ -98,13 +99,19 @@ function DataTable<TData extends Observation, TValue>({
         observationData={observationData}
         openStatus={open}
       />
-      <Table className="table-fixed text-wrap">
+      <Table className="table-auto text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="bg-muted p-4 text-base" key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      "border-b-2 bg-muted py-4 text-sm text-wrap wrap-break-word text-muted-foreground md:text-base",
+                      (header.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -118,13 +125,28 @@ function DataTable<TData extends Observation, TValue>({
           {!isLoading && !isError && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="cursor-pointer text-wrap"
+                className="cursor-pointer"
+                // oxlint-disable-next-line jsx_a11y/prefer-tag-over-role
+                role="button"
+                aria-label="More info observation"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openModal(row.original);
+                  }
+                }}
                 onClick={() => openModal(row.original)} //Opens modal with correct row's info onclick.
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="wrap-break-word" key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      (cell.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
