@@ -40,7 +40,7 @@ function EditDescriptionCard({
       variant="outline"
       onClick={() => setIsEditing(true)}
     >
-      <span className="line-clamp-12 overflow-hidden text-center whitespace-pre-wrap">
+      <span className="line-clamp-4 overflow-hidden text-center whitespace-pre-wrap">
         {value || "Click to edit"}
       </span>
       <PencilIcon className="shrink-0" />

@@ -30,18 +30,18 @@ function computeMinZoomForLocations(locations: Location[]): number {
   const maxDistance = Math.max(...locations.map((l) => haversineDistance(centroid, l)));
 
   if (maxDistance <= 100) {
-    return 18;
-  }
-  if (maxDistance <= 250) {
-    return 17;
-  }
-  if (maxDistance <= 500) {
-    return 16;
-  }
-  if (maxDistance <= 1000) {
     return 14;
   }
-  return 12;
+  if (maxDistance <= 250) {
+    return 13;
+  }
+  if (maxDistance <= 500) {
+    return 12;
+  }
+  if (maxDistance <= 1000) {
+    return 10;
+  }
+  return 8;
 }
 
 export { computeMinZoomForLocations };

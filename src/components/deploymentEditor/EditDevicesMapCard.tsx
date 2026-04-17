@@ -73,8 +73,8 @@ function EditDevicesMapCard({
           <PlusIcon className="h-4 w-4" />
         </Button>
       </div>
-      <div className="flex flex-col gap-2 px-4">
-        <div className="flex max-h-64 flex-col gap-2 overflow-y-auto">
+      <div className="flex flex-col gap-2 px-4 pb-4">
+        <div className="flex h-48 flex-col gap-2 overflow-y-auto">
           {adding && (
             <NewDeviceRow
               existingDeviceIds={new Set(devices.map((d) => d.device_id))}
