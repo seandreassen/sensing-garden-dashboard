@@ -1,24 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import type { Deployment, DeploymentDevice } from "@/lib/types/api";
+import type {
+  Deployment,
+  CreateDeploymentBody,
+  UpdateDeploymentBody,
+  SaveDeploymentArgs,
+} from "@/lib/types/api";
 import { getHeaders } from "@/lib/utils/headers";
 
 const JSON_HEADERS = { ...getHeaders(), "Content-Type": "application/json" };
 
 // --- Deployment mutations ---
-
-interface CreateDeploymentBody {
-  name?: string;
-  description?: string;
-  deployment_id?: string;
-  start_time?: string;
-  end_time?: string | null;
-  model_id?: string;
-  location_name?: string;
-  location?: { lat: number; long: number };
-  image?: string;
-}
 
 function useCreateDeployment() {
   const queryClient = useQueryClient();
@@ -38,8 +31,6 @@ function useCreateDeployment() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments"] }),
   });
 }
-
-type UpdateDeploymentBody = Omit<CreateDeploymentBody, "deployment_id">;
 
 function useUpdateDeployment(deploymentId: string) {
   const queryClient = useQueryClient();
@@ -78,85 +69,7 @@ function useDeleteDeployment() {
   });
 }
 
-// --- Deployment-device link mutations ---
-
-interface LinkDeviceBody {
-  device_id: string;
-  name?: string;
-  location?: { lat: number; long: number };
-}
-
-function useLinkDevice(deploymentId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (body: LinkDeviceBody) => {
-      const res = await fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`, {
-        method: "POST",
-        headers: JSON_HEADERS,
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        throw new Error(`Failed to link device: ${res.status}`);
-      }
-      return (await res.json()) as DeploymentDevice;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
-  });
-}
-
-interface UpdateDeviceLinkBody {
-  name?: string;
-  location?: { lat: number; long: number };
-}
-
-function useUpdateDeviceLink(deploymentId: string, deviceId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (body: UpdateDeviceLinkBody) => {
-      const res = await fetch(
-        `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${deviceId}`,
-        { method: "PATCH", headers: JSON_HEADERS, body: JSON.stringify(body) },
-      );
-      if (!res.ok) {
-        throw new Error(`Failed to update device link: ${res.status}`);
-      }
-      return (await res.json()) as DeploymentDevice;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
-  });
-}
-
-function useDeleteDeviceLink(deploymentId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (deviceId: string) => {
-      const res = await fetch(
-        `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${deviceId}`,
-        { method: "DELETE", headers: getHeaders() },
-      );
-      if (!res.ok) {
-        throw new Error(`Failed to delete device link: ${res.status}`);
-      }
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
-  });
-}
-
 // --- Combined save hook for the edit page ---
-
-interface SaveDeploymentArgs {
-  name?: string;
-  description?: string;
-  startDate?: string;
-  endDate?: string | null;
-  image?: string;
-  devices: Array<{ device_id: string; name?: string; location?: { lat: number; long: number } }>;
-  initialDevices: Array<{
-    device_id: string;
-    name?: string;
-    location?: { lat: number; long: number };
-  }>;
-}
 
 function useDeploymentMutations(deploymentId: string) {
   const queryClient = useQueryClient();
@@ -265,12 +178,4 @@ function useDeploymentMutations(deploymentId: string) {
   };
 }
 
-export {
-  useCreateDeployment,
-  useUpdateDeployment,
-  useDeleteDeployment,
-  useLinkDevice,
-  useUpdateDeviceLink,
-  useDeleteDeviceLink,
-  useDeploymentMutations,
-};
+export { useCreateDeployment, useUpdateDeployment, useDeleteDeployment, useDeploymentMutations };
