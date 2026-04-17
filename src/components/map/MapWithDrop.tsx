@@ -1,10 +1,9 @@
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useRef, useState } from "react";
 
+import { PinIcon } from "@/components/map/PinIcon";
 import type { Location } from "@/lib/types/api";
 import { computeMinZoomForLocations } from "@/lib/utils/location";
-
-import { PinIcon } from "./PinIcon";
 
 const DEFAULT_ZOOM = 11;
 const SINGLE_PIN_ZOOM = 15;
