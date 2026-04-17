@@ -45,7 +45,7 @@ function DeviceCard() {
         <div
           ref={devicesRef}
           className={cn(
-            "grid grid-cols-2 gap-2 pt-px pb-2",
+            "grid grid-cols-1 gap-2 px-0.5 pt-px pb-2 [scrollbar-gutter:stable]",
             !expanded && isTruncated && "overflow-hidden",
             expanded && "max-h-64 overflow-y-auto",
           )}

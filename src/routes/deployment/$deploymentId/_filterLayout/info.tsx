@@ -14,19 +14,17 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/in
 
 function RouteComponent() {
   return (
-    <div className="flex grid-cols-2 flex-col gap-y-3 md:flex">
-      <div className="flex items-start gap-x-3">
-        <div className="h-89 flex-1 overflow-hidden">
-          <DeploymentInfoCard />
-        </div>
-        <div className="h-89 flex-1 overflow-hidden">
-          <DeviceCard />
-        </div>
-        <div className="h-89 shrink-0 overflow-hidden">
-          <PictureCard />
-        </div>
+    <div className="grid grid-cols-2 gap-3 lg:flex lg:flex-wrap lg:gap-3">
+      <div className="overflow-hidden lg:h-89 lg:min-w-64 lg:flex-1">
+        <DeploymentInfoCard />
       </div>
-      <div className="h-100">
+      <div className="overflow-hidden lg:h-89 lg:shrink-0">
+        <PictureCard />
+      </div>
+      <div className="col-span-2 overflow-hidden lg:col-span-1 lg:h-89 lg:w-fit lg:shrink-0">
+        <DeviceCard />
+      </div>
+      <div className="col-span-2 lg:h-100 lg:basis-full">
         <GoogleMapsCard />
       </div>
     </div>
