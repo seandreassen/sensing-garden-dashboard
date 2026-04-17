@@ -1,6 +1,6 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { DeviceField } from "@/components/deploymentEditor/DeviceField";
 import { NewDeviceRow } from "@/components/deploymentEditor/NewDeviceRow";
@@ -30,6 +30,10 @@ function EditDevicesMapCard({
 }) {
   const [devices, setDevices] = useState<DeploymentDevice[]>(initialDevices);
   const [adding, setAdding] = useState(false);
+
+  useEffect(() => {
+    setDevices(initialDevices);
+  }, [initialDevices]);
   const draggingIndex = useRef<number | null>(null);
   const isDirty = JSON.stringify(devices) !== JSON.stringify(initialDevices);
 

@@ -255,7 +255,7 @@ function useDeploymentMutations(deploymentId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["deployments"] });
-      queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] });
+      queryClient.invalidateQueries({ queryKey: ["deployment", deploymentId] });
     },
   });
 

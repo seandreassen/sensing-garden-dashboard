@@ -48,7 +48,7 @@ function EditNameCard({
 
   return (
     <Card>
-      <CardTitle className="text-center">Name</CardTitle>
+      <CardTitle className={`text-center ${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
       <div className="flex h-10 items-center px-3">{inputField}</div>
     </Card>
   );

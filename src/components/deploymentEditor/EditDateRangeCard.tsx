@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -15,6 +15,10 @@ function EditDateRangeCard({
   onChange?: (startDate: string, endDate: string | null) => void;
 }) {
   const [hasEndDate, setHasEndDate] = useState(!!initialEndDate);
+
+  useEffect(() => {
+    setHasEndDate(!!initialEndDate);
+  }, [initialEndDate]);
   const {
     value: startDate,
     setValue: setStartDate,

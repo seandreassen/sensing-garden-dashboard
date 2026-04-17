@@ -1,5 +1,5 @@
 import { PencilIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Card, CardTitle } from "@/components/ui/Card";
 
@@ -13,6 +13,10 @@ function EditImageCard({
   const [src, setSrc] = useState<string>(initialUrl);
   const isDirty: boolean = src !== initialUrl;
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setSrc(initialUrl);
+  }, [initialUrl]);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];

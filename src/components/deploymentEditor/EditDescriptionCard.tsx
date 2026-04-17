@@ -50,7 +50,9 @@ function EditDescriptionCard({
   return (
     <Card className="flex-1">
       <div className="relative flex items-center justify-center">
-        <CardTitle className="text-center">Description</CardTitle>
+        <CardTitle className={`text-center ${isDirty ? "text-primary" : ""}`}>
+          Description
+        </CardTitle>
         {isEditing && (
           <Button
             className="absolute right-0 mx-2 text-primary"
