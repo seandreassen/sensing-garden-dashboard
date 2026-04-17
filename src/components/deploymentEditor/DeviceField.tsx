@@ -15,7 +15,7 @@ function DeviceField({
   placeholder: string;
   isDirty?: boolean;
 }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
