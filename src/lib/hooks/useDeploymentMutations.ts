@@ -181,7 +181,7 @@ function useDeploymentMutations(deploymentId: string) {
       if (startDate !== undefined) {
         deploymentPatch.start_time = startDate;
       }
-      if (endDate !== undefined) {
+      if (endDate !== null) {
         deploymentPatch.end_time = endDate;
       }
       if (image !== undefined) {

@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { EditDateRangeCard } from "@/components/deploymentEditor/EditDateRangeCard";
 import { EditDescriptionCard } from "@/components/deploymentEditor/EditDescriptionCard";
@@ -48,14 +50,22 @@ function EditPage({
   deployment: Deployment;
   devices: DeploymentDevice[];
 }) {
+  const schema = z.object({
+    name: z.string(),
+    description: z.string().optional(),
+    startDate: z.iso.datetime(),
+    endDate: z.iso.datetime().nullable().optional(),
+    image: z.string().optional(),
+    devices: z.array(z.custom<DeploymentDevice>()).optional(),
+  });
+
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
   const deleteDeployment = useDeleteDeployment();
   const navigate = useNavigate();
-
-  const [name, setName] = useState<string | undefined>();
+  const [name, setName] = useState<string>();
   const [description, setDescription] = useState<string | undefined>();
-  const [startDate, setStartDate] = useState<string | undefined>();
-  const [endDate, setEndDate] = useState<string | null | undefined>();
+  const [startDate, setStartDate] = useState<string>();
+  const [endDate, setEndDate] = useState<string | null>();
   const [image, setImage] = useState<string | undefined>();
   const [devices, setDevices] = useState<DeploymentDevice[] | undefined>();
 
@@ -66,6 +76,52 @@ function EditPage({
   }
 
   function handleSave() {
+    const result = schema.safeParse({
+      name,
+      description,
+      startDate,
+      endDate,
+      image,
+      devices,
+    });
+
+    if (!result.success) {
+      const errors = z.flattenError(result.error).fieldErrors;
+
+      if (errors.name) {
+        toast.warning(<p className="font-bold">Changes not made</p>, {
+          position: "top-center",
+          description: errors.name[0],
+        });
+        return;
+      }
+      if (errors.startDate) {
+        toast.warning(<p className="font-bold">Changes not made</p>, {
+          position: "top-center",
+          description: `Start date: ${errors.startDate[0]}`,
+        });
+        return;
+      }
+      if (errors.endDate) {
+        toast.warning(<p className="font-bold">Changes not made</p>, {
+          position: "top-center",
+          description: `End date: ${errors.endDate[0]}`,
+        });
+        return;
+      }
+      if (errors.devices) {
+        toast.warning(<p className="font-bold">Invalid devices</p>, {
+          position: "top-center",
+          description: errors.devices[0],
+        });
+        return;
+      }
+      toast.warning(<p className="font-bold">Validation failed</p>, {
+        position: "top-center",
+        description: "Please check your inputs.",
+      });
+      return;
+    }
     saveDeployment({
       name,
       description,
