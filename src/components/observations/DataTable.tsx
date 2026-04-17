@@ -99,7 +99,7 @@ function DataTable<TData extends Observation, TValue>({
         observationData={observationData}
         openStatus={open}
       />
-      <Table className="table-auto text-wrap">
+      <Table className="table-fixed text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -162,7 +162,9 @@ function DataTable<TData extends Observation, TValue>({
                 {isLoading ? (
                   <Spinner className="absolute top-1/2 left-1/2 size-8 -translate-x-1/2 -translate-y-1/2" />
                 ) : isError ? (
-                  "Failed to load data"
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    Failed to load data.
+                  </p>
                 ) : (
                   <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                     No classifications found for specified filters.
