@@ -108,7 +108,7 @@ function DataTable<TData extends Observation, TValue>({
                   <TableHead
                     key={header.id}
                     className={cn(
-                      "border-b-2 bg-muted py-4 text-sm text-wrap wrap-break-word text-muted-foreground md:text-base",
+                      "border-b-2 bg-muted py-4 text-center text-sm text-wrap wrap-break-word text-muted-foreground md:text-base",
                       (header.column.columnDef.meta as { className?: string })?.className,
                     )}
                   >
@@ -144,6 +144,7 @@ function DataTable<TData extends Observation, TValue>({
                   <TableCell
                     key={cell.id}
                     className={cn(
+                      "text-center",
                       (cell.column.columnDef.meta as { className?: string })?.className,
                     )}
                   >

@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
  * Columns: Image, Hub, Family, Genus, Species and timestamp.
  * @status - When confirmations status is supported in backend, implement confirmations tatus row.
  */
-const defaultColumnClass: string = "text-center";
+
 const columns: ColumnDef<Observation>[] = [
   {
     header: "ID",
     meta: {
-      className: `${defaultColumnClass} max-sm:w-15`,
+      className: `max-sm:w-15`,
     },
     cell: ({ row, table }) => {
       const isDesc = table.getState().sorting[0]?.desc;
@@ -29,9 +29,6 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     header: "PREVIEW",
-    meta: {
-      className: defaultColumnClass,
-    },
     cell: ({ row }) => (
       <img
         className="mx-auto h-15 w-15 text-wrap sm:h-20 sm:w-20"
@@ -43,9 +40,6 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "timestamp",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: ({ column }) => {
       const sorted = column.getIsSorted();
       return (
@@ -94,9 +88,6 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     header: "HUB",
-    meta: {
-      className: defaultColumnClass,
-    },
     cell: ({ row }) => {
       const hub = row.original.device_id;
       return <p className="text-wrap wrap-break-word">{hub}</p>;
@@ -105,9 +96,6 @@ const columns: ColumnDef<Observation>[] = [
 
   {
     accessorKey: "family",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "FAMILY",
     cell: ({ row }) => {
       const family = row.original.family ?? "-";
@@ -116,17 +104,11 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "family_confidence",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "CONFIDENCE",
     cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.family_confidence} />,
   },
   {
     accessorKey: "genus",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "Genus",
     cell: ({ row }) => {
       const genus = row.original.genus;
@@ -135,17 +117,11 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "genus_confidence",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "CONFIDENCE",
     cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.genus_confidence} />,
   },
   {
     accessorKey: "species",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "CONFIDENCE",
     cell: ({ row }) => {
       const species = row.original.species;
@@ -154,9 +130,6 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "species_confidence",
-    meta: {
-      className: defaultColumnClass,
-    },
     header: "CONFIDENCE",
     cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.species_confidence} />,
   },
