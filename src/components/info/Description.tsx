@@ -7,18 +7,19 @@ const COLLAPSED_MAX_HEIGHT = 96; // px
 
 interface DescriptionProps {
   description?: string;
+  maxHeight?: number;
 }
 
-function Description({ description }: DescriptionProps) {
+function Description({ description, maxHeight = COLLAPSED_MAX_HEIGHT }: DescriptionProps) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isTruncated, setIsTruncated] = useState<boolean>(false);
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (textRef.current) {
-      setIsTruncated(textRef.current.scrollHeight > COLLAPSED_MAX_HEIGHT);
+      setIsTruncated(textRef.current.scrollHeight > maxHeight);
     }
-  }, [description]);
+  }, [description, maxHeight]);
 
   if (!description) {
     return <p className="text-sm text-muted-foreground">This deployment has no description</p>;
@@ -32,7 +33,7 @@ function Description({ description }: DescriptionProps) {
           !expanded && isTruncated && "overflow-hidden",
           expanded && "max-h-64 overflow-y-auto",
         )}
-        style={!expanded && isTruncated ? { maxHeight: COLLAPSED_MAX_HEIGHT } : undefined}
+        style={!expanded && isTruncated ? { maxHeight } : undefined}
       >
         <p>{description}</p>
       </div>
