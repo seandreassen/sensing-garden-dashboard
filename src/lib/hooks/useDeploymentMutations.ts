@@ -101,7 +101,7 @@ function useDeploymentMutations(deploymentId: string) {
         deploymentPatch.image = image.includes(",") ? image.split(",")[1] : image;
       }
 
-      const ops: Promise<unknown>[] = [];
+      const mutationRequests: Promise<Response>[] = [];
 
       if (Object.keys(deploymentPatch).length > 0) {
         ops.push(
@@ -118,7 +118,7 @@ function useDeploymentMutations(deploymentId: string) {
 
       for (const device of devices) {
         if (!initialIds.has(device.device_id)) {
-          ops.push(
+          mutationRequests.push(
             fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`, {
               method: "POST",
               headers: JSON_HEADERS,
@@ -136,7 +136,7 @@ function useDeploymentMutations(deploymentId: string) {
             (device.name !== initial.name ||
               JSON.stringify(device.location) !== JSON.stringify(initial.location))
           ) {
-            ops.push(
+            mutationRequests.push(
               fetch(
                 `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${device.device_id}`,
                 {
@@ -152,7 +152,7 @@ function useDeploymentMutations(deploymentId: string) {
 
       for (const initial of initialDevices) {
         if (!currentIds.has(initial.device_id)) {
-          ops.push(
+          mutationRequests.push(
             fetch(
               `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${initial.device_id}`,
               {
@@ -164,7 +164,7 @@ function useDeploymentMutations(deploymentId: string) {
         }
       }
 
-      await Promise.all(ops);
+      await Promise.all(mutationRequests);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["deployments"] });
