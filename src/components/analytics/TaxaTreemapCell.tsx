@@ -4,7 +4,7 @@ interface TaxaTreemapCellPayload {
 }
 
 const TREEMAP_COLORS = ["#8adf9f", "#62cd7b", "#3db85f", "#238f47", "#1b6c37"];
-const OTHER_TREEMAP_COLOR = "#5aa06f";
+const OTHER_TREEMAP_COLOR = "#B3D86A";
 const MIN_LABEL_WIDTH = 40;
 const MIN_LABEL_HEIGHT = 30;
 const MIN_COUNT_WIDTH = 72;
