@@ -8,7 +8,7 @@ function DeploymentPicture({ image_url }: DeploymentPictureProps) {
   }
 
   return (
-    <img src={image_url} alt="Deployment" className="max-h-64 max-w-lg rounded-md object-contain" />
+    <img src={image_url} alt="Deployment" className="max-h-64 w-full rounded-md object-cover" />
   );
 }
 
