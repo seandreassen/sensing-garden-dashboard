@@ -19,21 +19,21 @@ function EnvironmentDataPerObservation({ observationData }: { observationData?: 
           <CardContent className="flex flex-col items-center gap-1">
             <ThermometerIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Temperature</h2>
-            <p className="basis-1/3 font-bold">{`${observationData?.environment?.ambient_temperature ? observationData?.environment?.ambient_temperature : "No data"}`}</p>
+            <p className="basis-1/3 font-bold">{`${observationData?.environment?.ambient_temperature ?? "No data"}`}</p>
           </CardContent>
         </Card>
         <Card className="mx-auto flex basis-1/3 flex-col">
           <CardContent className="flex flex-col items-center gap-1">
             <DropletsIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Humidity</h2>
-            <p className="basis-1/3 font-bold">{`${observationData?.environment?.ambient_humidity ? observationData?.environment?.ambient_humidity : "No data"}`}</p>
+            <p className="basis-1/3 font-bold">{`${observationData?.environment?.ambient_humidity ?? "No data"}`}</p>
           </CardContent>
         </Card>
         <Card className="mx-auto flex basis-1/3 flex-col">
           <CardContent className="flex flex-col items-center gap-1">
             <MapPinIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Location</h2>
-            <p className="basis-1/3 font-bold">{`${observationData?.environment?.location ? observationData.environment.location : "No data"}`}</p>{" "}
+            <p className="basis-1/3 font-bold">{`${observationData?.environment?.location ?? "No data"}`}</p>{" "}
             {/*Placeholder value*/}
           </CardContent>
         </Card>
