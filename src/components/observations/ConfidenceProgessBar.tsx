@@ -7,10 +7,10 @@ type ConfidenceProgressBarProps = {
 
 function ConfidenceProgressBar({ confidence }: ConfidenceProgressBarProps) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="mx-auto mt-3 flex flex-col items-center justify-center gap-2 sm:flex-row">
       <Progress
         className={cn(
-          "basis-3/5 border",
+          "border sm:basis-3/5",
           confidence >= 0.8
             ? "border-success/50 *:data-[slot=progress-indicator]:bg-success"
             : confidence >= 0.6
@@ -21,7 +21,7 @@ function ConfidenceProgressBar({ confidence }: ConfidenceProgressBarProps) {
         )}
         value={confidence * 100}
       />
-      <span className="basis-1/5 py-2">{`${(confidence * 100).toFixed(0)}%`}</span>
+      <p className="basis-1/5 py-0 sm:py-2">{`${(confidence * 100).toFixed(0)}%`}</p>
     </div>
   );
 }

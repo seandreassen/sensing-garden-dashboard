@@ -28,13 +28,14 @@ interface GoogleMapsProps {
 }
 
 function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps) {
-  const { data } = useDeployment({ deployment_id: deploymentId });
+  const { data, isLoading } = useDeployment({ deployment_id: deploymentId });
 
   const [locations, setLocations] = useState<Location[]>([]);
   useEffect(() => {
-    setLocations(
-      data?.devices.map((device) => device.location).filter((location) => !!location) ?? [],
-    );
+    if (!data) {
+      return;
+    }
+    setLocations(data.devices.map((device) => device.location).filter((location) => !!location));
   }, [data]);
 
   return (
@@ -53,7 +54,9 @@ function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps)
         </div>
       )}
       <div className="flex h-125 items-center justify-center">
-        {env.VITE_GOOGLE_MAPS_API_KEY ? (
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading map...</p>
+        ) : env.VITE_GOOGLE_MAPS_API_KEY ? (
           <APIProvider apiKey={env.VITE_GOOGLE_MAPS_API_KEY}>
             <MapWithDrop
               locations={locations}

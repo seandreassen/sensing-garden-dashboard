@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 
 import { ObservationRowDialog } from "@/components/observations/ObservationRowDialog";
-import { Button } from "@/components/ui/Button";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Table,
   TableBody,
@@ -20,28 +20,28 @@ import {
 } from "@/components/ui/Table";
 import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
+import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
   data: TData[];
-  nextToken?: string | null;
-  isLoading?: boolean;
+  isLoading: boolean;
+  isError: boolean;
   sorting: SortingState;
-  rowCount?: number;
+  rowCount: number;
   pageIndex: number;
-  onPageChange: (direction: "forward" | "backward") => void;
   onSortingChange: OnChangeFn<SortingState>;
-  onLoadMore?: (nextToken: string) => void; //Not implemented function for pagination, feel free to discard.
 }
 
 function DataTable<TData extends Observation, TValue>({
   columns,
   data,
+  isLoading,
+  isError,
   sorting,
   onSortingChange,
   rowCount,
   pageIndex,
-  onPageChange,
   limit,
 }: DataTableProps<TData, TValue>) {
   const { taxonomyLevel } = useFilters();
@@ -71,8 +71,8 @@ function DataTable<TData extends Observation, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true, //Shows that filtering, sorting and pagination will not be client side.
     rowCount: rowCount,
+    manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
     onSortingChange,
@@ -92,56 +92,26 @@ function DataTable<TData extends Observation, TValue>({
     setOpen(true);
   };
 
-  {
-    /*Pagination controls below. Shows what rows are shown and total rows. eg. 1-10 of 100 */
-  }
-  const paginationButtons = (
-    <div className="flex justify-between border-t border-t-foreground bg-muted px-6 py-4">
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("backward")}
-        disabled={pageIndex < 1}
-      >
-        Previous
-      </Button>
-      <div className="flex flex-col items-center text-xs">
-        <p>
-          Page <span className="font-bold text-primary">{`${pageIndex + 1} `}</span>
-          of {table.getPageCount()}
-        </p>
-        <p>
-          Rows {pageIndex * limit + 1}-
-          {pageIndex === table.getPageCount() - 1 ? rowCount : (pageIndex + 1) * limit} of{" "}
-          {rowCount}
-        </p>
-      </div>
-      <Button
-        className="w-18"
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange("forward")}
-        disabled={pageIndex >= table.getPageCount() - 1}
-      >
-        Next
-      </Button>
-    </div>
-  );
   return (
-    <div className="overflow-hidden rounded-md border">
+    <>
       <ObservationRowDialog
         onClose={() => setOpen(false)}
         observationData={observationData}
         openStatus={open}
       />
-      <Table className="w-full table-fixed text-wrap">
+      <Table className="table-fixed text-wrap">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="bg-muted p-4 text-base" key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      "border-b-2 bg-muted py-4 text-center text-sm text-wrap wrap-break-word text-muted-foreground md:text-base",
+                      (header.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -152,16 +122,32 @@ function DataTable<TData extends Observation, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && !isError && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="cursor-pointer text-wrap"
+                className="cursor-pointer"
+                // oxlint-disable-next-line jsx_a11y/prefer-tag-over-role
+                role="button"
+                aria-label="More info observation"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openModal(row.original);
+                  }
+                }}
                 onClick={() => openModal(row.original)} //Opens modal with correct row's info onclick.
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="wrap-break-word" key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      "text-center",
+                      (cell.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -169,15 +155,28 @@ function DataTable<TData extends Observation, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+              <TableCell
+                colSpan={table.getVisibleLeafColumns().length}
+                style={{ height: `${limit * 6}rem` }}
+                className="flex h-full"
+              >
+                {isLoading ? (
+                  <Spinner className="absolute top-1/2 left-1/2 size-8 -translate-x-1/2 -translate-y-1/2" />
+                ) : isError ? (
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    Failed to load data.
+                  </p>
+                ) : (
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    No classifications found for specified filters.
+                  </p>
+                )}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      {paginationButtons}
-    </div>
+    </>
   );
 }
 export { DataTable };
