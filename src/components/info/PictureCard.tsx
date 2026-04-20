@@ -14,14 +14,14 @@ function PictureCard() {
   }
   if (isError) {
     return (
-      <div className="flex h-64 items-center justify-center">
+      <div className="flex h-64 w-fit items-center justify-center">
         <span className="text-sm text-muted-foreground">Error: {error.message}</span>
       </div>
     );
   }
 
   return (
-    <Card className="h-full w-fit">
+    <Card className="h-full w-full">
       <CardHeader>
         <CardTitle className="text-lg">Deployment Picture</CardTitle>
       </CardHeader>
