@@ -104,7 +104,7 @@ function useDeploymentMutations(deploymentId: string) {
       const mutationRequests: Promise<Response>[] = [];
 
       if (Object.keys(deploymentPatch).length > 0) {
-        ops.push(
+        mutationRequests.push(
           fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}`, {
             method: "PATCH",
             headers: JSON_HEADERS,
