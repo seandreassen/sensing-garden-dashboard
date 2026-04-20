@@ -21,7 +21,7 @@ function RouteComponent() {
       <div className="overflow-hidden lg:h-89 lg:shrink-0">
         <PictureCard />
       </div>
-      <div className="col-span-2 overflow-hidden lg:col-span-1 lg:h-89 lg:w-fit lg:shrink-0">
+      <div className="col-span-2 overflow-hidden lg:col-span-1 lg:h-89 lg:min-w-64 lg:shrink-0">
         <DeviceCard />
       </div>
       <div className="col-span-2 lg:h-100 lg:basis-full">
