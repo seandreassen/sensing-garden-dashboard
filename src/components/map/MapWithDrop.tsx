@@ -1,10 +1,9 @@
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useRef, useState } from "react";
 
+import { PinIcon } from "@/components/map/PinIcon";
 import type { Location } from "@/lib/types/api";
 import { computeMinZoomForLocations } from "@/lib/utils/location";
-
-import { PinIcon } from "./PinIcon";
 
 const DEFAULT_ZOOM = 11;
 const SINGLE_PIN_ZOOM = 15;
@@ -47,12 +46,28 @@ function computeDefaultView(locations: Location[]) {
 
 interface MapWithDropProps {
   locations: Location[];
-  setLocations: React.Dispatch<React.SetStateAction<Location[]>>;
+  // Made optional because callers may use onDropLocation instead (see below).
+  setLocations?: React.Dispatch<React.SetStateAction<Location[]>>;
+  // Called when something is dropped onto the map. Receives the lat/lng of the
+  // drop point. Use this when the caller owns which device/item is being dragged
+  // and needs to associate the drop location with that item — rather than simply
+  // appending a new anonymous location to the list.
+  onDropLocation?: (location: Location) => void;
+  // Optional label for each marker, aligned by index with `locations`.
+  // When provided, renders a name badge above the pin.
+  markerLabels?: string[];
   center?: Location;
   allowDragAndDrop?: boolean;
 }
 
-function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapWithDropProps) {
+function MapWithDrop({
+  locations,
+  setLocations,
+  onDropLocation,
+  markerLabels,
+  center,
+  allowDragAndDrop,
+}: MapWithDropProps) {
   const map = useMap();
   const mapDivRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
@@ -63,7 +78,9 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
   );
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-    if (!allowDragAndDrop) {
+    // Allow the drop if either flag is set — allowDragAndDrop enables generic
+    // pin placement, onDropLocation enables device-specific placement.
+    if (!allowDragAndDrop && !onDropLocation) {
       return;
     }
     e.preventDefault();
@@ -96,7 +113,15 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
       return;
     }
 
-    setLocations((prev) => [...prev, { lat: latLng.lat(), long: latLng.lng() }]);
+    const location = { lat: latLng.lat(), long: latLng.lng() };
+    // If the caller provided onDropLocation, delegate to it so it can associate
+    // the coordinates with whichever item was being dragged (tracked externally).
+    // Otherwise fall back to appending a new location to the list.
+    if (onDropLocation) {
+      onDropLocation(location);
+    } else {
+      setLocations?.((prev) => [...prev, location]);
+    }
   }
 
   function handleDragEnd(
@@ -108,7 +133,7 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
     }
     const lat = e.latLng.lat();
     const long = e.latLng.lng();
-    setLocations((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
+    setLocations?.((prev) => prev.map((loc, i) => (i === index ? { lat, long } : loc)));
   }
 
   const overviewPosition = center
@@ -124,8 +149,8 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
     <div
       ref={mapDivRef}
       className="h-125 w-full"
-      onDragOver={allowDragAndDrop ? (e) => e.preventDefault() : undefined}
-      onDrop={allowDragAndDrop ? handleDrop : undefined}
+      onDragOver={allowDragAndDrop || onDropLocation ? (e) => e.preventDefault() : undefined}
+      onDrop={allowDragAndDrop || onDropLocation ? handleDrop : undefined}
     >
       <Map
         defaultZoom={defaultZoom}
@@ -144,7 +169,16 @@ function MapWithDrop({ locations, setLocations, center, allowDragAndDrop }: MapW
                 position={{ lat: loc.lat, lng: loc.long }}
                 draggable={allowDragAndDrop}
                 onDragEnd={(e) => handleDragEnd(i, e)}
-              />
+              >
+                {markerLabels?.[i] && (
+                  <div className="flex flex-col items-center">
+                    <div className="rounded bg-white px-1.5 py-0.5 text-xs font-medium shadow">
+                      {markerLabels[i]}
+                    </div>
+                    <PinIcon />
+                  </div>
+                )}
+              </AdvancedMarker>
             ))}
       </Map>
     </div>

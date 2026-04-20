@@ -1,6 +1,7 @@
 import { CalendarIcon } from "lucide-react";
 
 import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
+import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import {
   Select,
@@ -67,7 +68,7 @@ function DateRangeFilter() {
 
       {rangePreset === "custom" && (
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="date"
             aria-label="Start date"
             className={dateInputClass}
@@ -75,7 +76,7 @@ function DateRangeFilter() {
             onChange={(e) => updateFilters({ startDate: e.target.value })}
           />
           <span className="shrink-0 text-xs text-muted-foreground">to</span>
-          <input
+          <Input
             type="date"
             aria-label="End date"
             className={dateInputClass}
