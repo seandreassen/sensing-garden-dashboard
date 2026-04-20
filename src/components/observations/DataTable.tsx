@@ -19,12 +19,13 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { useFilters } from "@/lib/hooks/useFilters";
-import type { Observation } from "@/lib/types/api";
+import type { SelectedDeploymentResponse, Observation } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
   data: TData[];
+  deploymentData?: SelectedDeploymentResponse;
   isLoading: boolean;
   isError: boolean;
   sorting: SortingState;
@@ -36,6 +37,7 @@ interface DataTableProps<TData, TValue> {
 function DataTable<TData extends Observation, TValue>({
   columns,
   data,
+  deploymentData,
   isLoading,
   isError,
   sorting,
@@ -97,6 +99,7 @@ function DataTable<TData extends Observation, TValue>({
       <ObservationRowDialog
         onClose={() => setOpen(false)}
         observationData={observationData}
+        deploymentData={deploymentData}
         openStatus={open}
       />
       <Table className="table-fixed text-wrap">

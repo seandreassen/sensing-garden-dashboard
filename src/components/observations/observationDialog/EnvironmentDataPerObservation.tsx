@@ -1,7 +1,7 @@
 import { ThermometerIcon, DropletsIcon, MapPinIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/Card";
-import type { Observation } from "@/lib/types/api";
+import type { SelectedDeploymentResponse, Observation } from "@/lib/types/api";
 /**
  * @status Incomplete -  Location is placeholder value.
  *
@@ -10,7 +10,14 @@ import type { Observation } from "@/lib/types/api";
  * @todo Minor style tweaks to match figma model
  *
  */
-function EnvironmentDataPerObservation({ observationData }: { observationData?: Observation }) {
+interface EnvironmentDataPerObservationProps {
+  observationData: Observation | undefined;
+  deploymentData: SelectedDeploymentResponse;
+}
+function EnvironmentDataPerObservation({
+  observationData,
+  deploymentData,
+}: EnvironmentDataPerObservationProps) {
   return (
     <>
       <h1 className="mb-4 border-b py-4 text-lg">Environmental conditions at capture</h1>
@@ -33,7 +40,12 @@ function EnvironmentDataPerObservation({ observationData }: { observationData?: 
           <CardContent className="flex flex-col items-center gap-1">
             <MapPinIcon className="basis-1/3" />
             <h2 className="basis 1/3 text-muted-foreground">Location</h2>
-            <p className="basis-1/3 font-bold">{`${observationData?.environment?.location ?? "No data"}`}</p>{" "}
+            <p className="basis-1/3 font-bold">{`${
+              deploymentData?.deployment.location_name ??
+              JSON.stringify(deploymentData.deployment.location) ??
+              JSON.stringify(observationData?.environment?.location) ??
+              "No data"
+            }`}</p>
             {/*Placeholder value*/}
           </CardContent>
         </Card>
