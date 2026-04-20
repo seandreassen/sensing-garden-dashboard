@@ -6,6 +6,9 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ["@base-ui/react/button", "@base-ui/react/checkbox", "@base-ui/react/progress"],
+  },
   test: {
     include: ["tests/**/*.test.{ts,tsx}"],
     exclude: ["tests/e2e/**/*.test.{ts,tsx}"],
