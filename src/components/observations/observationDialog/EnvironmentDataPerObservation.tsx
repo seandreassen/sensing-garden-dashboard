@@ -12,7 +12,7 @@ import type { SelectedDeploymentResponse, Observation } from "@/lib/types/api";
  */
 interface EnvironmentDataPerObservationProps {
   observationData: Observation | undefined;
-  deploymentData: SelectedDeploymentResponse;
+  deploymentData?: SelectedDeploymentResponse;
 }
 function EnvironmentDataPerObservation({
   observationData,
@@ -42,8 +42,8 @@ function EnvironmentDataPerObservation({
             <h2 className="basis 1/3 text-muted-foreground">Location</h2>
             <p className="basis-1/3 font-bold">{`${
               deploymentData?.deployment.location_name ??
-              JSON.stringify(deploymentData.deployment.location) ??
               JSON.stringify(observationData?.environment?.location) ??
+              JSON.stringify(deploymentData?.deployment.location) ??
               "No data"
             }`}</p>
             {/*Placeholder value*/}
