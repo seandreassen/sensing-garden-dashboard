@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/Table";
 import { useFilters } from "@/lib/hooks/useFilters";
 import type { Observation } from "@/lib/types/api";
+import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   limit: number;
@@ -104,7 +105,13 @@ function DataTable<TData extends Observation, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="bg-muted p-4 text-base" key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      "border-b-2 bg-muted py-4 text-center text-sm text-wrap wrap-break-word text-muted-foreground md:text-base",
+                      (header.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -118,13 +125,29 @@ function DataTable<TData extends Observation, TValue>({
           {!isLoading && !isError && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="cursor-pointer text-wrap"
+                className="cursor-pointer"
+                // oxlint-disable-next-line jsx_a11y/prefer-tag-over-role
+                role="button"
+                aria-label="More info observation"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openModal(row.original);
+                  }
+                }}
                 onClick={() => openModal(row.original)} //Opens modal with correct row's info onclick.
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="wrap-break-word" key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      "text-center",
+                      (cell.column.columnDef.meta as { className?: string })?.className,
+                    )}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -138,11 +161,15 @@ function DataTable<TData extends Observation, TValue>({
                 className="flex h-full"
               >
                 {isLoading ? (
-                  <Spinner className="absolute top-1/2 left-1/2 size-8" />
+                  <Spinner className="absolute top-1/2 left-1/2 size-8 -translate-x-1/2 -translate-y-1/2" />
                 ) : isError ? (
-                  "Failed to load data"
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    Failed to load data.
+                  </p>
                 ) : (
-                  "No classifications found for specified filters."
+                  <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    No classifications found for specified filters.
+                  </p>
                 )}
               </TableCell>
             </TableRow>
