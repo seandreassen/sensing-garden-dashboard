@@ -42,6 +42,57 @@ const columns: ColumnDef<Observation>[] = [
     ),
   },
   {
+    accessorKey: "timestamp",
+    meta: {
+      className: defaultColumnClass,
+    },
+    header: ({ column }) => {
+      const sorted = column.getIsSorted();
+      return (
+        <Button
+          className={cn("[font-size:inherit]")}
+          variant="outline"
+          onClick={() => column.toggleSorting(sorted === "asc")}
+        >
+          TIMESTAMP
+          {sorted === "asc" ? (
+            <ArrowUpIcon className="h-4 w-4" />
+          ) : sorted === "desc" ? (
+            <ArrowDownIcon className="h-4 w-4" />
+          ) : (
+            <ArrowUpDownIcon className="h-4 w-4" />
+          )}
+        </Button>
+      );
+    },
+    sortingFn: "datetime",
+    cell: ({ row }) => {
+      const value = row.original.timestamp as string | number | Date | null;
+
+      if (!value) {
+        return "—";
+      }
+
+      const date = new Date(value);
+
+      if (isNaN(date.getTime())) {
+        return "Invalid date";
+      }
+
+      return (
+        <p className="mx-auto text-wrap">
+          {date.toLocaleString(undefined, {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
+      );
+    },
+  },
+  {
     header: "HUB",
     meta: {
       className: defaultColumnClass,
@@ -108,57 +159,6 @@ const columns: ColumnDef<Observation>[] = [
     },
     header: "CONFIDENCE",
     cell: ({ row }) => <ConfidenceProgressBar confidence={row.original.species_confidence} />,
-  },
-  {
-    accessorKey: "timestamp",
-    meta: {
-      className: defaultColumnClass,
-    },
-    header: ({ column }) => {
-      const sorted = column.getIsSorted();
-      return (
-        <Button
-          className={cn("[font-size:inherit]")}
-          variant="outline"
-          onClick={() => column.toggleSorting(sorted === "asc")}
-        >
-          TIMESTAMP
-          {sorted === "asc" ? (
-            <ArrowUpIcon className="h-4 w-4" />
-          ) : sorted === "desc" ? (
-            <ArrowDownIcon className="h-4 w-4" />
-          ) : (
-            <ArrowUpDownIcon className="h-4 w-4" />
-          )}
-        </Button>
-      );
-    },
-    sortingFn: "datetime",
-    cell: ({ row }) => {
-      const value = row.original.timestamp as string | number | Date | null;
-
-      if (!value) {
-        return "—";
-      }
-
-      const date = new Date(value);
-
-      if (isNaN(date.getTime())) {
-        return "Invalid date";
-      }
-
-      return (
-        <p className="mx-auto text-wrap">
-          {date.toLocaleString(undefined, {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </p>
-      );
-    },
   },
 ];
 
