@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { columns } from "@/components/observations/columns";
 import { DataTable } from "@/components/observations/DataTable";
 import { PaginationControls } from "@/components/observations/PaginationControls";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -55,6 +56,10 @@ function RouteComponent() {
     selected_taxa: selectedTaxa,
   });
 
+  const { data: deploymentData } = useDeployment({
+    deployment_id: deploymentId,
+  });
+
   useEffect(() => {
     setPageIndex(0);
   }, [sorting, startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa]);
@@ -82,6 +87,7 @@ function RouteComponent() {
         pageIndex={pageIndex}
         rowCount={observationCount?.count ? observationCount.count : 0}
         data={tableData?.items ?? []}
+        deploymentData={deploymentData ?? undefined}
         isLoading={isTableLoading}
         isError={isTableError}
         sorting={sorting}

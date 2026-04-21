@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog";
-import type { Observation } from "@/lib/types/api";
+import type { Observation, SelectedDeploymentResponse } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 
 /**
@@ -36,9 +36,7 @@ import { cn } from "@/lib/utils";
  * `EnvironmentDataPerObservation` All data is placeholder data.
  * `ImageGalleryObservation` In time of writing each observation has 1 image url, not a list of image urls. Image gallery uses 2 stock photos.
  *
- * @todo Add feature to swap between observations from table. See Figma
  * @todo Replace `device_id` with `observation_id` in `DialogDescription`.
- * @todo Pass `observationData` to `EnvironmentDataPerObservation` when supported.
  * @todo Pass `observationData` to `ConfirmObservation` when database verification is connected.
  * @todo If api returns list of image url. Modify ImageGalleryObservation's props and pass in an array.
  *
@@ -47,10 +45,16 @@ import { cn } from "@/lib/utils";
 type ObservationRowDialogProps = {
   onClose: () => void;
   observationData?: Observation;
+  deploymentData?: SelectedDeploymentResponse;
   openStatus: boolean;
 };
 
-function ObservationRowDialog({ onClose, observationData, openStatus }: ObservationRowDialogProps) {
+function ObservationRowDialog({
+  onClose,
+  observationData,
+  deploymentData,
+  openStatus,
+}: ObservationRowDialogProps) {
   return (
     <Dialog open={openStatus} onOpenChange={onClose}>
       <DialogContent className={cn("lg: col-1 mx-auto flex !max-h-6/7 flex-col sm:!max-w-1/2")}>
@@ -74,7 +78,11 @@ function ObservationRowDialog({ onClose, observationData, openStatus }: Observat
             observationData={observationData}
           />
 
-          <EnvironmentDataPerObservation aria-label="Environmental conditions" />
+          <EnvironmentDataPerObservation
+            aria-label="Environmental conditions"
+            observationData={observationData}
+            deploymentData={deploymentData ?? undefined}
+          />
         </div>
         <DialogFooter className={cn("sm:flex-col")}>
           <ConfirmObservation />
