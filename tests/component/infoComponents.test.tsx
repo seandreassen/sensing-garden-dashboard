@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { beforeEach, expect, test, vi } from "vitest";
 
 import { DeploymentInfoCard } from "@/components/info/DeploymentInfoCard";
+import { DeviceCard } from "@/components/info/DeviceCard";
 
 const mocks = vi.hoisted(() => ({
   useDeployment: vi.fn(),
@@ -72,19 +73,24 @@ beforeEach(() => {
   });
 });
 
-test("renders deployment info with connected hubs", async () => {
+test("renders deployment info details", async () => {
   const { getByText } = await renderWithRootProviders(<DeploymentInfoCard />);
 
   await expect.element(getByText("Deployment Information for: Forest garden")).toBeInTheDocument();
   await expect
     .element(getByText("A deployment used for testing insect observations."))
     .toBeInTheDocument();
+});
+
+test("renders device card with connected hubs", async () => {
+  const { getByText } = await renderWithRootProviders(<DeviceCard />);
+
   await expect.element(getByText("Connected hubs")).toBeInTheDocument();
   await expect.element(getByText("North hub")).toBeInTheDocument();
   await expect.element(getByText("Active")).toBeInTheDocument();
 });
 
-test("renders deployment info empty devices state", async () => {
+test("renders deployment info empty description state", async () => {
   mocks.useDeployment.mockReturnValue({
     data: {
       deployment: {
@@ -103,6 +109,26 @@ test("renders deployment info empty devices state", async () => {
   const { getByText } = await renderWithRootProviders(<DeploymentInfoCard />);
 
   await expect.element(getByText("This deployment has no description")).toBeInTheDocument();
+});
+
+test("renders device card empty devices state", async () => {
+  mocks.useDeployment.mockReturnValue({
+    data: {
+      deployment: {
+        deployment_id: "dep-123",
+        description: "",
+        name: "Forest garden",
+        start_time: new Date("2025-06-01T00:00:00.000Z"),
+      },
+      devices: [],
+    },
+    error: null,
+    isError: false,
+    isLoading: false,
+  });
+
+  const { getByText } = await renderWithRootProviders(<DeviceCard />);
+
   await expect.element(getByText("This deployment has no connected hubs")).toBeInTheDocument();
 });
 
