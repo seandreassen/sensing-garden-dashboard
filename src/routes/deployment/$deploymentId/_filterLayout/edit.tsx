@@ -50,22 +50,32 @@ function EditPage({
   deployment: Deployment;
   devices: DeploymentDevice[];
 }) {
-  const schema = z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    startDate: z.iso.datetime(),
-    endDate: z.iso.datetime().nullable().optional(),
-    image: z.string().optional(),
-    devices: z.array(z.custom<DeploymentDevice>()).optional(),
-  });
+  const schema = z
+    .object({
+      name: z.string().min(1, "Name cannot be empty"),
+      description: z.string().optional(),
+      startDate: z.iso.date().optional(),
+      endDate: z.iso.date().nullable().optional(),
+      image: z.url().optional(),
+      devices: z.array(z.custom<DeploymentDevice>()).optional(),
+    })
+    .refine(
+      ({ startDate, endDate }) => {
+        if (!startDate || !endDate) {
+          return true;
+        }
+        return new Date(endDate) > new Date(startDate);
+      },
+      { message: "End date must come after start date", path: ["endDate"] },
+    );
 
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
   const deleteDeployment = useDeleteDeployment();
   const navigate = useNavigate();
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string | undefined>();
   const [description, setDescription] = useState<string | undefined>();
-  const [startDate, setStartDate] = useState<string>();
-  const [endDate, setEndDate] = useState<string | null>();
+  const [startDate, setStartDate] = useState<string | undefined>();
+  const [endDate, setEndDate] = useState<string | null | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [devices, setDevices] = useState<DeploymentDevice[] | undefined>();
 
@@ -85,40 +95,16 @@ function EditPage({
       devices,
     });
 
-    if (!result.success) {
+    if (result.success === false) {
       const errors = z.flattenError(result.error).fieldErrors;
-
-      if (errors.name) {
-        toast.warning(<p className="font-bold">Changes not made</p>, {
-          position: "top-center",
-          description: errors.name[0],
-        });
-        return;
-      }
-      if (errors.startDate) {
-        toast.warning(<p className="font-bold">Changes not made</p>, {
-          position: "top-center",
-          description: `Start date: ${errors.startDate[0]}`,
-        });
-        return;
-      }
-      if (errors.endDate) {
-        toast.warning(<p className="font-bold">Changes not made</p>, {
-          position: "top-center",
-          description: `End date: ${errors.endDate[0]}`,
-        });
-        return;
-      }
-      if (errors.devices) {
-        toast.warning(<p className="font-bold">Invalid devices</p>, {
-          position: "top-center",
-          description: errors.devices[0],
-        });
-        return;
-      }
-      toast.warning(<p className="font-bold">Validation failed</p>, {
+      const formatedErrors = Object.entries(errors).map(([key, value]) => (
+        <p key={key}>
+          {key} : {value}
+        </p>
+      ));
+      toast.warning(<p className="font-bold">Changes not made, check inputs:</p>, {
         position: "top-center",
-        description: "Please check your inputs.",
+        description: formatedErrors,
       });
       return;
     }

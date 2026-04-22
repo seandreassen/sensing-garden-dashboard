@@ -150,7 +150,7 @@ interface SaveDeploymentArgs {
   startDate?: string;
   endDate?: string | null;
   image?: string;
-  devices: Array<{ device_id: string; name?: string; location?: { lat: number; long: number } }>;
+  devices: DeploymentDevice[];
   initialDevices: Array<{
     device_id: string;
     name?: string;
@@ -181,13 +181,12 @@ function useDeploymentMutations(deploymentId: string) {
       if (startDate !== undefined) {
         deploymentPatch.start_time = startDate;
       }
-      if (endDate !== null) {
+      if (endDate !== undefined) {
         deploymentPatch.end_time = endDate;
       }
       if (image !== undefined) {
         deploymentPatch.image = image.includes(",") ? image.split(",")[1] : image;
       }
-
       const ops: Promise<unknown>[] = [];
 
       if (Object.keys(deploymentPatch).length > 0) {
@@ -250,7 +249,6 @@ function useDeploymentMutations(deploymentId: string) {
           );
         }
       }
-
       await Promise.all(ops);
     },
     onSuccess: () => {
