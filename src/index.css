@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: oklch(16.36% 0.0067 178.64);
+  --color-background: oklch(14.36% 0.0067 178.64);
   --color-foreground: oklch(94.61% 0 0);
-  --color-card: oklch(19.64% 0.0065 214.46);
+  --color-card: oklch(24.08% 0.0065 214.46);
   --color-card-foreground: oklch(94.61% 0 0);
-  --color-popover: oklch(17.37% 0.0067 214.5);
+  --color-popover: oklch(14.36% 0.0067 214.5);
   --color-popover-foreground: oklch(92.49% 0 0);
   --color-primary: oklch(74.33% 0.1835 126.01);
   --color-primary-foreground: oklch(17.38% 0.0139 149.67);
-  --color-secondary: oklch(22.08% 0.0091 208.75);
-  --color-secondary-foreground: oklch(62.93% 0.0059 197.01);
-  --color-muted: oklch(18.06% 0.0075 196.97);
-  --color-muted-foreground: oklch(68.05% 0.0081 196.97);
+  --color-secondary: oklch(25.08% 0.0065 214.75);
+  --color-secondary-foreground: oklch(90.93% 0.0059 197.01);
+  --color-muted: oklch(24.08% 0.0075 196.97);
+  --color-muted-foreground: oklch(78.05% 0.0081 196.97);
   --color-accent: oklch(21.3% 0.0078 211.08);
   --color-accent-foreground: oklch(94.61% 0 0);
-  --color-border: oklch(27.82% 0.0099 196.6);
+  --color-border: oklch(40.82% 0.0099 196.6);
   --color-input: oklch(16.36% 0.0067 178.64);
   --color-ring: oklch(59.33% 0.1835 126.01);
   --color-success: oklch(56% 0.1218 155.86);

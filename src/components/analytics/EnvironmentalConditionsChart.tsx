@@ -73,7 +73,7 @@ function EnvironmentalConditionsChart({ timeSeries, metrics }: EnvironmentalCond
           humidity: data.humidity[i],
         }))}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
         <XAxis
           dataKey="time"
           type="number"

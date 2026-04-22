@@ -23,7 +23,7 @@ function Header() {
         <Separator orientation="vertical" />
         <Link to="/" className={cn(buttonVariants({ variant: "nav", size: "none" }), "gap-1.5")}>
           <ArrowLeftIcon className="size-4" />
-          Select Deployment
+          Deployment overview
         </Link>
       </div>
     </div>
