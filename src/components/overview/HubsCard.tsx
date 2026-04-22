@@ -1,6 +1,6 @@
 import { ChevronRightIcon, RadioIcon } from "lucide-react";
 
-import { TotalInsectCount } from "@/components/overview/TotalInsectCount";
+import { HubsCount } from "@/components/overview/HubsCount";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/Dialog";
@@ -28,7 +28,7 @@ function HubsCard({ deploymentId }: HubsCardProps) {
           <CardTitle className="text-sm text-muted-foreground uppercase">Active hubs</CardTitle>
         </CardHeader>
         <CardContent className="h-full">
-          <TotalInsectCount deploymentId={deploymentId} />
+          <HubsCount deploymentId={deploymentId} />
         </CardContent>
       </Card>
       <DialogContent />
