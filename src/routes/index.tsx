@@ -16,11 +16,9 @@ function RouteComponent() {
 
   const now = new Date();
   const activeDeployments =
-    data?.deployments?.filter((deployment) => !deployment.end_time || deployment.end_time > now) ??
-    [];
+    data?.filter((deployment) => !deployment.end_time || deployment.end_time > now) ?? [];
   const inactiveDeployments =
-    data?.deployments?.filter((deployment) => deployment.end_time && deployment.end_time < now) ??
-    [];
+    data?.filter((deployment) => deployment.end_time && deployment.end_time < now) ?? [];
 
   return (
     <>
