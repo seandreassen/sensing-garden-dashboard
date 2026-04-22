@@ -24,14 +24,14 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
   const currentDeployment = activeDeployments.find((d) => d.deployment_id === deploymentId);
 
   return (
-    <nav className="flex items-center justify-between border-b bg-background px-6 py-3">
-      {/* LEFT: Dropdown */}
+    <nav className="flex items-center border-b bg-background px-6 py-3">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary">
-          <span className="rounded-md bg-primary/10 px-3 py-1.5 text-primary">
-            {currentDeployment?.name ?? "Select deployment"}
-          </span>
-          <span className="text-sm text-muted-foreground">▼</span>
+        <DropdownMenuTrigger
+          className="flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:bg-primary/20"
+        >
+          <span>{currentDeployment?.name ?? "Select deployment"}</span>
+
+          <span className="text-xs opacity-70">▼</span>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-64 p-1">
