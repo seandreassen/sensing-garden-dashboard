@@ -86,6 +86,20 @@ function EditPage({
   }
 
   function handleSave() {
+    const hasChanges =
+      name !== undefined ||
+      description !== undefined ||
+      startDate !== undefined ||
+      endDate !== undefined ||
+      image !== undefined ||
+      devices !== undefined;
+    if (!hasChanges) {
+      toast.warning(<p className="font-bold">Changes not made:</p>, {
+        position: "top-center",
+        description: "No changes found",
+      });
+      return;
+    }
     const result = schema.safeParse({
       name,
       description,
@@ -108,15 +122,26 @@ function EditPage({
       });
       return;
     }
-    saveDeployment({
-      name,
-      description,
-      startDate,
-      endDate,
-      image,
-      devices: devices ?? initialDevices,
-      initialDevices,
-    });
+    /*Undefined fields will be ignored in useDeploymentMutations hook.*/
+    saveDeployment(
+      {
+        name,
+        description,
+        startDate,
+        endDate,
+        image,
+        devices: devices ?? initialDevices,
+        initialDevices,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Deployment saved successfully", { position: "top-center" });
+        },
+        onError: () => {
+          toast.error("Failed to save deployment", { position: "top-center" });
+        },
+      },
+    );
   }
 
   return (
