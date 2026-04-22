@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 import {
   DropdownMenu,
@@ -15,18 +15,18 @@ interface DeploymentSelectorProps {
 
 function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
   const { data: deployments } = useDeployments();
+  const navigate = useNavigate();
 
   const activeDeployments =
-    deployments?.deployments.filter(
-      (deployment) => !deployment.end_time || deployment.end_time > new Date(),
-    ) ?? [];
+    deployments?.filter((deployment) => !deployment.end_time || deployment.end_time > new Date()) ??
+    [];
 
   const currentDeployment = activeDeployments.find((d) => d.deployment_id === deploymentId);
 
   return (
-    <nav className="border-b bg-background px-6 py-3">
+    <nav className="flex items-center justify-between border-b bg-background px-6 py-3">
+      {/* LEFT: Dropdown */}
       <DropdownMenu>
-        {/* Trigger */}
         <DropdownMenuTrigger className="flex items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary">
           <span className="rounded-md bg-primary/10 px-3 py-1.5 text-primary">
             {currentDeployment?.name ?? "Select deployment"}
@@ -34,17 +34,19 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
           <span className="text-sm text-muted-foreground">▼</span>
         </DropdownMenuTrigger>
 
-        {/* Dropdown */}
         <DropdownMenuContent className="w-64 p-1">
           {activeDeployments.map((deployment) => {
             const isActive = deployment.deployment_id === deploymentId;
 
             return (
               <DropdownMenuItem key={deployment.deployment_id}>
-                <Link
-                  to="/deployment/$deploymentId/overview"
-                  params={{ deploymentId: deployment.deployment_id }}
-                  search={(prev) => ({ ...prev, hub: undefined })}
+                <button
+                  onClick={() =>
+                    navigate({
+                      to: "/deployment/$deploymentId/overview",
+                      params: { deploymentId: deployment.deployment_id },
+                    })
+                  }
                   className={cn(
                     "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
                     isActive
@@ -53,10 +55,8 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
                   )}
                 >
                   {deployment.name}
-
-                  {/* Active indicator */}
                   {isActive && <span className="text-xs opacity-80">✓</span>}
-                </Link>
+                </button>
               </DropdownMenuItem>
             );
           })}

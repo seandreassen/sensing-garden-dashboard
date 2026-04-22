@@ -7,13 +7,13 @@ function GoogleMapsCard() {
   const { deploymentId } = Route.useParams();
 
   return (
-    <Card className="col-span-2 p-4">
+    <Card className="col-span-2 flex h-full flex-col p-4 pb-5">
       <CardHeader>
         <CardTitle className="text-lg">Deployment location</CardTitle>
         <CardDescription>Location of deployment and its contained hubs</CardDescription>
       </CardHeader>
       <Separator />
-      <CardContent>
+      <CardContent className="flex-1 pb-4">
         <GoogleMaps deploymentId={deploymentId} />
       </CardContent>
     </Card>
