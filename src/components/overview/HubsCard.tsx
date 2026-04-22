@@ -20,10 +20,10 @@ function HubsCard({ deploymentId }: HubsCardProps) {
             "peer absolute inset-0 rounded-[inherit]",
           )}
         />
-        <CardHeader className="flex flex-col gap-3 peer-focus-visible:*:first:*:nth-[2]:text-primary">
+        <CardHeader className="flex flex-col gap-3 peer-focus-visible:[&_#highlight-on-hover]:text-primary">
           <div className="flex w-full items-center justify-between">
-            <RadioIcon className="size-5 text-primary" />
-            <ChevronRightIcon className="size-5 text-muted-foreground" />
+            <RadioIcon className="text-primar size-5" />
+            <ChevronRightIcon id="highlight-on-hover" className="size-5 text-muted-foreground" />
           </div>
           <CardTitle className="text-sm text-muted-foreground uppercase">Active hubs</CardTitle>
         </CardHeader>
