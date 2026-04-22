@@ -9,7 +9,7 @@ import { PinIcon } from "@/components/map/PinIcon";
 import { Button } from "@/components/ui/Button";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { env } from "@/env";
-import type { Location, DeploymentDevice } from "@/lib/types/api";
+import type { Location, DeploymentDevice, Device } from "@/lib/types/api";
 
 const dragImage = new Image();
 dragImage.src =
@@ -23,9 +23,11 @@ dragImage.src =
 
 function EditDevicesMapCard({
   initialDevices = [],
+  availableDevices = [],
   onChange,
 }: {
   initialDevices?: DeploymentDevice[];
+  availableDevices?: Device[];
   onChange?: (devices: DeploymentDevice[]) => void;
 }) {
   const [devices, setDevices] = useState<DeploymentDevice[]>(initialDevices);
@@ -42,6 +44,9 @@ function EditDevicesMapCard({
     onChange?.(next);
   }
 
+  const remainingDevices = availableDevices.filter(
+    (device) => !devices.map((d) => d.device_id).includes(device.device_id),
+  );
   const located = devices.filter(
     (d): d is DeploymentDevice & { location: Location } => d.location !== undefined,
   );
@@ -82,6 +87,7 @@ function EditDevicesMapCard({
           {adding && (
             <NewDeviceRow
               existingDeviceIds={new Set(devices.map((d) => d.device_id))}
+              remainingDeviceIds={remainingDevices.map((d) => d.device_id).toSorted()}
               onConfirm={(device) => {
                 update([...devices, device]);
                 setAdding(false);

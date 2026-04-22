@@ -10,10 +10,12 @@ import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useDeploymentMutations, useDeleteDeployment } from "@/lib/hooks/useDeploymentMutations";
+import { useDevices } from "@/lib/hooks/useDevices";
 import type {
   Deployment,
   DeploymentDevice,
   GetSelectedDeploymentParameters,
+  Device,
 } from "@/lib/types/api";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/edit")({
@@ -26,6 +28,8 @@ function RouteComponent() {
     deployment_id: deploymentId,
   } as GetSelectedDeploymentParameters);
 
+  const { data: devicesData } = useDevices();
+
   if (isLoading || !data?.deployment) {
     return (
       <div className="flex justify-center py-20">
@@ -35,7 +39,12 @@ function RouteComponent() {
   }
 
   return (
-    <EditPage deploymentId={deploymentId} deployment={data.deployment} devices={data.devices} />
+    <EditPage
+      deploymentId={deploymentId}
+      deployment={data.deployment}
+      devices={data.devices}
+      availableDevices={devicesData ?? []}
+    />
   );
 }
 
@@ -43,10 +52,12 @@ function EditPage({
   deploymentId,
   deployment,
   devices: initialDevices,
+  availableDevices,
 }: {
   deploymentId: string;
   deployment: Deployment;
   devices: DeploymentDevice[];
+  availableDevices: Device[];
 }) {
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
   const deleteDeployment = useDeleteDeployment();
@@ -65,6 +76,9 @@ function EditPage({
     });
   }
 
+  const values = [name, description, startDate, endDate, image, devices];
+  const isDirty = values.some((value) => value !== undefined);
+
   function handleSave() {
     saveDeployment({
       name,
@@ -75,6 +89,16 @@ function EditPage({
       devices: devices ?? initialDevices,
       initialDevices,
     });
+    for (const setValue of [
+      setName,
+      setDescription,
+      setStartDate,
+      setEndDate,
+      setImage,
+      setDevices,
+    ]) {
+      setValue(undefined);
+    }
   }
 
   return (
@@ -83,7 +107,7 @@ function EditPage({
         <Button variant="destructive" onClick={handleDelete} disabled={deleteDeployment.isPending}>
           {deleteDeployment.isPending ? "Deleting…" : "Delete"}
         </Button>
-        <Button onClick={handleSave} disabled={isSaving}>
+        <Button onClick={handleSave} disabled={isSaving || !isDirty}>
           {isSaving ? "Saving…" : "Save"}
         </Button>
       </div>
@@ -111,7 +135,11 @@ function EditPage({
           <EditImageCard initialUrl={deployment.image_url ?? ""} onChange={setImage} />
         </div>
         <div className="flex h-full flex-col gap-5">
-          <EditDevicesMapCard initialDevices={initialDevices} onChange={setDevices} />
+          <EditDevicesMapCard
+            initialDevices={initialDevices}
+            availableDevices={availableDevices}
+            onChange={setDevices}
+          />
         </div>
       </div>
     </div>

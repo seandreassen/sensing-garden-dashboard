@@ -58,6 +58,16 @@ interface DeploymentDevice {
 
 type UpdateDeploymentDevice = Omit<DeploymentDevice, "device_id">;
 
+interface Device {
+  created: Date;
+  device_id: string;
+}
+
+// Device refers to the devices returned by the /devices API endpoint while deploymentDevices refer to devices in the context of being connected to a hub
+interface DevicesResponse {
+  items: Device[];
+}
+
 interface CreateDeploymentBody {
   name?: string;
   description?: string;
@@ -240,6 +250,8 @@ export type {
   Deployment,
   DeploymentDevice,
   UpdateDeploymentDevice,
+  Device,
+  DevicesResponse,
   CreateDeploymentBody,
   UpdateDeploymentBody,
   SaveDeploymentArgs,
