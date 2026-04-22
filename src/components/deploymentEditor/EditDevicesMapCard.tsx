@@ -86,7 +86,7 @@ function EditDevicesMapCard({
         <div className="flex h-48 flex-col gap-2 overflow-y-auto">
           {adding && (
             <NewDeviceRow
-              existingDeviceIds={new Set(devices.map((d) => d.device_id))}
+              existingDevices={devices ?? []}
               remainingDeviceIds={remainingDevices.map((d) => d.device_id).toSorted()}
               onConfirm={(device) => {
                 update([...devices, device]);
