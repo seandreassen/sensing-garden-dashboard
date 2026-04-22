@@ -12,7 +12,7 @@
 
 ## Overview
 
-Sensing Garden Dashboard is a web application designed to make the outputs of Flik, that visualizes insect detection data collected by AI cameras, accessible and actionable. Users can view statistics by deployment or hub, as well as add, edit, or delete deployments to manage the data being collected. The dashboard provides interactive charts and filters for a clearer understanding of insect activity patterns.
+Sensing Garden Dashboard is a web application designed to make the outputs of Flik, that visualizes insect detection data collected by AI cameras, accessible and actionable. Users can view statistics by deployment or hub, as well as create, edit, or delete deployments to manage the data being collected. The dashboard provides interactive charts and filters for a clearer understanding of insect activity patterns.
 
 ## Features
 
@@ -24,13 +24,14 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
   !!!! ADD SCREENSHOT
 - Download observations: export all filtered observations as CSV and/or JSON, and/or download a ZIP file containing the associated images.
 - View data and statistics across 4 main pages:
-  1. Overview: provides a high-level summary of insect activity and deployment data. Users can see key metrics such as total observations, number of unique species, detection trends over time, most common insect families, and the geographic location of the selected deployment.
+  1. Overview: provides a high-level summary of insect activity and deployment data. Users can see key metrics such as total observations, number of unique species, detection trends over time and most common insect families.
      !!!! ADD SCREENSHOT
   2. Analytics: provides deeper insights into insect activity and environmental conditions. Users can explore detection patterns through a heatmap showing activity across months and weekdays, as well as view environmental data such as temperature, humidity, air pollution (PM levels), and air quality indices (VOC and NOx) over the selected period.
      !!!! ADD SCREENSHOT
   3. Observations: displays a list of all observations within the selected period, based on the applied filters. Users can open individual observations to view more detailed information, including browsing through images associated with each observation.
      !!!! ADD SCREENSHOT
-  4. Info:
+  4. Info: provides detailed information about the selected deployment. Users can view the deployment description, associated image, connected hubs, and the geographic locations of both the deployment and its connected hubs.
+     !!!! ADD SCREENSHOT
 
 ## Project structure
 
@@ -49,7 +50,7 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
 
 - Frontend: React, TypeScript
 - State management/routing: TanStack Router
-- Styling/UI: Shadcn, TailwindCSS
+- Styling/UI: Shadcn, TailwindCSS, Recharts
 - Backend/API: Sensing Garden client API
 - Database: AWS-hosted
 - Testing: Vitest, Playwright (E2E)
