@@ -12,6 +12,56 @@ The architecture is described using Kruchten's **4+1 View Model**. Each view ans
 
 The dashboard is a React 19 SPA (Vite + TanStack Router/Query) that visualizes data from the Sensing Garden backend. All state lives either in the URL (filters via query params) or in the TanStack Query cache (server data). There is no separate backend in this repo — the app talks directly to the REST API on AWS API Gateway.
 
+## Domain model
+
+The system revolves around four core concepts:
+
+- **Deployment** — a collection of one or more hubs grouped together at a physical location (e.g. a rooftop or park). Each deployment has a lifetime (start/end date), a location, and an optional flowerbed image. Deployments also carry pre-computed aggregate metrics (top taxa, counts) to avoid re-computing them on every dashboard load.
+- **Hub** (also called _device_ in the API/code) — a Raspberry Pi 5 + Hailo AI HAT edge unit with attached camera and environmental sensors. A hub belongs to exactly one active deployment at a time and is the source of all observations and environmental readings for that site.
+- **Observation** — a single insect detection produced by a hub, stored with a taxonomic classification, an AI confidence score, a timestamp, and a link to the original image in S3.
+- **AI model** — each deployment is associated with the model version its hubs ran during that deployment window. The model's metadata ("Model Card") is exposed in the dashboard so users can judge the provenance of the predictions.
+
+```mermaid
+classDiagram
+    class Deployment {
+        id
+        name
+        location
+        start_date
+        end_date
+        flowerbed_image
+        aggregate_metrics
+    }
+    class Hub {
+        id
+        name
+        hardware
+    }
+    class Observation {
+        id
+        timestamp
+        taxon
+        confidence
+        image_url
+    }
+    class EnvironmentReading {
+        timestamp
+        temperature
+        humidity
+        air_quality
+    }
+    class AIModel {
+        id
+        version
+        model_card
+    }
+
+    Deployment "1" o-- "1..*" Hub : contains
+    Deployment "1" --> "1" AIModel : uses
+    Hub "1" --> "*" Observation : records
+    Hub "1" --> "*" EnvironmentReading : records
+```
+
 ---
 
 ## 1. Logical View
@@ -232,8 +282,16 @@ graph LR
 
 Where does the application run in production?
 
+The dashboard is only one of three physical tiers in the overall Flik system: the **field sites** (edge devices), the **AWS cloud** (API + storage), and the **end-user dashboard** running in a browser. This repo owns the dashboard tier, but its design is shaped by what the other two tiers produce and accept.
+
 ```mermaid
 graph TB
+    subgraph Field["Field sites (per deployment)"]
+        Hub["Hub — Raspberry Pi 5 + Hailo AI HAT<br/>runs insect detection/classification on-device"]
+        Cam["Camera"]
+        EnvSensors["Environmental sensors<br/>(temperature, humidity, air quality)"]
+    end
+
     subgraph Client["Client (browser)"]
         SPA["Sensing Garden Dashboard<br/>React SPA bundle<br/>(HTML + JS + CSS, chunked by route)"]
     end
@@ -242,10 +300,10 @@ graph TB
         Host["Vite build output<br/>dist/ served as static files"]
     end
 
-    subgraph AWS["AWS"]
+    subgraph AWS["AWS cloud"]
         APIGW["API Gateway<br/>nxdp0npcb2.execute-api.<br/>us-east-1.amazonaws.com"]
-        Lambda["Backend<br/>(lambdas / services)"]
-        DB[("Data store<br/>observations, environment,<br/>deployments, devices")]
+        Lambda["Backend<br/>(Python lambdas / sensing_garden_client)"]
+        DB[("DynamoDB<br/>observations, environment,<br/>deployments, hubs/devices")]
         S3[("S3<br/>observation and<br/>deployment images")]
     end
 
@@ -259,6 +317,10 @@ graph TB
         Vite["vite dev server<br/>pnpm dev"]
         Playwright["Playwright browsers"]
     end
+
+    Cam --> Hub
+    EnvSensors --> Hub
+    Hub -->|push observations<br/>+ sensor data| APIGW
 
     User((User)) -->|HTTPS| Host
     Host -->|HTTPS| SPA
@@ -283,7 +345,41 @@ graph TB
 
 ## 5. Scenarios (+1)
 
-Three core scenarios that tie the other views together.
+The dashboard has two primary stakeholder groups whose use cases drive the scenarios below:
+
+- **Biologist / Researcher** — inspects ecological patterns, compares trends across sites and time, and validates individual detections against the original images.
+- **Technical stakeholder** — manages deployments and hubs, keeps an eye on data quality and hub status, and needs visibility into which AI model produced which data.
+
+```mermaid
+graph LR
+    Biologist((Biologist /<br/>Researcher))
+    Tech((Technical<br/>stakeholder))
+
+    UC1[View top insect taxa<br/>per deployment or hub]
+    UC2[Filter observations<br/>by time, species, site]
+    UC3[Overlay environmental data<br/>on insect abundance]
+    UC4[Inspect observation image<br/>with AI confidence]
+    UC5[Download raw data<br/>CSV / JSON / ZIP + README]
+    UC6[View deployment info<br/>and sensor locations on map]
+    UC7[Browse past deployments]
+    UC8[Create deployment<br/>and connect hubs]
+    UC9[Access AI Model Card<br/>and technical metadata]
+    UC10[Monitor hub status<br/>and data gaps]
+
+    Biologist --> UC1
+    Biologist --> UC2
+    Biologist --> UC3
+    Biologist --> UC4
+    Biologist --> UC5
+    Biologist --> UC6
+    Biologist --> UC7
+    Tech --> UC6
+    Tech --> UC8
+    Tech --> UC9
+    Tech --> UC10
+```
+
+The four scenarios below tie the other views together and show how these use cases are realized end-to-end.
 
 ### Scenario A — View data for a deployment
 
@@ -324,7 +420,36 @@ sequenceDiagram
     Exp-->>U: Download zip/CSV/JSON (client-side)
 ```
 
-### Scenario C — Edit deployment (CRUD)
+### Scenario C — Biologist inspects an observation image
+
+```mermaid
+sequenceDiagram
+    actor B as Biologist
+    participant UI as Dashboard UI
+    participant Obs as useObservations
+    participant Img as useObservationImage
+    participant API as sensing_garden_client API
+    participant DB as DynamoDB
+    participant S3 as S3
+
+    B->>UI: Opens deployment detail
+    UI->>Obs: useObservations(deploymentId, filters)
+    Obs->>API: GET /observations?deploymentId=...
+    API->>DB: SELECT observations
+    DB-->>API: Observation list
+    API-->>Obs: Observations (with imageUrl)
+    Obs-->>UI: Render observation table
+
+    B->>UI: Clicks a row
+    UI->>Img: useObservationImage(observationId)
+    Img->>API: GET /image/{observationId}
+    API->>S3: Fetch image blob
+    S3-->>API: Image data
+    API-->>Img: Image URL / data
+    Img-->>UI: Modal with photo, species label,<br/>confidence score
+```
+
+### Scenario D — Edit deployment (CRUD)
 
 ```mermaid
 sequenceDiagram

@@ -1,0 +1,53 @@
+@startuml process-view
+title Process view — startup, navigation, filtering
+
+actor "User" as U
+participant "Browser /\nReact" as B
+participant "TanStack\nRouter" as R
+participant "TanStack\nQuery Cache" as Q
+participant "Sensing\nGarden API" as API
+participant "Google\nMaps" as GM
+
+autonumber
+
+U -> B : Loads / (root)
+B -> R : Matches route "/"
+R -> B : Render index.tsx
+B -> Q : useDeployments()
+Q -> API : GET /deployments?limit=100
+API --> Q : JSON deployments
+Q --> B : Cached data
+B --> U : Renders DeploymentGrid
+
+U -> B : Clicks deployment
+B -> R : Navigate /deployment/:id/overview
+R -> B : Render _filterLayout + overview
+
+group Parallel fetching
+  B -> Q : useObservationsTimeSeries
+  Q -> API : GET /classifications/time_series
+  B -> Q : useTaxaCount
+  Q -> API : GET /classifications/taxa_count
+  B -> Q : useObservationCount
+  Q -> API : GET /classifications/count
+end
+API --> Q : Responses
+Q --> B : Data
+B --> U : Renders cards + charts
+
+U -> B : Changes filter (e.g. date)
+B -> R : navigate({ search: ... }) (replace)
+R -> B : New query param -> useFilters new value
+B -> Q : New queryKey -> refetch
+Q -> API : GET /... (new params)
+API --> Q : Updated data
+Q --> B : Re-render
+
+note over B, GM
+  On the Info tab, Google Maps
+  JS SDK is loaded separately
+  for map rendering
+end note
+B -> GM : load maps script
+GM --> B : Map components
+@enduml

@@ -1,0 +1,14 @@
+@startuml scenario-a-view-deployment
+title Scenario A — View data for a deployment
+
+start
+:User opens /;
+:Sees active/inactive deployments;
+:Clicks a card;
+:Route /deployment/:id/overview loads;
+:_filterLayout renders Header + Tabs + FiltersRow;
+:Overview tab fetches in parallel:
+count, time series, top taxa;
+:Cards with numbers and charts shown;
+stop
+@enduml

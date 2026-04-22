@@ -1,0 +1,55 @@
+@startuml physical-view
+title Physical view — field sites, AWS cloud, browser
+
+skinparam componentStyle rectangle
+
+package "Field sites (per deployment)" as Field {
+  [Hub — Raspberry Pi 5 + Hailo AI HAT\nruns insect detection/classification on-device] as Hub
+  [Camera] as Cam
+  [Environmental sensors\n(temperature, humidity, air quality)] as EnvSensors
+}
+
+package "Client (browser)" as Client {
+  [Sensing Garden Dashboard\nReact SPA bundle\n(HTML + JS + CSS, chunked by route)] as SPA
+}
+
+package "Static hosting" as CDN {
+  [Vite build output\ndist/ served as static files] as Host
+}
+
+package "AWS cloud" as AWS {
+  [API Gateway\nnxdp0npcb2.execute-api.\nus-east-1.amazonaws.com] as APIGW
+  [Backend\n(Python lambdas / sensing_garden_client)] as Lambda
+  database "DynamoDB\nobservations, environment,\ndeployments, hubs/devices" as DB
+  database "S3\nobservation and\ndeployment images" as S3
+}
+
+package "Google" as Google {
+  [Maps JS SDK\n+ Tile API] as MapsSDK
+}
+
+package "Developer environment" as Dev {
+  [Node.js] as Node
+  [pnpm] as Pnpm
+  [vite dev server\npnpm dev] as Vite
+  [Playwright browsers] as Playwright
+}
+
+actor User
+
+Cam --> Hub
+EnvSensors --> Hub
+Hub --> APIGW : push observations\n+ sensor data
+
+User --> Host : HTTPS
+Host --> SPA : HTTPS
+SPA --> APIGW : HTTPS + X-Api-Key
+APIGW --> Lambda
+Lambda --> DB
+Lambda --> S3
+SPA --> MapsSDK : HTTPS
+SPA ..> S3 : image URL
+
+Vite --> Host : build
+Dev ..> Host : CI/hosting
+@enduml

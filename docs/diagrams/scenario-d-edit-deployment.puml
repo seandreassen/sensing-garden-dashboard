@@ -1,0 +1,34 @@
+@startuml scenario-d-edit-deployment
+title Scenario D — Edit deployment (CRUD)
+
+actor User as U
+participant "edit.tsx" as Edit
+participant "useDeployment" as H
+participant "useDeploymentMutations" as M
+participant "API" as API
+participant "QueryClient" as QC
+
+U -> Edit : Opens /deployment/:id/edit
+Edit -> H : Fetch deployment + devices
+H -> API : GET /deployments/:id
+API --> H : Deployment + devices
+H --> Edit : Pre-filled form
+
+U -> Edit : Edits fields, devices, image
+U -> Edit : Clicks "Save"
+Edit -> M : saveDeployment({name, dates, image, devices, initialDevices})
+
+group PATCH + device diff
+  M -> API : PATCH /deployments/:id
+  M -> API : POST/PATCH/DELETE /deployments/:id/devices/...
+end
+API --> M : 200
+M -> QC : invalidate ["deployments"], ["deployment", id]
+QC --> Edit : Fresh data
+
+U -> Edit : Clicks "Delete"
+Edit -> API : DELETE /deployments/:id
+API --> Edit : 200
+Edit -> QC : invalidate ["deployments"]
+Edit --> U : Navigate to /
+@enduml

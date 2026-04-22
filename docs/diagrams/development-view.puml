@@ -1,0 +1,57 @@
+@startuml development-view
+title Development view — source code organization
+
+skinparam componentStyle rectangle
+left to right direction
+
+package "Repo root" as root {
+  [vite.config.ts\ntsconfig.*\nplaywright.config.ts\nvitest.config.ts\n.oxlintrc.json\n.oxfmtrc.json] as cfg
+  [package.json\npnpm-lock.yaml] as pkg
+}
+
+package "src/" as src {
+  [main.tsx\n(entry)] as main
+  [env.ts] as env
+  [routeTree.gen.ts\n(auto-generated)] as tree
+  [routes/] as routes
+  [components/] as comps
+  [lib/] as libdir
+  [assets/] as assets
+  [index.css] as css
+}
+
+package "routes/" as routesDir {
+  [__root.tsx] as rroot
+  [index.tsx] as rindex
+  [deployment/$deploymentId/$.tsx] as rdep
+  [deployment/$deploymentId/_filterLayout.tsx] as rlayout
+  [_filterLayout/\noverview.tsx · analytics.tsx ·\nobservations.tsx · info.tsx ·\nedit.tsx · index.tsx] as rtabs
+}
+
+package "components/" as compsDir {
+  [ui/\n(Button, Card, Dialog, ...)] as uikit
+  [feature folders:\nlandingPage/ · deploymentLayout/\noverview/ · analytics/\nobservations/ · info/\nmap/ · deploymentEditor/\nfilters/ · deployments/] as feature
+  [Shared:\nRootHeader.tsx · ExportData.tsx\nNotFound.tsx] as shared
+}
+
+package "lib/" as libDir {
+  [hooks/\n(useDeployments, useObservations,\nuseFilters, useEnvironment, ...)] as hooks
+  [types/api.ts] as types
+  [utils/\n(filters, queryParameters,\nheatmap, timeSeries, location,\nheaders, index)] as utils
+}
+
+package "tests/" as tests {
+  [unit/\nheatmap · location ·\nqueryParameters · timeSeries] as unit
+  [component/\nNotFound.test.tsx] as component
+  [e2e/\ninfo.test.ts (+ snapshots)] as e2e
+  [render.tsx\n(test helper)] as render
+}
+
+main --> tree
+main --> env
+tree --> routes
+routes --> comps
+routes --> libdir
+comps --> libdir
+libdir --> env
+@enduml

@@ -1,0 +1,25 @@
+@startuml scenario-b-filter-export
+title Scenario B — Filter observations and export
+
+actor User as U
+participant "FiltersRow" as UI
+participant "useFilters" as F
+participant "Router" as R
+participant "Query cache" as Q
+participant "API" as API
+participant "ExportData" as Exp
+
+U -> UI : Sets date, hub, confidence
+UI -> F : updateFilters(...)
+F -> R : navigate(search=..., replace=true)
+R -> F : New search state
+F --> Q : New queryKeys -> refetch
+Q -> API : GET /classifications (new params)
+API --> Q : Filtered observations
+Q --> UI : Table re-renders
+
+U -> Exp : Selects CSV/JSON/Images
+Exp -> Q : Get observations (same filter)
+Exp -> API : Possibly GET image URLs
+Exp --> U : Download zip/CSV/JSON (client-side)
+@enduml

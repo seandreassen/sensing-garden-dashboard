@@ -1,0 +1,74 @@
+@startuml logical-view
+title Logical view — UI, domain/state, infrastructure, external services
+
+skinparam componentStyle rectangle
+left to right direction
+
+package "UI layer (React components)" as UI {
+  [Routes\n(TanStack file-based)] as Routes
+  [Landing page\nDeploymentGrid, HeroCarousel] as LandingPage
+  [Deployment layout\nHeader, Tabs, FiltersRow] as DeploymentLayout
+  [Overview\nInsectCount, SpeciesRichness, TopTaxa] as Overview
+  [Analytics\nHeatmap, AirQuality, Treemap] as Analytics
+  [Observations\nDataTable + Dialog] as Observations
+  [Info\nDeploymentInfo, Devices, Map] as Info
+  [Deployment Editor\nEdit cards] as Editor
+  [Filters\nDate, Hub, Taxonomy, Confidence] as Filters
+  [UI kit (ui/)\nCard, Button, Table, Dialog, ...] as UiKit
+}
+
+package "Domain and state layer (lib/)" as Domain {
+  [Query hooks\nuseDeployments, useObservations,\nuseEnvironment, useTaxaCount, ...] as Hooks
+  [Mutation hooks\nuseDeploymentMutations,\nuseDeviceMutations] as Mutations
+  [useFilters\n(URL <-> state)] as FilterHook
+  [Utils\nfilters, queryParameters,\nheatmap, timeSeries, location] as Utils
+  [Types\nlib/types/api.ts] as Types
+}
+
+package "Infrastructure" as Infra {
+  [env.ts\n(validated via zod/t3-env)] as Env
+  [TanStack QueryClient\n(cache)] as QueryClient
+  [TanStack Router\n(URL + search params)] as Router
+}
+
+package "External services" as External {
+  [Sensing Garden REST API\n(AWS API Gateway)] as API
+  [Google Maps\nPlatform] as Maps
+}
+
+Routes --> LandingPage
+Routes --> DeploymentLayout
+DeploymentLayout --> Overview
+DeploymentLayout --> Analytics
+DeploymentLayout --> Observations
+DeploymentLayout --> Info
+DeploymentLayout --> Editor
+DeploymentLayout --> Filters
+
+Overview --> UiKit
+Analytics --> UiKit
+Observations --> UiKit
+Info --> UiKit
+Editor --> UiKit
+Filters --> UiKit
+
+Overview --> Hooks
+Analytics --> Hooks
+Observations --> Hooks
+Editor --> Mutations
+Filters --> FilterHook
+Info --> Maps
+
+Hooks --> Utils
+Hooks --> Types
+Mutations --> Types
+FilterHook --> Router
+
+Hooks --> QueryClient
+Mutations --> QueryClient
+Hooks --> Env
+Mutations --> Env
+QueryClient --> API
+Hooks ..> API : HTTP
+Mutations ..> API : HTTP
+@enduml

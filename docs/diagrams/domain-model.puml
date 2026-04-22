@@ -1,0 +1,45 @@
+@startuml domain-model
+title Domain model — Deployments, Hubs, Observations, AI Model
+
+class Deployment {
+  id
+  name
+  location
+  start_date
+  end_date
+  flowerbed_image
+  aggregate_metrics
+}
+
+class Hub {
+  id
+  name
+  hardware
+}
+
+class Observation {
+  id
+  timestamp
+  taxon
+  confidence
+  image_url
+}
+
+class EnvironmentReading {
+  timestamp
+  temperature
+  humidity
+  air_quality
+}
+
+class AIModel {
+  id
+  version
+  model_card
+}
+
+Deployment "1" o-- "1..*" Hub : contains
+Deployment "1" --> "1" AIModel : uses
+Hub "1" --> "*" Observation : records
+Hub "1" --> "*" EnvironmentReading : records
+@enduml

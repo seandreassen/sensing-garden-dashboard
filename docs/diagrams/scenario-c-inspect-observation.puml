@@ -1,0 +1,27 @@
+@startuml scenario-c-inspect-observation
+title Scenario C — Biologist inspects an observation image
+
+actor Biologist as B
+participant "Dashboard UI" as UI
+participant "useObservations" as Obs
+participant "useObservationImage" as Img
+participant "sensing_garden_client API" as API
+database "DynamoDB" as DB
+database "S3" as S3
+
+B -> UI : Opens deployment detail
+UI -> Obs : useObservations(deploymentId, filters)
+Obs -> API : GET /observations?deploymentId=...
+API -> DB : SELECT observations
+DB --> API : Observation list
+API --> Obs : Observations (with imageUrl)
+Obs --> UI : Render observation table
+
+B -> UI : Clicks a row
+UI -> Img : useObservationImage(observationId)
+Img -> API : GET /image/{observationId}
+API -> S3 : Fetch image blob
+S3 --> API : Image data
+API --> Img : Image URL / data
+Img --> UI : Modal with photo, species label,\nconfidence score
+@enduml
