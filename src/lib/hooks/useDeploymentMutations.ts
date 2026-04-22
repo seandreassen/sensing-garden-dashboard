@@ -1,24 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { env } from "@/env";
-import type { Deployment, DeploymentDevice } from "@/lib/types/api";
+import type {
+  Deployment,
+  CreateDeploymentBody,
+  UpdateDeploymentBody,
+  SaveDeploymentArgs,
+  DeploymentDevice,
+} from "@/lib/types/api";
 import { getHeaders } from "@/lib/utils/headers";
 
 const JSON_HEADERS = { ...getHeaders(), "Content-Type": "application/json" };
 
 // --- Deployment mutations ---
-
-interface CreateDeploymentBody {
-  name?: string;
-  description?: string;
-  deployment_id?: string;
-  start_time?: string;
-  end_time?: string | null;
-  model_id?: string;
-  location_name?: string;
-  location?: { lat: number; long: number };
-  image?: string;
-}
 
 function useCreateDeployment() {
   const queryClient = useQueryClient();
@@ -38,8 +32,6 @@ function useCreateDeployment() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments"] }),
   });
 }
-
-type UpdateDeploymentBody = Omit<CreateDeploymentBody, "deployment_id">;
 
 function useUpdateDeployment(deploymentId: string) {
   const queryClient = useQueryClient();
@@ -75,70 +67,6 @@ function useDeleteDeployment() {
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments"] }),
-  });
-}
-
-// --- Deployment-device link mutations ---
-
-interface LinkDeviceBody {
-  device_id: string;
-  name?: string;
-  location?: { lat: number; long: number };
-}
-
-function useLinkDevice(deploymentId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (body: LinkDeviceBody) => {
-      const res = await fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`, {
-        method: "POST",
-        headers: JSON_HEADERS,
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        throw new Error(`Failed to link device: ${res.status}`);
-      }
-      return (await res.json()) as DeploymentDevice;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
-  });
-}
-
-interface UpdateDeviceLinkBody {
-  name?: string;
-  location?: { lat: number; long: number };
-}
-
-function useUpdateDeviceLink(deploymentId: string, deviceId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (body: UpdateDeviceLinkBody) => {
-      const res = await fetch(
-        `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${deviceId}`,
-        { method: "PATCH", headers: JSON_HEADERS, body: JSON.stringify(body) },
-      );
-      if (!res.ok) {
-        throw new Error(`Failed to update device link: ${res.status}`);
-      }
-      return (await res.json()) as DeploymentDevice;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
-  });
-}
-
-function useDeleteDeviceLink(deploymentId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (deviceId: string) => {
-      const res = await fetch(
-        `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${deviceId}`,
-        { method: "DELETE", headers: getHeaders() },
-      );
-      if (!res.ok) {
-        throw new Error(`Failed to delete device link: ${res.status}`);
-      }
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["deployments", deploymentId] }),
   });
 }
 
@@ -187,10 +115,11 @@ function useDeploymentMutations(deploymentId: string) {
       if (image !== undefined) {
         deploymentPatch.image = image.includes(",") ? image.split(",")[1] : image;
       }
-      const ops: Promise<unknown>[] = [];
+
+      const mutationRequests: Promise<Response>[] = [];
 
       if (Object.keys(deploymentPatch).length > 0) {
-        ops.push(
+        mutationRequests.push(
           fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}`, {
             method: "PATCH",
             headers: JSON_HEADERS,
@@ -204,7 +133,7 @@ function useDeploymentMutations(deploymentId: string) {
 
       for (const device of devices) {
         if (!initialIds.has(device.device_id)) {
-          ops.push(
+          mutationRequests.push(
             fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`, {
               method: "POST",
               headers: JSON_HEADERS,
@@ -222,7 +151,7 @@ function useDeploymentMutations(deploymentId: string) {
             (device.name !== initial.name ||
               JSON.stringify(device.location) !== JSON.stringify(initial.location))
           ) {
-            ops.push(
+            mutationRequests.push(
               fetch(
                 `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${device.device_id}`,
                 {
@@ -238,7 +167,7 @@ function useDeploymentMutations(deploymentId: string) {
 
       for (const initial of initialDevices) {
         if (!currentIds.has(initial.device_id)) {
-          ops.push(
+          mutationRequests.push(
             fetch(
               `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${initial.device_id}`,
               {
@@ -249,7 +178,8 @@ function useDeploymentMutations(deploymentId: string) {
           );
         }
       }
-      await Promise.all(ops);
+
+      await Promise.all(mutationRequests);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["deployments"] });
@@ -263,12 +193,4 @@ function useDeploymentMutations(deploymentId: string) {
   };
 }
 
-export {
-  useCreateDeployment,
-  useUpdateDeployment,
-  useDeleteDeployment,
-  useLinkDevice,
-  useUpdateDeviceLink,
-  useDeleteDeviceLink,
-  useDeploymentMutations,
-};
+export { useCreateDeployment, useUpdateDeployment, useDeleteDeployment, useDeploymentMutations };

@@ -56,6 +56,36 @@ interface DeploymentDevice {
   location?: Location;
 }
 
+type UpdateDeploymentDevice = Omit<DeploymentDevice, "device_id">;
+
+interface CreateDeploymentBody {
+  name?: string;
+  description?: string;
+  deployment_id?: string;
+  start_time?: string;
+  end_time?: string | null;
+  model_id?: string;
+  location_name?: string;
+  location?: { lat: number; long: number };
+  image?: string;
+}
+
+type UpdateDeploymentBody = Omit<CreateDeploymentBody, "deployment_id">;
+
+interface SaveDeploymentArgs {
+  name?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string | null;
+  image?: string;
+  devices: Array<{ device_id: string; name?: string; location?: { lat: number; long: number } }>;
+  initialDevices: Array<{
+    device_id: string;
+    name?: string;
+    location?: { lat: number; long: number };
+  }>;
+}
+
 interface DeploymentsResponse {
   deployments: Deployment[];
   count: number;
@@ -163,6 +193,7 @@ interface Observation {
   image_url?: string;
   image_bucket: string;
   image_key: string;
+  environment?: Environment;
 }
 
 interface ObservationsResponse {
@@ -208,6 +239,10 @@ export type {
   GetEnvironmentParameters,
   Deployment,
   DeploymentDevice,
+  UpdateDeploymentDevice,
+  CreateDeploymentBody,
+  UpdateDeploymentBody,
+  SaveDeploymentArgs,
   DeploymentsResponse,
   SelectedDeploymentResponse,
   GetDeploymentsParameters,

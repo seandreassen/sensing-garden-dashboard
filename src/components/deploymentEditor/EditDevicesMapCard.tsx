@@ -73,7 +73,7 @@ function EditDevicesMapCard({
     <Card className="flex-1">
       <div className="flex items-center justify-between px-4">
         <CardTitle className={isDirty ? "text-primary" : ""}>Devices</CardTitle>
-        <Button variant="ghost" size="icon" onClick={() => setAdding(true)}>
+        <Button variant="outline" size="icon" onClick={() => setAdding(true)}>
           <PlusIcon className="h-4 w-4" />
         </Button>
       </div>

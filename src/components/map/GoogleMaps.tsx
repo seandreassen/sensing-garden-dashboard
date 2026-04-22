@@ -53,7 +53,7 @@ function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps)
           <span className="text-sm text-gray-500">Drag the pin onto the map to place it</span>
         </div>
       )}
-      <div className="flex h-125 items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Loading map...</p>
         ) : env.VITE_GOOGLE_MAPS_API_KEY ? (

@@ -17,9 +17,8 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
   const createDeployment = useCreateDeployment();
 
   const activeDeployments =
-    deployments?.filter(
-      (deployment) => !deployment.end_time || deployment.end_time > new Date(),
-    ) ?? [];
+    deployments?.filter((deployment) => !deployment.end_time || deployment.end_time > new Date()) ??
+    [];
 
   function handleCreate() {
     createDeployment.mutate(
