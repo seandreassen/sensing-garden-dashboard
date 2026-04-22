@@ -111,14 +111,14 @@ function EditPage({
 
     if (result.success === false) {
       const errors = z.flattenError(result.error).fieldErrors;
-      const formatedErrors = Object.entries(errors).map(([key, value]) => (
+      const formattedErrors = Object.entries(errors).map(([key, value]) => (
         <p key={key}>
           {key} : {value}
         </p>
       ));
       toast.warning(<p className="font-bold">Changes not made, check inputs:</p>, {
         position: "top-center",
-        description: formatedErrors,
+        description: formattedErrors,
       });
       return;
     }
@@ -135,10 +135,13 @@ function EditPage({
       },
       {
         onSuccess: () => {
-          toast.success("Deployment saved successfully", { position: "top-center" });
+          toast.success("Deployment updated successfully", { position: "top-center" });
         },
-        onError: () => {
-          toast.error("Failed to save deployment", { position: "top-center" });
+        onError: (error: Error) => {
+          toast.error("Failed to upload changes", {
+            position: "top-center",
+            description: error.message,
+          });
         },
       },
     );

@@ -33,7 +33,11 @@ function EditNameCard({
       }}
       onBlur={() => {
         setIsEditing(false);
-        setValue(value);
+        if (!value) {
+          setValue(initialValue);
+        } else {
+          setValue(value);
+        }
       }}
       onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
       className="w-full border-none bg-accent px-2 py-0 text-center outline-none"
