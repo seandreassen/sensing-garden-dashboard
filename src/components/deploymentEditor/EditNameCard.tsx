@@ -31,7 +31,14 @@ function EditNameCard({
         setValue(e.target.value);
         onChange?.(e.target.value);
       }}
-      onBlur={() => setIsEditing(false)}
+      onBlur={() => {
+        setIsEditing(false);
+        if (!value) {
+          setValue(initialValue);
+        } else {
+          setValue(value);
+        }
+      }}
       onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
       className="w-full border-none bg-accent px-2 py-0 text-center outline-none"
     />
@@ -41,7 +48,7 @@ function EditNameCard({
       variant="outline"
       onClick={() => setIsEditing(true)}
     >
-      {value || "Click to edit"}
+      {value || initialValue}
       <PencilIcon />
     </Button>
   );
