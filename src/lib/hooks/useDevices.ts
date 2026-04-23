@@ -8,7 +8,7 @@ function useDevices() {
   return useQuery({
     queryKey: ["devices"],
     queryFn: async () => {
-      const res = await fetch(`${env.VITE_API_BASE_URL}/devices?limit=100`, {
+      const res = await fetch(`${env.VITE_API_BASE_URL}/devices?limit=500`, {
         headers: getHeaders(),
       });
       if (!res.ok) {
