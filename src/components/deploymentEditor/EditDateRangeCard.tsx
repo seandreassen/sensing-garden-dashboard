@@ -59,6 +59,7 @@ function EditDateRangeCard({
           <Input
             id="start-date"
             type="date"
+            required
             value={startDate}
             onChange={handleStartChange}
             className={inputClass}
