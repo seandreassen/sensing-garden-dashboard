@@ -23,15 +23,16 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
 - Filter data: filter displayed data in the deployment accoding to date, hub, taxonomy level, selected family/genus/species, and minimum confidence
   !!!! ADD SCREENSHOT
 - Download observations: export all filtered observations as CSV and/or JSON, and/or download a ZIP file containing the associated images.
-- View data and statistics across 4 main pages:
-  1. Overview: provides a high-level summary of insect activity and deployment data. Users can see key metrics such as total observations, number of unique families/genera/species, detection trends over time and most common insect families/genera/species.
-     !!!! ADD SCREENSHOT
-  2. Analytics: provides deeper insights into insect activity and environmental conditions. Users can explore detection patterns through a heatmap showing activity across months and weekdays, as well as view environmental data such as temperature, humidity, air pollution (PM levels), and air quality indices (VOC and NOx) over the selected period. In addition, a taxa treemap is included, showing detection count by the selected taxonomy level.
-     !!!! ADD SCREENSHOT
-  3. Observations: displays a list of all observations within the selected period, based on the applied filters. Users can open individual observations to view more detailed information, including browsing through images associated with each observation.
-     !!!! ADD SCREENSHOT
-  4. Info: provides detailed information about the selected deployment. Users can view the deployment description, associated image, connected hubs, and the geographic locations of both the deployment and its connected hubs.
-     !!!! ADD SCREENSHOT
+- View data and statistics across 5 main pages/tabs:
+  **1. Overview:** provides a high-level summary of insect activity and deployment data. Users can see key metrics such as total observations, number of unique families/genera/species, detection trends over time and most common insect families/genera/species.
+  !!!! ADD SCREENSHOT
+  **2. Analytics:** provides deeper insights into insect activity and environmental conditions. Users can explore detection patterns through a heatmap showing activity across months and weekdays, as well as view environmental data such as temperature, humidity, air pollution (PM levels), and air quality indices (VOC and NOx) over the selected period. In addition, a taxa treemap is included, showing detection count by the selected taxonomy level.
+  !!!! ADD SCREENSHOT
+  **3. Observations:** displays a list of all observations within the selected period, based on the applied filters. Users can open individual observations to view more detailed information, including browsing through images associated with each observation.
+  !!!! ADD SCREENSHOT
+  **4. Info:** provides detailed information about the selected deployment. Users can view the deployment description, associated image, connected hubs, and the geographic locations of both the deployment and its connected hubs.
+  !!!! ADD SCREENSHOT
+  **5. Edit:** allows users to modify the selected deployment’s details, including name, date range, description, deployment image, connected hubs, and the location of the deployment and its associated hubs.
 
 ## Project structure
 
@@ -73,10 +74,10 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
 
 The project includes both component and end-to-end tests
 
-- Component/unit tests: Run `pnpm test:component` to run all Vitest tests
-- E2E tests:
+- **Component/unit tests:** Run `pnpm test:component` to run all Vitest tests
+- **E2E tests:**
   - Run `pnpm exec playwright install` to install browsers for Playwright.
   - Run `test:e2e` to run all playwright tests in real browser environment
-- All tests: Run `pnpm test` to run all tests
+- **All tests:** Run `pnpm test` to run all tests
 
 For more information, see [CONTRIBUTING.md](CONTRIBUTING.md)
