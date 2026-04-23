@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { EditDateRangeCard } from "@/components/deploymentEditor/EditDateRangeCard";
 import { EditDescriptionCard } from "@/components/deploymentEditor/EditDescriptionCard";
@@ -48,10 +50,28 @@ function EditPage({
   deployment: Deployment;
   devices: DeploymentDevice[];
 }) {
+  const schema = z
+    .object({
+      name: z.string().optional(),
+      description: z.string().optional(),
+      startDate: z.iso.date().optional(),
+      endDate: z.iso.date().nullable().optional(),
+      image: z.url().optional(),
+      devices: z.array(z.custom<DeploymentDevice>()).optional(),
+    })
+    .refine(
+      ({ startDate, endDate }) => {
+        if (!startDate || !endDate) {
+          return true;
+        }
+        return new Date(endDate) > new Date(startDate);
+      },
+      { message: "End date must come after start date", path: ["endDate"] },
+    );
+
   const { saveDeployment, isSaving } = useDeploymentMutations(deploymentId);
   const deleteDeployment = useDeleteDeployment();
   const navigate = useNavigate();
-
   const [name, setName] = useState<string | undefined>();
   const [description, setDescription] = useState<string | undefined>();
   const [startDate, setStartDate] = useState<string | undefined>();
@@ -61,20 +81,79 @@ function EditPage({
 
   function handleDelete() {
     deleteDeployment.mutate(deploymentId, {
-      onSuccess: () => void navigate({ to: "/" }),
+      onSuccess: () => {
+        void navigate({ to: "/" });
+        toast.success("Deployment deleted successfully", { position: "top-center" });
+      },
+      onError: (error: Error) => {
+        toast.error("Failed to delete deployment", {
+          position: "top-center",
+          description: error.message,
+        });
+      },
     });
   }
 
   function handleSave() {
-    saveDeployment({
+    const hasChanges =
+      name !== undefined ||
+      description !== undefined ||
+      startDate !== undefined ||
+      endDate !== undefined ||
+      image !== undefined ||
+      devices !== undefined;
+    if (!hasChanges) {
+      toast.warning(<p className="font-bold">Changes not made:</p>, {
+        position: "top-center",
+        description: "No changes found",
+      });
+      return;
+    }
+    const result = schema.safeParse({
       name,
       description,
       startDate,
       endDate,
       image,
-      devices: devices ?? initialDevices,
-      initialDevices,
+      devices,
     });
+
+    if (result.success === false) {
+      const errors = z.flattenError(result.error).fieldErrors;
+      const formattedErrors = Object.entries(errors).map(([key, value]) => (
+        <p key={key}>
+          {key} : {value}
+        </p>
+      ));
+      toast.warning(<p className="font-bold">Changes not made, check inputs:</p>, {
+        position: "top-center",
+        description: formattedErrors,
+      });
+      return;
+    }
+    /*Undefined fields will be ignored in useDeploymentMutations hook.*/
+    saveDeployment(
+      {
+        name,
+        description,
+        startDate,
+        endDate,
+        image,
+        devices: devices ?? initialDevices,
+        initialDevices,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Deployment updated successfully", { position: "top-center" });
+        },
+        onError: (error: Error) => {
+          toast.error("Failed to upload changes", {
+            position: "top-center",
+            description: error.message,
+          });
+        },
+      },
+    );
   }
 
   return (

@@ -109,7 +109,7 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "genus",
-    header: "Genus",
+    header: "GENUS",
     cell: ({ row }) => {
       const genus = row.original.genus;
       return <p className="text-wrap wrap-break-word">{genus}</p>;
@@ -122,7 +122,7 @@ const columns: ColumnDef<Observation>[] = [
   },
   {
     accessorKey: "species",
-    header: "CONFIDENCE",
+    header: "SPECIES",
     cell: ({ row }) => {
       const species = row.original.species;
       return <p className="text-wrap wrap-break-word">{species}</p>;

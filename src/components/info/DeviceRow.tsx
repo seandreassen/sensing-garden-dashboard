@@ -1,4 +1,4 @@
-import { subWeeks } from "date-fns/subWeeks";
+import { subHours } from "date-fns/subHours";
 
 import { Card, CardContent } from "@/components/ui/Card";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -9,7 +9,7 @@ type DeviceRowProps = { device_id: string; name?: string };
 function DeviceRow({ device_id, name }: DeviceRowProps) {
   const { data } = useObservations({
     device_id: [device_id],
-    start_time: subWeeks(new Date(), 1).toISOString(),
+    start_time: subHours(new Date(), 1).toISOString(),
     limit: 1,
   });
   const isActive = (data?.count ?? 0) > 0;
