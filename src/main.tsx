@@ -3,6 +3,8 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
+import { Toaster } from "@/components/ui/Sonner";
+
 import { routeTree } from "./routeTree.gen";
 
 import "./index.css";
@@ -39,6 +41,7 @@ if (!rootElement.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
+      <Toaster />
     </StrictMode>,
   );
 }
