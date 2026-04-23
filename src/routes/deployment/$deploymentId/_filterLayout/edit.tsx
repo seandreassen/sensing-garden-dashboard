@@ -81,7 +81,16 @@ function EditPage({
 
   function handleDelete() {
     deleteDeployment.mutate(deploymentId, {
-      onSuccess: () => void navigate({ to: "/" }),
+      onSuccess: () => {
+        void navigate({ to: "/" });
+        toast.success("Deployment deleted successfully", { position: "top-center" });
+      },
+      onError: (error: Error) => {
+        toast.error("Failed to delete deployment", {
+          position: "top-center",
+          description: error.message,
+        });
+      },
     });
   }
 
