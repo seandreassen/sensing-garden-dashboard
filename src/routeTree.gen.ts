@@ -16,6 +16,7 @@ import { Route as DeploymentDeploymentIdFilterLayoutIndexRouteImport } from "./r
 import { Route as DeploymentDeploymentIdFilterLayoutOverviewRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/overview";
 import { Route as DeploymentDeploymentIdFilterLayoutObservationsRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/observations";
 import { Route as DeploymentDeploymentIdFilterLayoutInfoRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/info";
+import { Route as DeploymentDeploymentIdFilterLayoutEditRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/edit";
 import { Route as DeploymentDeploymentIdFilterLayoutAnalyticsRouteImport } from "./routes/deployment/$deploymentId/_filterLayout/analytics";
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,12 @@ const DeploymentDeploymentIdFilterLayoutInfoRoute =
     path: "/info",
     getParentRoute: () => DeploymentDeploymentIdFilterLayoutRoute,
   } as any);
+const DeploymentDeploymentIdFilterLayoutEditRoute =
+  DeploymentDeploymentIdFilterLayoutEditRouteImport.update({
+    id: "/edit",
+    path: "/edit",
+    getParentRoute: () => DeploymentDeploymentIdFilterLayoutRoute,
+  } as any);
 const DeploymentDeploymentIdFilterLayoutAnalyticsRoute =
   DeploymentDeploymentIdFilterLayoutAnalyticsRouteImport.update({
     id: "/analytics",
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId": typeof DeploymentDeploymentIdFilterLayoutRouteWithChildren;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/edit": typeof DeploymentDeploymentIdFilterLayoutEditRoute;
   "/deployment/$deploymentId/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
@@ -80,6 +88,7 @@ export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/edit": typeof DeploymentDeploymentIdFilterLayoutEditRoute;
   "/deployment/$deploymentId/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
@@ -91,6 +100,7 @@ export interface FileRoutesById {
   "/deployment/$deploymentId/$": typeof DeploymentDeploymentIdSplatRoute;
   "/deployment/$deploymentId/_filterLayout": typeof DeploymentDeploymentIdFilterLayoutRouteWithChildren;
   "/deployment/$deploymentId/_filterLayout/analytics": typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  "/deployment/$deploymentId/_filterLayout/edit": typeof DeploymentDeploymentIdFilterLayoutEditRoute;
   "/deployment/$deploymentId/_filterLayout/info": typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   "/deployment/$deploymentId/_filterLayout/observations": typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   "/deployment/$deploymentId/_filterLayout/overview": typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId"
     | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/edit"
     | "/deployment/$deploymentId/info"
     | "/deployment/$deploymentId/observations"
     | "/deployment/$deploymentId/overview"
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
     | "/"
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId/analytics"
+    | "/deployment/$deploymentId/edit"
     | "/deployment/$deploymentId/info"
     | "/deployment/$deploymentId/observations"
     | "/deployment/$deploymentId/overview"
@@ -122,6 +134,7 @@ export interface FileRouteTypes {
     | "/deployment/$deploymentId/$"
     | "/deployment/$deploymentId/_filterLayout"
     | "/deployment/$deploymentId/_filterLayout/analytics"
+    | "/deployment/$deploymentId/_filterLayout/edit"
     | "/deployment/$deploymentId/_filterLayout/info"
     | "/deployment/$deploymentId/_filterLayout/observations"
     | "/deployment/$deploymentId/_filterLayout/overview"
@@ -185,6 +198,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DeploymentDeploymentIdFilterLayoutInfoRouteImport;
       parentRoute: typeof DeploymentDeploymentIdFilterLayoutRoute;
     };
+    "/deployment/$deploymentId/_filterLayout/edit": {
+      id: "/deployment/$deploymentId/_filterLayout/edit";
+      path: "/edit";
+      fullPath: "/deployment/$deploymentId/edit";
+      preLoaderRoute: typeof DeploymentDeploymentIdFilterLayoutEditRouteImport;
+      parentRoute: typeof DeploymentDeploymentIdFilterLayoutRoute;
+    };
     "/deployment/$deploymentId/_filterLayout/analytics": {
       id: "/deployment/$deploymentId/_filterLayout/analytics";
       path: "/analytics";
@@ -197,6 +217,7 @@ declare module "@tanstack/react-router" {
 
 interface DeploymentDeploymentIdFilterLayoutRouteChildren {
   DeploymentDeploymentIdFilterLayoutAnalyticsRoute: typeof DeploymentDeploymentIdFilterLayoutAnalyticsRoute;
+  DeploymentDeploymentIdFilterLayoutEditRoute: typeof DeploymentDeploymentIdFilterLayoutEditRoute;
   DeploymentDeploymentIdFilterLayoutInfoRoute: typeof DeploymentDeploymentIdFilterLayoutInfoRoute;
   DeploymentDeploymentIdFilterLayoutObservationsRoute: typeof DeploymentDeploymentIdFilterLayoutObservationsRoute;
   DeploymentDeploymentIdFilterLayoutOverviewRoute: typeof DeploymentDeploymentIdFilterLayoutOverviewRoute;
@@ -207,6 +228,8 @@ const DeploymentDeploymentIdFilterLayoutRouteChildren: DeploymentDeploymentIdFil
   {
     DeploymentDeploymentIdFilterLayoutAnalyticsRoute:
       DeploymentDeploymentIdFilterLayoutAnalyticsRoute,
+    DeploymentDeploymentIdFilterLayoutEditRoute:
+      DeploymentDeploymentIdFilterLayoutEditRoute,
     DeploymentDeploymentIdFilterLayoutInfoRoute:
       DeploymentDeploymentIdFilterLayoutInfoRoute,
     DeploymentDeploymentIdFilterLayoutObservationsRoute:
