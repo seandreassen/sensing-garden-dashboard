@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import type { TaxonomyLevel } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { TaxonomyLevel } from "@/lib/utils/filters";
 
 const levels: { value: TaxonomyLevel; label: string }[] = [
   { value: "family", label: "Family" },
