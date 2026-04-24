@@ -195,7 +195,7 @@ function EditPage({
           <EditNameCard initialValue={deployment.name ?? ""} onChange={setName} />
           <EditDateRangeCard
             initialStartDate={
-              !isNaN(deployment.start_time.getTime())
+              deployment.start_time && !isNaN(deployment.start_time.getTime())
                 ? deployment.start_time.toISOString().split("T")[0]
                 : ""
             }
