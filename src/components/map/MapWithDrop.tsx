@@ -7,12 +7,14 @@ import { computeMinZoomForLocations } from "@/lib/utils/location";
 
 const DEFAULT_ZOOM = 11;
 const SINGLE_PIN_ZOOM = 15;
+const WORLD_VIEW_ZOOM = 2;
+const WORLD_VIEW_CENTER = { lat: 20, lng: 0 };
 
 function computeDefaultView(locations: Location[]) {
   if (locations.length === 0) {
     return {
-      defaultCenter: undefined,
-      defaultZoom: DEFAULT_ZOOM,
+      defaultCenter: WORLD_VIEW_CENTER,
+      defaultZoom: WORLD_VIEW_ZOOM,
       defaultBounds: undefined,
     };
   }
@@ -148,7 +150,7 @@ function MapWithDrop({
   return (
     <div
       ref={mapDivRef}
-      className="h-125 w-full"
+      className="h-full min-h-125 w-full"
       onDragOver={allowDragAndDrop || onDropLocation ? (e) => e.preventDefault() : undefined}
       onDrop={allowDragAndDrop || onDropLocation ? handleDrop : undefined}
     >
