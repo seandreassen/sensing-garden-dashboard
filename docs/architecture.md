@@ -308,7 +308,7 @@ graph TB
     end
 
     subgraph Google["Google"]
-        MapsSDK["Maps JS SDK<br/>+ Tile API"]
+        MapsSDK["Maps JS SDK<br/>+ Tile API "]
     end
 
     subgraph Dev["Developer environment"]

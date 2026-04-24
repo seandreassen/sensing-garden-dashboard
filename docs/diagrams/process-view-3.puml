@@ -1,0 +1,28 @@
+@startuml process-view
+title Process view — startup, navigation, filtering
+
+actor "User" as U
+participant "Browser /\nReact" as B
+participant "TanStack\nRouter" as R
+participant "TanStack\nQuery Cache" as Q
+participant "Sensing\nGarden API" as API
+participant "Google\nMaps" as GM
+
+
+
+U -> B : User enters Info/Edit page
+
+B -> Q : useHubLocations (deploymentId)
+Q -> API : GET /devices?deploymentId=...
+API --> Q : Hubs with coordinates
+Q --> B : Location data
+
+note over B, GM
+  On the Info and Edit tab, Google Maps
+  JS SDK is loaded separately
+  for map rendering
+end note
+B -> GM : load maps script
+GM --> B : Map components
+B -> GM : render markers (location data)
+@enduml

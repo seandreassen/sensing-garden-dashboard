@@ -1,0 +1,20 @@
+@startuml process-view
+title Process view — startup, navigation, filtering
+
+actor "User" as U
+participant "Browser /\nReact" as B
+participant "TanStack\nRouter" as R
+participant "TanStack\nQuery Cache" as Q
+participant "Sensing\nGarden API" as API
+participant "Google\nMaps" as GM
+
+
+
+U -> B : Changes filter (e.g. date)
+B -> R : navigate({ search: ... }) (replace)
+R -> B : New query param -> useFilters new value
+B -> Q : New queryKey -> refetch
+Q -> API : GET /... (new params)
+API --> Q : Updated data
+Q --> B : Re-render
+@enduml

@@ -34,20 +34,4 @@ end
 API --> Q : Responses
 Q --> B : Data
 B --> U : Renders cards + charts
-
-U -> B : Changes filter (e.g. date)
-B -> R : navigate({ search: ... }) (replace)
-R -> B : New query param -> useFilters new value
-B -> Q : New queryKey -> refetch
-Q -> API : GET /... (new params)
-API --> Q : Updated data
-Q --> B : Re-render
-
-note over B, GM
-  On the Info tab, Google Maps
-  JS SDK is loaded separately
-  for map rendering
-end note
-B -> GM : load maps script
-GM --> B : Map components
 @enduml

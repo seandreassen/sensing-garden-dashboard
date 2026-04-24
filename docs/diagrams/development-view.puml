@@ -1,57 +1,96 @@
 @startuml development-view
 title Development view — source code organization
 
-skinparam componentStyle rectangle
-left to right direction
+skinparam packageStyle folder
+skinparam linetype ortho
+top to bottom direction
 
+' ---------- Repo root ----------
 package "Repo root" as root {
   [vite.config.ts\ntsconfig.*\nplaywright.config.ts\nvitest.config.ts\n.oxlintrc.json\n.oxfmtrc.json] as cfg
   [package.json\npnpm-lock.yaml] as pkg
 }
 
+' ---------- src/ ----------
 package "src/" as src {
-  [main.tsx\n(entry)] as main
-  [env.ts] as env
-  [routeTree.gen.ts\n(auto-generated)] as tree
-  [routes/] as routes
-  [components/] as comps
-  [lib/] as libdir
-  [assets/] as assets
-  [index.css] as css
+
+  package "Entry & config" as entry {
+    [main.tsx] as main
+    [env.ts] as env
+    [routeTree.gen.ts\n(auto-generated)] as tree
+    [index.css] as css
+    [assets/] as assets
+  }
+
+  package "routes/" as routes {
+    [__root.tsx] as rroot
+    [index.tsx\n(landing)] as rindex
+    package "deployment/$deploymentId/" as rdep {
+      [_filterLayout.tsx] as rlayout
+      [overview.tsx · analytics.tsx\nobservations.tsx · info.tsx\nedit.tsx · index.tsx] as rtabs
+      [$.tsx\n(catch-all)] as rcatch
+    }
+  }
+
+  package "components/" as comps {
+
+    package "ui/ (shadcn / Base UI)" as uikit {
+      [Button · Card · Dialog\nTable · Popover · Select\nSlider · Tooltip · ...] as uiPrims
+    }
+
+    package "Feature folders" as feats {
+      [landingPage/\nDeploymentGrid, HeroCarousel] as fLanding
+      [deploymentLayout/\nHeader, Tabs, FiltersRow] as fLayout
+      [overview/\nTotalInsectCount, SpeciesRichness,\nTopTaxa, Observations] as fOverview
+      [analytics/\nActivityHeatmap, AirPollution,\nAirQualityIndices, TaxaTreemap,\nEnvironmentalConditions] as fAnalytics
+      [observations/\nDataTable, Columns,\nObservationRowDialog,\nobservationDialog/] as fObs
+      [info/\nDeploymentInfo, Devices] as fInfo
+      [map/\nGoogleMaps, MapWithDrop,\nGoogleMapsCard, PinIcon] as fMap
+      [deploymentEditor/\nEdit cards] as fEditor
+      [filters/\nDateRange, Hub,\nTaxonomy, Confidence] as fFilters
+      [deployments/] as fDeployments
+    }
+
+    package "Shared (top-level)" as shared {
+      [RootHeader.tsx] as sHeader
+      [ExportData.tsx] as sExport
+      [NotFound.tsx] as sNotFound
+    }
+  }
+
+  package "lib/" as lib {
+    [hooks/\nuseDeployments, useDeployment,\nuseObservations, useObservationsTimeSeries,\nuseEnvironment, useEnvironmentTimeSeries,\nuseTaxaCount, useObservationCount,\nuseFilters, useDeploymentMutations,\nuseDeviceMutations, useScrollDirection] as hooks
+    [utils/\nfilters, queryParameters, heatmap,\ntimeSeries, location, headers, index] as utils
+    [types/\napi.ts] as types
+  }
 }
 
-package "routes/" as routesDir {
-  [__root.tsx] as rroot
-  [index.tsx] as rindex
-  [deployment/$deploymentId/$.tsx] as rdep
-  [deployment/$deploymentId/_filterLayout.tsx] as rlayout
-  [_filterLayout/\noverview.tsx · analytics.tsx ·\nobservations.tsx · info.tsx ·\nedit.tsx · index.tsx] as rtabs
-}
-
-package "components/" as compsDir {
-  [ui/\n(Button, Card, Dialog, ...)] as uikit
-  [feature folders:\nlandingPage/ · deploymentLayout/\noverview/ · analytics/\nobservations/ · info/\nmap/ · deploymentEditor/\nfilters/ · deployments/] as feature
-  [Shared:\nRootHeader.tsx · ExportData.tsx\nNotFound.tsx] as shared
-}
-
-package "lib/" as libDir {
-  [hooks/\n(useDeployments, useObservations,\nuseFilters, useEnvironment, ...)] as hooks
-  [types/api.ts] as types
-  [utils/\n(filters, queryParameters,\nheatmap, timeSeries, location,\nheaders, index)] as utils
-}
-
+' ---------- tests/ ----------
 package "tests/" as tests {
-  [unit/\nheatmap · location ·\nqueryParameters · timeSeries] as unit
-  [component/\nNotFound.test.tsx] as component
-  [e2e/\ninfo.test.ts (+ snapshots)] as e2e
-  [render.tsx\n(test helper)] as render
+  [unit/\n(vitest — utils)] as tUnit
+  [component/\n(vitest-browser-react)] as tComp
+  [e2e/\n(playwright)] as tE2E
+  [render.tsx\n(test helper)] as tRender
 }
 
-main --> tree
+' ---------- Dependencies ----------
 main --> env
+main --> tree
 tree --> routes
-routes --> comps
-routes --> libdir
-comps --> libdir
-libdir --> env
+
+routes --> feats
+routes --> shared
+routes --> hooks
+
+feats --> uikit
+feats --> hooks
+feats --> utils
+shared --> uikit
+
+hooks --> utils
+hooks --> types
+hooks --> env
+
+tests ..> src : exercises
+
 @enduml
