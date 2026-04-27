@@ -53,7 +53,9 @@ type ObservationRowDialogProps = {
 function ObservationRowDialog({ onClose, observationData, openStatus }: ObservationRowDialogProps) {
   return (
     <Dialog open={openStatus} onOpenChange={onClose}>
-      <DialogContent className={cn("lg: col-1 mx-auto flex !max-h-6/7 flex-col sm:!max-w-1/2")}>
+      <DialogContent
+        className={cn("lg: col-1 mx-auto flex max-h-6/7 max-w-9/10 flex-col sm:max-w-1/2")}
+      >
         <DialogHeader className={cn("sticky border-b pt-2 pb-4")}>
           <DialogTitle>Observation details</DialogTitle>
           <DialogDescription className="text-xs">

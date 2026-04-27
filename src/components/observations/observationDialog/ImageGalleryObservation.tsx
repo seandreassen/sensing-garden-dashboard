@@ -1,51 +1,203 @@
-import { useRef } from "react";
-import ImageGallery from "react-image-gallery";
-import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
+import { MaximizeIcon, MinimizeIcon } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/Button";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { Card, CardContent } from "@/components/ui/Card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/Carousel";
 import type { Observation } from "@/lib/types/api";
-
-import "react-image-gallery/styles/image-gallery.css";
-
+import { cn } from "@/lib/utils";
 /**
  * Image gallery for displaying photos tied to an observation.
- * Built with `react-image-gallery`.
- *
- * @status Incomplete — Only the first image slot uses `image_url` from the observation. Twoo placeholder images from picsum.photos are hardcoded in
- * Should take in array of images..
+ * Built with shadcn `Carousel`.
  *
  * @todo Replace placeholder images with actual observation images when multiple image
  * URLs are available in the {@link Observation} object.
- * @todo Pass `image_url` array instead of a single string once API supports it.
- *
- * @param image_url - URL of the observation image. Falls back to an empty string if undefined.
+ * @todo Pass `image_url` array instead of a single string when track_id support is added..
  */
-
 function ImageGalleryObservation({ observationData }: { observationData?: Observation }) {
-  const galleryRef = useRef<ImageGalleryRef>(null);
-  const images: GalleryItem[] = [
+  const [mainApi, setMainApi] = useState<CarouselApi>();
+  const [thumbApi, setThumbApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (!mainApi) {
+      return;
+    }
+    setCount(mainApi.scrollSnapList().length);
+  }, [mainApi]);
+
+  useEffect(() => {
+    if (!mainApi) {
+      return;
+    }
+    mainApi.on("select", () => {
+      const index = mainApi.selectedScrollSnap();
+      setCurrent(index);
+      thumbApi?.scrollTo(index);
+    });
+  }, [mainApi, thumbApi]);
+
+  const goTo = (index: number) => {
+    setCurrent(index);
+    mainApi?.scrollTo(index);
+  };
+
+  const images = [
     {
-      original: observationData?.image_url ?? "",
-      thumbnail: observationData?.image_url ?? "",
-      originalAlt: "Empty image",
+      src: observationData?.image_url ?? "",
+      alt: "Observation image",
     },
     {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
+      src: "https://picsum.photos/id/1015/1000/600/",
+      alt: "Placeholder image 1",
     },
     {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
+      src: "https://picsum.photos/id/1019/1000/600/",
+      alt: "Placeholder image 2",
+    },
+
+    {
+      src: "https://picsum.photos/id/1019/1000/600/",
+      alt: "Placeholder image 2",
+    },
+    {
+      src: "https://picsum.photos/id/1019/1000/600/",
+      alt: "Placeholder image 2",
+    },
+    {
+      src: "https://picsum.photos/id/1019/1000/600/",
+      alt: "Placeholder image 2",
+    },
+    {
+      src: "https://picsum.photos/id/1019/1000/600/",
+      alt: "Placeholder image 2",
     },
   ];
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      carouselRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
   return (
-    <div className="mx-auto my-auto sm:w-xs">
-      <ImageGallery
-        showThumbnails={false}
-        ref={galleryRef}
-        items={images}
-        showPlayButton={false}
-        showBullets
-      />
+    <div ref={carouselRef} className="mx-auto max-w-sm sm:max-w-md">
+      <Card className="relative flex">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute top-4 right-4 z-10 cursor-pointer"
+          onClick={toggleFullscreen}
+        >
+          {isFullscreen ? (
+            <MinimizeIcon className={cn("size-8")} />
+          ) : (
+            <MaximizeIcon className="size-6" />
+          )}
+        </Button>
+
+        <CardContent className="flex aspect-auto flex-col items-center justify-center">
+          <Carousel
+            setApi={setMainApi}
+            className={cn(isFullscreen ? "sm:max-w-[60vw]" : "max-w-xs")}
+          >
+            <CarouselContent>
+              {images.map((image, index) => (
+                <CarouselItem
+                  key={index}
+                  className={cn(
+                    "flex items-center justify-center pb-3",
+                    isFullscreen ? "max-h-[50vh] sm:h-[70vh]" : "",
+                  )}
+                >
+                  {/* oxlint-disable jsx-max-depth */}
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="max-h-full w-full object-contain"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious
+              className={cn(
+                buttonVariants({ variant: "outline", size: isFullscreen ? "icon-xl" : "icon-lg" }),
+                isFullscreen
+                  ? "max-sm:top-auto max-sm:left-0 max-sm:-translate-y-1 md:-left-24"
+                  : "max-sm:top-auto max-sm:left-0 max-sm:-translate-y-1",
+              )}
+            />
+            <CarouselNext
+              className={cn(
+                buttonVariants({ variant: "outline", size: isFullscreen ? "icon-xl" : "icon-lg" }),
+
+                isFullscreen
+                  ? "-right-24 max-sm:top-auto max-sm:right-0 max-sm:-translate-y-1"
+                  : "max-sm:top-auto max-sm:right-0 max-sm:-translate-y-1",
+              )}
+            />
+          </Carousel>
+          <div
+            className={cn(
+              "top-auto text-sm text-nowrap text-muted-foreground",
+              isFullscreen ? "flex text-center sm:text-lg" : "flex",
+            )}
+          >
+            Image {current + 1} of {count}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Thumbnail carousel */}
+      <Carousel
+        setApi={setThumbApi}
+        opts={{ dragFree: true, containScroll: "keepSnaps" }}
+        className={cn(isFullscreen ? "flex-none py-6" : "flex-none py-2")}
+      >
+        <CarouselContent className="ml-0 gap-2">
+          {images.map((image, index) => (
+            <CarouselItem
+              key={index}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "none" }),
+                "mx-auto cursor-pointer p-1",
+                isFullscreen ? "basis-1/5 sm:basis-1/8" : "basis-1/4",
+              )}
+              onClick={() => goTo(index)}
+            >
+              <div
+                className={cn(
+                  "aspect-video h-full overflow-hidden rounded-sm transition-opacity",
+                  index === current ? "opacity-100 ring-2 ring-primary" : "opacity-50",
+                )}
+              >
+                <img
+                  src={image.src}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
     </div>
   );
 }
