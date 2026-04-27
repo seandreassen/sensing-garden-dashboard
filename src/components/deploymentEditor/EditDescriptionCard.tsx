@@ -32,15 +32,15 @@ function EditDescriptionCard({
         onChange?.(e.target.value);
       }}
       onBlur={() => setIsEditing(false)}
-      className="h-32 w-full resize-none overflow-y-auto border-none bg-accent px-2 py-2 text-center outline-none"
+      className="h-32 w-full resize-none overflow-y-auto border-none bg-accent px-2 py-2 text-left outline-none"
     />
   ) : (
     <Button
-      className={`h-32 w-full justify-center ${isDirty ? "text-primary" : ""}`}
+      className={`h-32 w-full items-start justify-start px-2 py-2 ${isDirty ? "text-primary" : ""}`}
       variant="outline"
       onClick={() => setIsEditing(true)}
     >
-      <span className="line-clamp-4 overflow-hidden text-center whitespace-pre-wrap">
+      <span className="line-clamp-4 overflow-hidden text-left whitespace-pre-wrap">
         {value || "Click to edit"}
       </span>
       <PencilIcon className="shrink-0" />
@@ -49,10 +49,8 @@ function EditDescriptionCard({
 
   return (
     <Card className="flex-1">
-      <div className="relative flex items-center justify-center">
-        <CardTitle className={`text-center ${isDirty ? "text-primary" : ""}`}>
-          Description
-        </CardTitle>
+      <div className="relative flex items-center justify-start">
+        <CardTitle className={`text-left ${isDirty ? "text-primary" : ""}`}>Description</CardTitle>
         {isEditing && (
           <Button
             className="absolute right-0 mx-2 text-primary"

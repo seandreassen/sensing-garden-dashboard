@@ -40,11 +40,11 @@ function EditNameCard({
         }
       }}
       onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
-      className="w-full border-none bg-accent px-2 py-0 text-center outline-none"
+      className="w-full border-none bg-accent px-2 py-0 text-left outline-none"
     />
   ) : (
     <Button
-      className={`w-full justify-center ${isDirty ? "text-primary" : ""}`}
+      className={`w-full justify-start ${isDirty ? "text-primary" : ""}`}
       variant="outline"
       onClick={() => setIsEditing(true)}
     >
@@ -55,7 +55,7 @@ function EditNameCard({
 
   return (
     <Card>
-      <CardTitle className={`text-center ${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
+      <CardTitle className={`text-left ${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
       <div className="flex h-10 items-center px-3">{inputField}</div>
     </Card>
   );
