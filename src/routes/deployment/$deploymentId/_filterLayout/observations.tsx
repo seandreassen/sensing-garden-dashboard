@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 
 import { columns } from "@/components/observations/columns";
 import { DataTable } from "@/components/observations/DataTable";
-import { Spinner } from "@/components/ui/Spinner";
+import { PaginationControls } from "@/components/observations/PaginationControls";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useObservationCount } from "@/lib/hooks/useObservationCount";
 import { useObservations } from "@/lib/hooks/useObservations";
@@ -18,12 +19,16 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout/ob
 });
 
 function RouteComponent() {
-  const limit: number = 10;
+  const limit: number = 5;
   const [sorting, setSorting] = useState<SortingState>([{ id: "timestamp", desc: true }]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { deploymentId } = Route.useParams();
   const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa } = useFilters();
-  const { data, isLoading } = useObservations({
+  const {
+    data: tableData,
+    isLoading: isTableLoading,
+    isError: isTableError,
+  } = useObservations({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
@@ -37,10 +42,21 @@ function RouteComponent() {
     next_token: `{"offset":${limit * pageIndex}}`,
   });
 
-  const { data: totalCount } = useObservationCount({
+  const {
+    data: observationCount,
+    isLoading: isCountLoading,
+    isError: isCountError,
+  } = useObservationCount({
     start_time: startDate,
     end_time: endDate,
     device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    selected_taxa: selectedTaxa,
+  });
+
+  const { data: deploymentData } = useDeployment({
     deployment_id: deploymentId,
   });
 
@@ -49,7 +65,7 @@ function RouteComponent() {
   }, [sorting, startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa]);
 
   const onPageChange = (direction: string) => {
-    if (direction === "forward" && data?.next_token) {
+    if (direction === "forward" && tableData?.next_token) {
       setPageIndex((i) => i + 1);
     }
     if (direction === "backward" && pageIndex >= 1) {
@@ -62,23 +78,28 @@ function RouteComponent() {
     setSorting(newSorting);
   };
 
-  return isLoading ? (
-    <div className="flex h-275 w-full items-center justify-center">
-      <Spinner className="size-8" />
-    </div>
-  ) : (
-    <div className="flex h-full w-full justify-center">
+  return (
+    <div className="w-full overflow-hidden rounded-sm border">
       {/* Table */}
       <DataTable
         columns={columns}
         limit={limit}
-        data={data?.items ?? []}
-        isLoading={isLoading}
+        pageIndex={pageIndex}
+        rowCount={observationCount?.count ? observationCount.count : 0}
+        data={tableData?.items ?? []}
+        deploymentData={deploymentData ?? undefined}
+        isLoading={isTableLoading}
+        isError={isTableError}
         sorting={sorting}
         onSortingChange={handleSortingChange}
+      />
+      <PaginationControls
+        limit={limit}
+        isCountLoading={isCountLoading}
         pageIndex={pageIndex}
         onPageChange={(direction) => onPageChange(direction)}
-        rowCount={typeof totalCount?.count === "number" ? totalCount.count : 0}
+        rowCount={observationCount?.count ? observationCount.count : 0}
+        isCountError={isCountError}
       />
     </div>
   );

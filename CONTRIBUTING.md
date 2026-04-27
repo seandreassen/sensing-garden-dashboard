@@ -23,7 +23,17 @@ This document outlines the workflow and coding standards for contributing to the
 
 ### Testing
 
-The first time you run tests using `pnpm test`, `pnpm coverage`, etc., you might need to follow some instructions to finish the installation of playwright. If so, these instructions will be shown in the terminal. Also remember to always check that all tests pass with `pnpm test` after making changes. Additionally, a coverage report can be generated and viewed using `pnpm coverage`.
+We use different commands for different test types:
+
+- `pnpm test:unit`: Runs pure unit tests in `tests/unit/`
+- `pnpm test:component`: Runs component tests in `tests/component/`
+- `pnpm test:e2e`: Runs end-to-end tests in `tests/e2e/`
+- `pnpm test`: Runs unit tests, component tests, and e2e tests
+- `pnpm coverage`: Generates and serves a coverage report
+
+Pure unit tests should cover stable frontend-owned utility logic, such as formatting, query parameter serialization, and map/chart helper functions. Component tests should focus on top-level components rather than testing every child component separately. Route/page behavior should generally be tested with e2e tests.
+
+The first time you run tests using `pnpm test`, `pnpm test:unit`, `pnpm test:component`, `pnpm test:e2e`, or `pnpm coverage`, you might need to finish the Playwright browser installation. If so, instructions will be shown in the terminal.
 
 The coverage report will be generated at `coverage/`, and a more detailed list of e2e test results will be generated at `test-results/`.
 
@@ -70,6 +80,7 @@ When fetching data, use [TanStack Query](https://tanstack.com/query/latest). Cre
     - `ui/`: Generic reusable components
   - `lib/`: Shared utility functions
 - `tests/`: Tests
+  - `unit/`: Unit tests for pure utility logic
   - `component/`: Component tests
   - `e2e/`: End-to-end tests
 

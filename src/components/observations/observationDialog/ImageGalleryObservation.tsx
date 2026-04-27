@@ -121,7 +121,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
           )}
         </Button>
 
-        <CardContent className="flex aspect-auto flex-col items-center justify-center">
+        <CardContent className="flex flex-col items-center justify-center">
           <Carousel
             opts={{ watchDrag: false, duration: 25 }}
             setApi={setMainApi}

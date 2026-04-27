@@ -45,19 +45,61 @@ interface Deployment {
   location_name?: string;
   location?: Location;
   image_url?: string;
+  image_key?: string;
+  image_bucket?: string;
+  hub_count?: number;
+}
+
+interface DeploymentDevice {
+  device_id: string;
+  name?: string;
+  location?: Location;
+}
+
+type UpdateDeploymentDevice = Omit<DeploymentDevice, "device_id">;
+
+interface Device {
+  created: Date;
+  device_id: string;
+}
+
+// Device refers to the devices returned by the /devices API endpoint while deploymentDevices refer to devices in the context of being connected to a hub
+interface DevicesResponse {
+  items: Device[];
+}
+
+interface CreateDeploymentBody {
+  name?: string;
+  description?: string;
+  deployment_id?: string;
+  start_time?: string;
+  end_time?: string | null;
+  model_id?: string;
+  location_name?: string;
+  location?: { lat: number; long: number };
+  image?: string;
+}
+
+type UpdateDeploymentBody = Omit<CreateDeploymentBody, "deployment_id">;
+
+interface SaveDeploymentArgs {
+  name?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string | null;
+  image?: string;
+  devices: Array<{ device_id: string; name?: string; location?: { lat: number; long: number } }>;
+  initialDevices: Array<{
+    device_id: string;
+    name?: string;
+    location?: { lat: number; long: number };
+  }>;
 }
 
 interface DeploymentsResponse {
   deployments: Deployment[];
   count: number;
   next_token: string;
-}
-
-interface DeploymentDevice {
-  device_id: string;
-  deployment_id: string;
-  name?: string;
-  location?: Location;
 }
 
 interface SelectedDeploymentResponse {
@@ -161,6 +203,7 @@ interface Observation {
   image_url?: string;
   image_bucket: string;
   image_key: string;
+  environment?: Environment;
 }
 
 interface ObservationsResponse {
@@ -206,11 +249,19 @@ export type {
   GetEnvironmentParameters,
   Deployment,
   DeploymentDevice,
+  UpdateDeploymentDevice,
+  Device,
+  DevicesResponse,
+  CreateDeploymentBody,
+  UpdateDeploymentBody,
+  SaveDeploymentArgs,
   DeploymentsResponse,
   SelectedDeploymentResponse,
   GetDeploymentsParameters,
   GetSelectedDeploymentParameters,
+  TaxaCount,
   TaxaCountResponse,
+  TaxonomyLevel,
   GetTaxaCountParameters,
   IntervalUnit,
   ObservationsTimeSeriesResponse,
@@ -223,5 +274,4 @@ export type {
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
-  TaxonomyLevel,
 };
