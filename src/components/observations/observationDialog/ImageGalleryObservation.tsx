@@ -1,5 +1,5 @@
 import { MaximizeIcon, MinimizeIcon } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -28,29 +28,37 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
 
+  const onSelect = useCallback(() => {
+    if (!mainApi || !thumbApi) {
+      return;
+    }
+    const index = mainApi.selectedScrollSnap();
+    setCurrent(index);
+    thumbApi.scrollTo(index);
+  }, [mainApi, thumbApi]);
+
   useEffect(() => {
     if (!mainApi) {
       return;
     }
     setCount(mainApi.scrollSnapList().length);
-  }, [mainApi]);
 
-  useEffect(() => {
-    if (!mainApi) {
-      return;
-    }
-    mainApi.on("select", () => {
-      const index = mainApi.selectedScrollSnap();
-      setCurrent(index);
-      thumbApi?.scrollTo(index);
-    });
-  }, [mainApi, thumbApi]);
+    mainApi.on("select", onSelect).on("reInit", onSelect);
+    return () => {
+      mainApi.off("select", onSelect).off("reInit", onSelect);
+    };
+  }, [mainApi, onSelect]);
+  const goTo = useCallback(
+    (index: number) => {
+      if (!mainApi || !thumbApi) {
+        return;
+      }
+      mainApi.scrollTo(index);
+    },
+    [mainApi, thumbApi],
+  );
 
-  const goTo = (index: number) => {
-    setCurrent(index);
-    mainApi?.scrollTo(index);
-  };
-
+  //mock data for 6 last pictures.
   const images = [
     {
       src: observationData?.image_url ?? "",
@@ -98,7 +106,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
   return (
-    <div ref={carouselRef} className="mx-auto max-w-sm sm:max-w-md">
+    <div ref={carouselRef} className="mx-auto max-w-sm overflow-hidden sm:max-w-md">
       <Card className="relative flex">
         <Button
           size="icon"
@@ -115,6 +123,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
 
         <CardContent className="flex aspect-auto flex-col items-center justify-center">
           <Carousel
+            opts={{ watchDrag: false, duration: 25 }}
             setApi={setMainApi}
             className={cn(isFullscreen ? "sm:max-w-[60vw]" : "max-w-xs")}
           >
@@ -124,7 +133,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
                   key={index}
                   className={cn(
                     "flex items-center justify-center pb-3",
-                    isFullscreen ? "max-h-[50vh] sm:h-[70vh]" : "",
+                    isFullscreen ? "max-h-[50vh] sm:max-h-[70vh]" : "",
                   )}
                 >
                   {/* oxlint-disable jsx-max-depth */}
@@ -140,8 +149,8 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
               className={cn(
                 buttonVariants({ variant: "outline", size: isFullscreen ? "icon-xl" : "icon-lg" }),
                 isFullscreen
-                  ? "max-sm:top-auto max-sm:left-0 max-sm:-translate-y-1 md:-left-24"
-                  : "max-sm:top-auto max-sm:left-0 max-sm:-translate-y-1",
+                  ? "max-md:top-auto max-sm:left-0 max-sm:-translate-y-1 md:-left-24"
+                  : "max-md:top-auto max-md:left-0 max-md:-translate-y-1",
               )}
             />
             <CarouselNext
@@ -150,7 +159,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
 
                 isFullscreen
                   ? "-right-24 max-sm:top-auto max-sm:right-0 max-sm:-translate-y-1"
-                  : "max-sm:top-auto max-sm:right-0 max-sm:-translate-y-1",
+                  : "max-md:top-auto max-md:right-0 max-md:-translate-y-1",
               )}
             />
           </Carousel>
@@ -168,7 +177,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
       {/* Thumbnail carousel */}
       <Carousel
         setApi={setThumbApi}
-        opts={{ dragFree: true, containScroll: "keepSnaps" }}
+        opts={{ watchDrag: false, duration: 20 }}
         className={cn(isFullscreen ? "flex-none py-6" : "flex-none py-2")}
       >
         <CarouselContent className="ml-0 gap-2">
