@@ -4,49 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { filterLabelClass, filterSelectClass } from "@/components/filters/filterStyles";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectTrigger } from "@/components/ui/Select";
+import { Spinner } from "@/components/ui/Spinner";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
+import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 import type { TaxonomyLevel } from "@/lib/utils/filters";
-
-const mockTaxonomy = {
-  family: [
-    "Apidae", // bees
-    "Formicidae", // ants
-    "Culicidae", // mosquitoes
-    "Coccinellidae", // ladybugs
-    "Carabidae", // ground beetles
-    "Pieridae", // butterflies
-    "Acrididae", // grasshoppers
-    "Gryllidae", // crickets
-  ],
-
-  genus: [
-    "Apis",
-    "Bombus",
-    "Formica",
-    "Camponotus",
-    "Anopheles",
-    "Culex",
-    "Harmonia",
-    "Carabus",
-    "Pieris",
-    "Locusta",
-    "Gryllus",
-  ],
-
-  species: [
-    "Apis mellifera",
-    "Bombus terrestris",
-    "Formica rufa",
-    "Camponotus pennsylvanicus",
-    "Anopheles gambiae",
-    "Culex pipiens",
-    "Harmonia axyridis",
-    "Carabus nemoralis",
-    "Pieris rapae",
-    "Locusta migratoria",
-    "Gryllus campestris",
-  ],
-};
 
 const TAXONOMY_TEXT: Record<
   TaxonomyLevel,
@@ -77,18 +39,36 @@ const TAXONOMY_TEXT: Record<
   },
 };
 
-function TaxaMultiSelect() {
-  const { taxonomyLevel, selectedTaxa, updateFilters } = useFilters();
+interface TaxaMultiSelectProps {
+  deploymentId: string;
+}
 
-  const currentLevel: TaxonomyLevel = taxonomyLevel ?? "family";
-  const currentSelectedTaxa = selectedTaxa ?? [];
-  const taxonomyText = TAXONOMY_TEXT[currentLevel];
+function TaxaMultiSelect({ deploymentId }: TaxaMultiSelectProps) {
+  const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa, updateFilters } =
+    useFilters();
+  const { data: _deploymentData } = useDeployment({ deployment_id: deploymentId });
+
+  const { data: foundData, isLoading: foundLoading } = useTaxaCount({
+    start_time: startDate,
+    end_time: endDate,
+    device_id: hub ? [hub] : undefined,
+    deployment_id: deploymentId,
+    min_confidence: minConfidence,
+    taxonomy_level: taxonomyLevel,
+    sort_desc: true,
+  });
+
+  const taxonomyText = TAXONOMY_TEXT[taxonomyLevel];
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const availableTaxa = useMemo(() => mockTaxonomy[taxonomyLevel] || [], [taxonomyLevel]);
+  const availableTaxaLoading = foundLoading;
+  const availableTaxa = useMemo(
+    () => foundData?.counts.map((taxaCount) => taxaCount.taxa) ?? [],
+    [foundData],
+  );
 
   const filteredTaxa = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -99,16 +79,16 @@ function TaxaMultiSelect() {
   }, [availableTaxa, search]);
 
   const toggleTaxon = (taxon: string) => {
-    const next = currentSelectedTaxa.includes(taxon)
-      ? currentSelectedTaxa.filter((t) => t !== taxon)
-      : [...currentSelectedTaxa, taxon];
+    const next = selectedTaxa.includes(taxon)
+      ? selectedTaxa.filter((t) => t !== taxon)
+      : [...selectedTaxa, taxon];
 
     updateFilters({ selectedTaxa: next });
   };
 
   useEffect(() => {
     setSearch("");
-  }, [currentLevel]);
+  }, [taxonomyLevel]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -139,11 +119,11 @@ function TaxaMultiSelect() {
             }}
           >
             <span>
-              {currentSelectedTaxa.length === 0
+              {selectedTaxa.length === 0
                 ? taxonomyText.triggerLabel
-                : currentSelectedTaxa.length === 1
-                  ? currentSelectedTaxa[0]
-                  : `${currentSelectedTaxa.length} selected`}
+                : selectedTaxa.length === 1
+                  ? selectedTaxa[0]
+                  : `${selectedTaxa.length} selected`}
             </span>
           </SelectTrigger>
         </Select>
@@ -177,13 +157,17 @@ function TaxaMultiSelect() {
             </div>
 
             <div className="max-h-64 overflow-y-auto border-t p-1">
-              {filteredTaxa.length === 0 ? (
+              {availableTaxaLoading ? (
+                <div className="flex h-61.75 items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : filteredTaxa.length === 0 ? (
                 <div className="px-3 py-2 text-sm text-muted-foreground">
                   {taxonomyText.emptyLabel}
                 </div>
               ) : (
                 filteredTaxa.map((taxon) => {
-                  const selected = currentSelectedTaxa.includes(taxon);
+                  const selected = selectedTaxa.includes(taxon);
 
                   return (
                     <button
