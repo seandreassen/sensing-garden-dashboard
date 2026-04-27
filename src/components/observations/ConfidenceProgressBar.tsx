@@ -1,13 +1,12 @@
 import { Progress } from "@/components/ui/Progress";
 import { cn } from "@/lib/utils";
-
 type ConfidenceProgressBarProps = {
   confidence: number;
 };
 
 function ConfidenceProgressBar({ confidence }: ConfidenceProgressBarProps) {
   return (
-    <div className="mx-auto mt-3 flex flex-col items-center justify-center gap-2 sm:flex-row">
+    <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
       <Progress
         className={cn(
           "border sm:basis-3/5",

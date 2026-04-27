@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import type { Observation } from "@/lib/types/api";
-
+import { cn } from "@/lib/utils";
+import { getConfidenceClass } from "@/lib/utils/confidenceColor";
 /**
  * Information card used in parent file "MoreInfoObservation.tsx"
  * @status Incomplete
@@ -21,7 +22,7 @@ function TaxonomyClassificationRowDialog({ observationData }: { observationData?
   return (
     <>
       <h1 className="mb-4 border-b py-4 text-lg">Taxonomy classification</h1>
-      <Card className="bg-confirmGreen/10 text-confirmGreen">
+      <Card className={cn(getConfidenceClass(observationData?.family_confidence))}>
         <CardContent>
           <CardHeader>
             <h3 className="mb-2 text-muted-foreground">Family result</h3>
