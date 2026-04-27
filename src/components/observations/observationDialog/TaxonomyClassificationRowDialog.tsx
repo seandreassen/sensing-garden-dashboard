@@ -22,7 +22,7 @@ function TaxonomyClassificationRowDialog({ observationData }: { observationData?
   return (
     <>
       <h1 className="mb-4 border-b py-4 text-lg">Taxonomy classification</h1>
-      <Card className={cn(getConfidenceClass(observationData?.family_confidence))}>
+      <Card className={cn("mb-4", getConfidenceClass(observationData?.family_confidence))}>
         <CardContent>
           <CardHeader>
             <h3 className="mb-2 text-muted-foreground">Family result</h3>
@@ -33,6 +33,36 @@ function TaxonomyClassificationRowDialog({ observationData }: { observationData?
           <i className="pl-4 text-muted-foreground">
             {observationData
               ? `Family confidence: ${(observationData.family_confidence * 100).toFixed(1)}%`
+              : "Not found"}
+          </i>
+        </CardContent>
+      </Card>
+      <Card className={cn("mb-4", getConfidenceClass(observationData?.genus_confidence))}>
+        <CardContent>
+          <CardHeader>
+            <h3 className="mb-2 text-muted-foreground">Genus result</h3>
+          </CardHeader>
+          <p className="mb-2 pl-4 text-lg font-semibold capitalize">
+            {observationData ? `${observationData.genus}` : "No identification result"}
+          </p>
+          <i className="pl-4 text-muted-foreground">
+            {observationData
+              ? `Family confidence: ${(observationData.genus_confidence * 100).toFixed(1)}%`
+              : "Not found"}
+          </i>
+        </CardContent>
+      </Card>
+      <Card className={cn("mb-4", getConfidenceClass(observationData?.species_confidence))}>
+        <CardContent>
+          <CardHeader>
+            <h3 className="mb-2 text-muted-foreground">Species result</h3>
+          </CardHeader>
+          <p className="mb-2 pl-4 text-lg font-semibold capitalize">
+            {observationData ? `${observationData.species}` : "No identification result"}
+          </p>
+          <i className="pl-4 text-muted-foreground">
+            {observationData
+              ? `Family confidence: ${(observationData.species_confidence * 100).toFixed(1)}%`
               : "Not found"}
           </i>
         </CardContent>
