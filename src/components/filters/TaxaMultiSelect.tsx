@@ -5,7 +5,6 @@ import { filterLabelClass, filterSelectClass } from "@/components/filters/filter
 import { Label } from "@/components/ui/Label";
 import { Select, SelectTrigger } from "@/components/ui/Select";
 import { Spinner } from "@/components/ui/Spinner";
-import { useDeployment } from "@/lib/hooks/useDeployment";
 import { useFilters } from "@/lib/hooks/useFilters";
 import { useTaxaCount } from "@/lib/hooks/useTaxaCount";
 import type { TaxonomyLevel } from "@/lib/utils/filters";
@@ -46,8 +45,6 @@ interface TaxaMultiSelectProps {
 function TaxaMultiSelect({ deploymentId }: TaxaMultiSelectProps) {
   const { startDate, endDate, hub, minConfidence, taxonomyLevel, selectedTaxa, updateFilters } =
     useFilters();
-  const { data: _deploymentData } = useDeployment({ deployment_id: deploymentId });
-
   const { data: foundData, isLoading: foundLoading } = useTaxaCount({
     start_time: startDate,
     end_time: endDate,
@@ -64,6 +61,7 @@ function TaxaMultiSelect({ deploymentId }: TaxaMultiSelectProps) {
   const [search, setSearch] = useState("");
   const rootRef = useRef<HTMLDivElement | null>(null);
 
+  // TODO: Get more accurate available taxa with useDetectableTaxa if deployment has model_id. It currently doesn't work as expected.
   const availableTaxaLoading = foundLoading;
   const availableTaxa = useMemo(
     () => foundData?.counts.map((taxaCount) => taxaCount.taxa) ?? [],
