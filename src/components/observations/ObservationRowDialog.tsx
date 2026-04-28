@@ -32,13 +32,10 @@ import { cn } from "@/lib/utils";
  * @param observationData - An {@link Observation} fetched via the `useObservations` hook
  * in the data-table's parent `observations`
  *
- * @status Incomplete — `device_id` is used as observation title in DialogTitle`, swap to "observation_id" if observation_id is available through api.
- * `EnvironmentDataPerObservation` All data is placeholder data.
- * `ImageGalleryObservation` In time of writing each observation has 1 image url, not a list of image urls. Image gallery uses 2 stock photos.
- *
- * @todo Replace `device_id` with `observation_id` in `DialogDescription`.
- * @todo Pass `observationData` to `ConfirmObservation` when database verification is connected.
- * @todo If api returns list of image url. Modify ImageGalleryObservation's props and pass in an array.
+ * @status Incomplete —
+ * @todo`device_id` is used as observation title in DialogTitle`, swap to "track_id" when implemented.
+ * @todo `When track id is implemented allow swapping between tracks from the open dialog.
+ * @todo `ImageGalleryObservation`takes in only one image. Update when track implemented.
  *
  */
 
@@ -69,13 +66,27 @@ function ObservationRowDialog({
           <ImageGalleryObservation aria-label="image-gallery" observationData={observationData} />
 
           <MetadataCardsRowDialog
-            aria-label="observation metadata"
+            aria-label="observation metadata cards"
             observationData={observationData}
           />
-
+          <h1 className="mb-4 border-b py-4 text-lg">Taxonomy classifications</h1>
           <TaxonomyClassificationRowDialog
-            aria-label="Taxonomy classification"
-            observationData={observationData}
+            aria-label="Family classification confidence"
+            taxonomyLevel="Family"
+            classificationResult={observationData?.family}
+            observationConfidence={observationData?.family_confidence}
+          />
+          <TaxonomyClassificationRowDialog
+            aria-label="Genus classification confidence"
+            taxonomyLevel="Genus"
+            classificationResult={observationData?.genus}
+            observationConfidence={observationData?.genus_confidence}
+          />
+          <TaxonomyClassificationRowDialog
+            aria-label="Species classification confidence"
+            taxonomyLevel="Species"
+            classificationResult={observationData?.species}
+            observationConfidence={observationData?.species_confidence}
           />
 
           <EnvironmentDataPerObservation

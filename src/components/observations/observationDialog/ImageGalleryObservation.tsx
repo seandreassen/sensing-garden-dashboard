@@ -180,6 +180,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
         <CarouselContent className="ml-0 gap-2">
           {images.map((image, index) => (
             <CarouselItem
+              aria-label="Select image from thumbnail carousel"
               key={index}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "none" }),
