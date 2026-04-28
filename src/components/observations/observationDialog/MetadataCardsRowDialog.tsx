@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { getConfidenceClass } from "@/lib/utils/confidenceColor";
 /**
  * A grid with 4 cards showcasing:
- *      - `device_id` as "hub ID"¨
+ *      - `device_id` as "hub ID"
  *      - `timestamp` formatted to date, hour, minute format.
  *      - `family_confidence` as AI Confidence score.
  *      - `model_id` as AI model tied to selected observation.
@@ -29,10 +29,7 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
       <h1 className="mb-4 border-b py-4 text-lg">Observation metadata</h1>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card className="flex flex-row flex-wrap gap-0">
-          <CalendarIcon
-            strokeWidth={1.5}
-            className="my-auto mr-0 ml-2 shrink-0 basis-1/8 text-primary"
-          />
+          <CalendarIcon strokeWidth={1.5} className="my-auto mr-0 ml-2 shrink-0 text-primary" />
           <CardContent className="py-auto flex-1">
             <h2 className="top-2 pb-1 text-muted-foreground">Timestamp</h2>
             <p>{timestampReadable}</p>
@@ -53,7 +50,7 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
             strokeWidth={1.5}
             className={cn(
               getConfidenceClass(observationData?.family_confidence),
-              "bg-0 my-auto mr-0 ml-2 shrink-0 basis-1/8 rounded-sm border-0",
+              "bg-0 my-auto mr-0 ml-2 shrink-0 rounded-sm border-0",
             )}
           />
           <CardContent className="flex-1">

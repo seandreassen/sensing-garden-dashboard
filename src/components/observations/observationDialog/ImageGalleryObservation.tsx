@@ -18,8 +18,6 @@ import { cn } from "@/lib/utils";
  * Image gallery for displaying photos tied to an observation.
  * Built with shadcn `Carousel`.
  *
- * @todo Replace placeholder images with actual observation images when multiple image
- * URLs are available in the {@link Observation} object.
  * @todo Pass `image_url` array instead of a single string when track_id support is added..
  */
 function ImageGalleryObservation({ observationData }: { observationData?: Observation }) {
@@ -42,7 +40,6 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
       return;
     }
     setCount(mainApi.scrollSnapList().length);
-
     mainApi.on("select", onSelect).on("reInit", onSelect);
     return () => {
       mainApi.off("select", onSelect).off("reInit", onSelect);
@@ -50,12 +47,12 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
   }, [mainApi, onSelect]);
   const goTo = useCallback(
     (index: number) => {
-      if (!mainApi || !thumbApi) {
+      if (!mainApi) {
         return;
       }
       mainApi.scrollTo(index);
     },
-    [mainApi, thumbApi],
+    [mainApi],
   );
 
   //mock data for 6 last pictures.
@@ -165,8 +162,8 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
           </Carousel>
           <div
             className={cn(
-              "top-auto text-sm text-nowrap text-muted-foreground",
-              isFullscreen ? "flex text-center sm:text-lg" : "flex",
+              "flex text-sm text-nowrap text-muted-foreground",
+              isFullscreen && "text-center sm:text-lg",
             )}
           >
             Image {current + 1} of {count}
@@ -178,7 +175,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
       <Carousel
         setApi={setThumbApi}
         opts={{ watchDrag: false, duration: 20 }}
-        className={cn(isFullscreen ? "flex-none py-6" : "flex-none py-2")}
+        className={cn(isFullscreen ? "py-6" : "flex-none py-2")}
       >
         <CarouselContent className="ml-0 gap-2">
           {images.map((image, index) => (
@@ -186,7 +183,7 @@ function ImageGalleryObservation({ observationData }: { observationData?: Observ
               key={index}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "none" }),
-                "mx-auto cursor-pointer p-1",
+                "cursor-pointer p-1",
                 isFullscreen ? "basis-1/5 sm:basis-1/8" : "basis-1/4",
               )}
               onClick={() => goTo(index)}
