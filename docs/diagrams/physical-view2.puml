@@ -1,0 +1,47 @@
+@startuml physical-view2
+title Physical view — simplified deployment diagram
+
+skinparam componentStyle rectangle
+skinparam linetype ortho
+left to right direction
+
+' ---------- Field site ----------
+rectangle "Field site" as Field #E3F2FD {
+  rectangle "Camera" as Cam
+  rectangle "Hub\n(Raspberry Pi 5 +\nHailo AI HAT)" as Hub
+  rectangle "Environmental\nsensors" as Sensors
+
+  Cam --> Hub
+  Sensors --> Hub
+}
+
+' ---------- Client ----------
+rectangle "User browser" as Browser
+
+' ---------- Google ----------
+rectangle "Google" as Google #FFF3E0 {
+  rectangle "Maps JS SDK" as Maps
+}
+
+' ---------- AWS Cloud ----------
+rectangle "AWS Cloud" as AWS #F3E5F5 {
+  rectangle "API Gateway" as APIGW
+  rectangle "Backend" as Lambda
+  rectangle "DynamoDB" as DB
+  rectangle "S3" as S3
+
+  APIGW <--> Lambda
+  Lambda <--> DB
+  Lambda <--> S3
+}
+
+' ---------- Layout hints ----------
+Field -[hidden]down- Browser
+Browser -[hidden]right- Google
+
+' ---------- Connections ----------
+Hub --> APIGW : HTTPS\n\n
+Browser <--> APIGW : \n\nHTTPS
+Browser <--> Maps : HTTPS
+
+@enduml

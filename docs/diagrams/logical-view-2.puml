@@ -1,0 +1,63 @@
+@startuml logical-view-2
+title Logical view — hardware, data and webapplication
+
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam linetype ortho
+top to bottom direction
+
+' ---------- Webapplication ----------
+package "Sensing Garden Dashboard" as Web #E8F5E9 {
+  [Landing] as Landing
+  [Filters] as Filters
+
+  package "Deployment dashboard" as Dashboard {
+    [Overview] as Overview
+    [Analytics] as Analytics
+    [Observations] as Observations
+    [Info] as Info
+    [Edit] as Edit
+
+    Overview -[hidden]- Analytics
+    Analytics -[hidden]- Observations
+    Observations -[hidden]- Info
+    Info -[hidden]- Edit
+  }
+
+  Landing -[hidden]- Dashboard
+  Dashboard -[hidden]- Filters
+}
+
+' ---------- Hardware ----------
+package "Hardware" as Hardware #E3F2FD {
+  [Hub] as Hub
+  [Camera] as Camera
+  [Environmental sensors] as Sensors
+
+  Hub o-- Camera
+  Hub o-- Sensors
+
+  Camera -[hidden]- Sensors
+}
+
+' ---------- Data ----------
+package "Data" as Data #FFF3E0 {
+  [Sensing Garden API] as API
+  [Deployment] as Deployment
+  [Observation] as Observation
+  [Environmental reading] as EnvReading
+
+  Deployment "1" o-- "1..*" Hub
+  Hub "1" --> "*" Observation
+  Hub "1" --> "*" EnvReading
+
+  API -[hidden]- Deployment
+  Deployment -[hidden]- Observation
+  Observation -[hidden]- EnvReading
+}
+
+' ---------- Cross-package relationships ----------
+Web --> API : fetches data
+Hardware --> API : pushes data
+
+@enduml

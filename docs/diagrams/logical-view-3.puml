@@ -1,0 +1,38 @@
+@startuml logical-view-3
+title Logical view — domain abstractions
+
+skinparam componentStyle rectangle
+skinparam linetype ortho
+top to bottom direction
+
+' ---------- Presentation ----------
+rectangle "Presentation" as Pres #E8F5E9 {
+  rectangle "Landing Page" as Landing
+  rectangle "Deployment dashboard\n--\nOverview\nAnalytics\nObservations\nInfo\nEdit" as Dashboard
+  rectangle "Filters\n--\ndate range\nhub\ntaxonomy\nconfidence" as Filters
+}
+
+' ---------- Domain ----------
+rectangle "Domain" as Domain #FFF3E0 {
+
+  rectangle "Deployment\n--\nid\nname\nlocation\nstart date\nend date\nflowerbed image" as Deployment
+
+  rectangle "Hub\n--\nid\nname" as Hub
+
+  rectangle "Observation\n--\nid\ntimestamp\ntaxon\nconfidence\nimage url" as Observation
+
+  rectangle "Environmental reading\n--\ntimestamp\ntemperature\nhumidity\nair quality" as EnvReading
+
+  Deployment "1" o-- "1..*" Hub
+  Hub "1" --> "*" Observation
+  Hub "1" --> "*" EnvReading
+}
+
+' ---------- Cross-package usage ----------
+Landing ..> Deployment : displays
+Dashboard ..> Deployment : displays
+Dashboard ..> Observation : displays
+Dashboard ..> EnvReading : displays
+Filters ..> Observation : narrows
+
+@enduml

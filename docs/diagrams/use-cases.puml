@@ -7,21 +7,19 @@ actor "Biologist /\nResearcher" as Biologist
 actor "Technical\nstakeholder" as Tech
 
 rectangle "Sensing Garden Dashboard" {
-  usecase "View top insect taxa\nper deployment or hub" as UC1
+  usecase "View top insect taxa\nper deployment" as UC1
   usecase "Filter observations\nby time, species, site" as UC2
-  usecase "Overlay environmental data\non insect abundance" as UC3
   usecase "Inspect observation image\nwith AI confidence" as UC4
   usecase "Download raw data\nCSV / JSON / ZIP + README" as UC5
   usecase "View deployment info\nand sensor locations on map" as UC6
   usecase "Browse past deployments" as UC7
   usecase "Create deployment\nand connect hubs" as UC8
-  usecase "Access AI Model Card\nand technical metadata" as UC9
-  usecase "Monitor hub status\nand data gaps" as UC10
+  usecase "Edit deployment" as UC9
+  usecase "Monitor hub status" as UC10
 }
 
 Biologist --> UC1
 Biologist --> UC2
-Biologist --> UC3
 Biologist --> UC4
 Biologist --> UC5
 Biologist --> UC6

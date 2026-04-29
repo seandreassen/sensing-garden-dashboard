@@ -6,7 +6,6 @@ participant "Browser /\nReact" as B
 participant "TanStack\nRouter" as R
 participant "TanStack\nQuery Cache" as Q
 participant "Sensing\nGarden API" as API
-participant "Google\nMaps" as GM
 
 
 
@@ -17,4 +16,5 @@ B -> Q : New queryKey -> refetch
 Q -> API : GET /... (new params)
 API --> Q : Updated data
 Q --> B : Re-render
+B --> U : User Sees New Results
 @enduml

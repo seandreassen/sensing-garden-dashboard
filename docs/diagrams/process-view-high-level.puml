@@ -1,0 +1,15 @@
+@startuml process-view-high-level
+title High-Level Activity Diagram
+
+skinparam activity {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+  ArrowColor #555555
+}
+
+start
+:HUB;
+:BACKEND;
+:DASHBOARD;
+stop
+@enduml

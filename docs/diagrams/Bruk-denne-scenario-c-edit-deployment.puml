@@ -1,0 +1,30 @@
+@startuml scenario-b-edit-deployment
+title Scenario C — Technical stakeholder edits a deployment (UC9)
+
+actor "Technical\nstakeholder" as T
+participant "Dashboard" as UI
+participant "API" as API
+database "Storage" as Store
+
+T -> UI : Opens a deployment
+UI -> API : Request deployment\nand connected hubs
+API -> Store : Fetch records
+Store --> API : Deployment + hubs
+API --> UI : Deployment data
+UI --> T : Pre-filled edit form
+
+T -> UI : Updates name, dates,\nimage or hubs
+T -> UI : Clicks "Save"
+
+UI -> API : Save changes
+API -> Store : Update records
+Store --> API : Confirmation
+API --> UI : Confirmation
+UI --> T : Updated deployment shown
+
+note over T
+  Changes are now visible
+  to all dashboard users
+end note
+
+@enduml

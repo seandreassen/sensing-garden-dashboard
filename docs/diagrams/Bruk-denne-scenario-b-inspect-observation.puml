@@ -1,0 +1,25 @@
+@startuml scenario-a-inspect-observation
+title Scenario B — Biologist inspects an observation (UC4)
+
+actor "Biologist" as B
+participant "Dashboard" as UI
+participant "API" as API
+database "Storage" as Store
+
+B -> UI : Opens a deployment
+UI -> API : Request observations
+API -> Store : Fetch records
+Store --> API : Observation list
+API --> UI : Observations with AI confidence
+UI --> B : Shows table of detections
+
+B -> UI : Clicks an interesting row
+UI -> Store : Request full-resolution image
+Store --> UI : Image
+UI --> B : Modal with photo, taxon\nand AI confidence score
+
+note over B
+  Biologist can now inspect the observation
+end note
+
+@enduml

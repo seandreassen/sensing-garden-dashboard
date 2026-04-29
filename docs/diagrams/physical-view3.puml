@@ -1,0 +1,37 @@
+@startuml physical-view3
+title Physical view — Deployment topology
+
+skinparam linetype ortho
+left to right direction
+
+' ---------- Field site ----------
+node "<<device>>\nHub\nRaspberry Pi 5\n+ Hailo AI HAT" as Hub #E3F2FD {
+  node "<<sensor>>\nCamera" as Cam
+  node "<<sensor>>\nEnvironmental sensors\n(T, RH, AQ)" as Sensors
+}
+
+' ---------- AWS Cloud ----------
+cloud "AWS Cloud" as AWS #F3E5F5 {
+  node "<<server>>\nAPI Gateway" as APIGW
+  node "<<server>>\nLambda backend" as Lambda
+  database "DynamoDB" as DB
+  database "S3" as S3
+}
+
+' ---------- Client ----------
+node "<<browser>>\nUser device" as Browser
+
+' ---------- Google ----------
+cloud "Google Maps Platform" as Google #FFF3E0 {
+  node "<<service>>\nMaps JS SDK" as Maps
+}
+
+Browser <--> APIGW
+Browser <--> Maps
+Hub --> APIGW
+
+APIGW <--> Lambda
+Lambda <--> DB
+Lambda <--> S3
+
+@enduml

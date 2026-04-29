@@ -1,96 +1,150 @@
 @startuml development-view
-title Development view — source code organization
+title Development view — file-level dependencies
 
 skinparam packageStyle folder
 skinparam linetype ortho
 top to bottom direction
 
-' ---------- Repo root ----------
-package "Repo root" as root {
-  [vite.config.ts\ntsconfig.*\nplaywright.config.ts\nvitest.config.ts\n.oxlintrc.json\n.oxfmtrc.json] as cfg
-  [package.json\npnpm-lock.yaml] as pkg
-}
-
 ' ---------- src/ ----------
-package "src/" as src {
+package "src/" as src #ffffff {
 
-  package "Entry & config" as entry {
+  package "Entry & config" as entry #E3F2FD {
     [main.tsx] as main
     [env.ts] as env
-    [routeTree.gen.ts\n(auto-generated)] as tree
-    [index.css] as css
-    [assets/] as assets
+    [routeTree.gen.ts] as tree
+    [index.css · assets/] as misc
+
+    main -[hidden]- env
+    env -[hidden]- tree
+    tree -[hidden]- misc
   }
 
-  package "routes/" as routes {
-    [__root.tsx] as rroot
-    [index.tsx\n(landing)] as rindex
-    package "deployment/$deploymentId/" as rdep {
-      [_filterLayout.tsx] as rlayout
-      [overview.tsx · analytics.tsx\nobservations.tsx · info.tsx\nedit.tsx · index.tsx] as rtabs
-      [$.tsx\n(catch-all)] as rcatch
-    }
+  package "routes/" as routes #F3E5F5 {
+    [__root.tsx] as rRoot
+    [index.tsx\n(landing)] as rLanding
+    [_filterLayout.tsx] as rLayout
+    [overview.tsx] as rOverview
+    [analytics.tsx] as rAnalytics
+    [observations.tsx] as rObservations
+    [info.tsx] as rInfo
+    [edit.tsx] as rEdit
+
+    rRoot -[hidden]- rLanding
+    rLanding -[hidden]- rLayout
+    rLayout -[hidden]- rOverview
+    rOverview -[hidden]- rAnalytics
+    rAnalytics -[hidden]- rObservations
+    rObservations -[hidden]- rInfo
+    rInfo -[hidden]- rEdit
   }
 
-  package "components/" as comps {
+  package "components/" as comps #E8F5E9 {
+    [ui/\nshadcn / Base UI] as cUi
+    [landingPage/] as cLanding
+    [deploymentLayout/] as cLayout
+    [overview/] as cOverview
+    [analytics/] as cAnalytics
+    [observations/] as cObservations
+    [info/] as cInfo
+    [map/] as cMap
+    [deploymentEditor/] as cEditor
+    [filters/] as cFilters
+    [Shared\nRootHeader · ExportData · NotFound] as cShared
 
-    package "ui/ (shadcn / Base UI)" as uikit {
-      [Button · Card · Dialog\nTable · Popover · Select\nSlider · Tooltip · ...] as uiPrims
-    }
-
-    package "Feature folders" as feats {
-      [landingPage/\nDeploymentGrid, HeroCarousel] as fLanding
-      [deploymentLayout/\nHeader, Tabs, FiltersRow] as fLayout
-      [overview/\nTotalInsectCount, SpeciesRichness,\nTopTaxa, Observations] as fOverview
-      [analytics/\nActivityHeatmap, AirPollution,\nAirQualityIndices, TaxaTreemap,\nEnvironmentalConditions] as fAnalytics
-      [observations/\nDataTable, Columns,\nObservationRowDialog,\nobservationDialog/] as fObs
-      [info/\nDeploymentInfo, Devices] as fInfo
-      [map/\nGoogleMaps, MapWithDrop,\nGoogleMapsCard, PinIcon] as fMap
-      [deploymentEditor/\nEdit cards] as fEditor
-      [filters/\nDateRange, Hub,\nTaxonomy, Confidence] as fFilters
-      [deployments/] as fDeployments
-    }
-
-    package "Shared (top-level)" as shared {
-      [RootHeader.tsx] as sHeader
-      [ExportData.tsx] as sExport
-      [NotFound.tsx] as sNotFound
-    }
+    cUi -[hidden]- cLanding
+    cLanding -[hidden]- cLayout
+    cLayout -[hidden]- cOverview
+    cOverview -[hidden]- cAnalytics
+    cAnalytics -[hidden]- cObservations
+    cObservations -[hidden]- cInfo
+    cInfo -[hidden]- cMap
+    cMap -[hidden]- cEditor
+    cEditor -[hidden]- cFilters
+    cFilters -[hidden]- cShared
   }
 
-  package "lib/" as lib {
-    [hooks/\nuseDeployments, useDeployment,\nuseObservations, useObservationsTimeSeries,\nuseEnvironment, useEnvironmentTimeSeries,\nuseTaxaCount, useObservationCount,\nuseFilters, useDeploymentMutations,\nuseDeviceMutations, useScrollDirection] as hooks
-    [utils/\nfilters, queryParameters, heatmap,\ntimeSeries, location, headers, index] as utils
-    [types/\napi.ts] as types
+  package "lib/" as lib #FFF3E0 {
+    [hooks/] as hooks
+    [utils/] as utils
+    [types/api.ts] as types
+
+    hooks -[hidden]- utils
+    utils -[hidden]- types
   }
+
+  entry -[hidden]- routes
+  routes -[hidden]- comps
+  comps -[hidden]- lib
 }
 
-' ---------- tests/ ----------
-package "tests/" as tests {
-  [unit/\n(vitest — utils)] as tUnit
-  [component/\n(vitest-browser-react)] as tComp
-  [e2e/\n(playwright)] as tE2E
-  [render.tsx\n(test helper)] as tRender
-}
+' ' ---------- tests/ ----------
+' package "tests/" as tests #FCE4EC {
+'   [unit/] as tUnit
+'   [component/] as tComp
+'   [e2e/] as tE2E
 
-' ---------- Dependencies ----------
-main --> env
+'   tUnit -[hidden]- tComp
+'   tComp -[hidden]- tE2E
+' }
+
+' ---------- Entry ----------
 main --> tree
-tree --> routes
+main --> env
+tree --> rRoot
 
-routes --> feats
-routes --> shared
-routes --> hooks
+' ---------- Route -> Component dependencies ----------
+rRoot --> cShared
+rLanding --> cLanding
+rLanding --> cShared
+rLanding --> cUi
+rLayout --> cLayout
+rLayout --> cShared
+rOverview --> cOverview
+rAnalytics --> cAnalytics
+rObservations --> cObservations
+rInfo --> cInfo
+rInfo --> cMap
+rEdit --> cEditor
+rEdit --> cMap
 
-feats --> uikit
-feats --> hooks
-feats --> utils
-shared --> uikit
+' Filter row used inside the deployment layout
+cLayout --> cFilters
 
+' ---------- Route -> hooks ----------
+rLanding --> hooks
+rLayout --> hooks
+rOverview --> hooks
+rAnalytics --> hooks
+rObservations --> hooks
+rEdit --> hooks
+
+' ---------- Component -> ui / hooks / utils ----------
+cLanding --> cUi
+cLayout --> cUi
+cOverview --> cUi
+cAnalytics --> cUi
+cObservations --> cUi
+cInfo --> cUi
+cEditor --> cUi
+cFilters --> cUi
+cMap --> cUi
+
+cOverview --> hooks
+cAnalytics --> hooks
+cObservations --> hooks
+cInfo --> hooks
+cEditor --> hooks
+cFilters --> hooks
+
+cAnalytics --> utils
+cObservations --> utils
+cFilters --> utils
+cMap --> utils
+
+' ---------- lib internals ----------
 hooks --> utils
 hooks --> types
 hooks --> env
 
-tests ..> src : exercises
 
 @enduml

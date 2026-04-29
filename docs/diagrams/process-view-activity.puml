@@ -1,0 +1,46 @@
+@startuml process-view-activity
+title Process view — abstract activity flow
+
+skinparam activity {
+  BackgroundColor #E8F5E9
+  BorderColor #2E7D32
+  DiamondBackgroundColor #FFF3E0
+  DiamondBorderColor #EF6C00
+  ArrowColor #555555
+}
+
+start
+
+:User action
+(open page, navigate,
+change filter);
+
+:Resolve route and filters
+from URL state;
+
+if (data already in cache?) then (yes)
+  :Read from cache;
+else (no)
+  fork
+    :Fetch data from
+    Sensing Garden API;
+  fork again
+    if (page uses a map?) then (yes)
+      :Load Google Maps
+      and hub locations;
+    endif
+  end fork
+  :Store response in cache;
+endif
+
+:Render UI
+(cards, charts, tables, map);
+
+if (further user action?) then (yes)
+  :Update URL state;
+  detach
+else (no)
+  stop
+endif
+
+@enduml
