@@ -36,10 +36,7 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
           </CardContent>
         </Card>
         <Card className="flex flex-row flex-wrap gap-0">
-          <RadioIcon
-            strokeWidth={1.5}
-            className="my-auto mr-0 ml-2 shrink-0 basis-1/8 text-primary"
-          />
+          <RadioIcon strokeWidth={1.5} className="my-auto mr-0 ml-2 shrink-0 text-primary" />
           <CardContent className="flex-1 justify-center">
             <h2 className="pb-1 text-muted-foreground">Hub ID</h2>
             <p className="text-wrap">{observationData?.device_id ?? "Not found"}</p>
@@ -65,7 +62,7 @@ function MetadataCardsRowDialog({ observationData }: { observationData?: Observa
         <Card className="flex flex-row flex-wrap gap-0">
           <CpuIcon
             strokeWidth={1.5}
-            className="my-auto mr-0 ml-2 shrink-0 basis-1/8 border-ring text-primary"
+            className="my-auto mr-0 ml-2 shrink-0 border-ring text-primary"
           />
           <CardContent className="flex-1 justify-center">
             <h2 className="pb-1 text-muted-foreground">Ai Model</h2>
