@@ -174,7 +174,7 @@ function MapWithDrop({
               >
                 {markerLabels?.[i] && (
                   <div className="flex flex-col items-center">
-                    <div className="rounded bg-white px-1.5 py-0.5 text-xs font-medium shadow">
+                    <div className="rounded bg-white px-1.5 py-0.5 text-xs font-medium text-black shadow">
                       {markerLabels[i]}
                     </div>
                     <PinIcon />
