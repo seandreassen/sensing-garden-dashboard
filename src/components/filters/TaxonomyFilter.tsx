@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import type { TaxonomyLevel } from "@/lib/filters";
 import { useFilters } from "@/lib/hooks/useFilters";
+import type { TaxonomyLevel } from "@/lib/utils/filters";
 
 const levels: { value: TaxonomyLevel; label: string }[] = [
   { value: "family", label: "Family" },
@@ -29,7 +29,11 @@ function TaxonomyFilter() {
       </Label>
       <Select
         value={taxonomyLevel}
-        onValueChange={(value) => updateFilters({ taxonomyLevel: value ?? undefined })}
+        onValueChange={(value) => {
+          if (value !== taxonomyLevel) {
+            updateFilters({ taxonomyLevel: value ?? undefined, selectedTaxa: [] });
+          }
+        }}
       >
         <SelectTrigger id="filter-taxonomy-level" className={filterSelectClass}>
           <SelectValue placeholder="Select Taxonomy Level">

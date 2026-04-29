@@ -1,7 +1,8 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { env } from "@/env";
+import { useDeployment } from "@/lib/hooks/useDeployment";
 import type { Location } from "@/lib/types/api";
 
 import { MapWithDrop } from "./MapWithDrop";
@@ -22,13 +23,20 @@ function handleDragStart(e: React.DragEvent<HTMLSpanElement>) {
 }
 
 interface GoogleMapsProps {
-  initialLocations?: Location[];
-  center?: Location;
+  deploymentId: string;
   allowDragAndDrop?: boolean;
 }
 
-function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }: GoogleMapsProps) {
-  const [locations, setLocations] = useState<Location[]>(initialLocations);
+function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps) {
+  const { data, isLoading } = useDeployment({ deployment_id: deploymentId });
+
+  const [locations, setLocations] = useState<Location[]>([]);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    setLocations(data.devices.map((device) => device.location).filter((location) => !!location));
+  }, [data]);
 
   return (
     <>
@@ -45,13 +53,16 @@ function GoogleMaps({ initialLocations = [], center, allowDragAndDrop = false }:
           <span className="text-sm text-gray-500">Drag the pin onto the map to place it</span>
         </div>
       )}
-      <div className="flex h-125 items-center justify-center">
-        {env.VITE_GOOGLE_MAPS_API_KEY ? (
+      <div className="flex h-full items-center justify-center">
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading map...</p>
+        ) : env.VITE_GOOGLE_MAPS_API_KEY ? (
           <APIProvider apiKey={env.VITE_GOOGLE_MAPS_API_KEY}>
             <MapWithDrop
               locations={locations}
               setLocations={setLocations}
-              center={center}
+              markerLabels={data?.devices.map((device) => device.name ?? device.device_id)}
+              center={data?.deployment.location}
               allowDragAndDrop={allowDragAndDrop}
             />
           </APIProvider>
