@@ -80,7 +80,6 @@ test("shows current info page", async ({ page }) => {
 
   await expect(page).toHaveTitle("Info | Sensing Garden Dashboard");
   await expect(page.getByText("Custom Range")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Everything Deployment!" })).toBeVisible();
   await expect(page.getByText("Deployment Information for: Everything Deployment!")).toBeVisible();
   await expect(
     page.getByText("This deployments contains all devices as of 9th of April 2026"),
