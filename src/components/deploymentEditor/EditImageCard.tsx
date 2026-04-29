@@ -2,7 +2,7 @@ import { PencilIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 function EditImageCard({
   initialUrl = "",
   onChange,
@@ -59,7 +59,9 @@ function EditImageCard({
 
   return (
     <Card className="flex-1">
-      <CardTitle className={`px-4 text-center ${isDirty ? "text-primary" : ""}`}>Image</CardTitle>
+      <CardHeader>
+        <CardTitle className={`${isDirty ? "text-primary" : ""}`}>Image</CardTitle>
+      </CardHeader>
       <div className="flex flex-1 flex-col gap-3 px-4">
         <button
           type="button"

@@ -2,7 +2,7 @@ import { PencilIcon } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
@@ -55,7 +55,9 @@ function EditNameCard({
 
   return (
     <Card>
-      <CardTitle className={`text-left ${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
+      <CardHeader>
+        <CardTitle className={`${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
+      </CardHeader>
       <div className="flex h-10 items-center px-3">{inputField}</div>
     </Card>
   );

@@ -2,7 +2,7 @@ import { PencilIcon, CheckIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 import { Textarea } from "@/components/ui/Textarea";
 import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
@@ -50,7 +50,11 @@ function EditDescriptionCard({
   return (
     <Card className="flex-1">
       <div className="relative flex items-center justify-start">
-        <CardTitle className={`text-left ${isDirty ? "text-primary" : ""}`}>Description</CardTitle>
+        <CardHeader>
+          <CardTitle className={`text-left ${isDirty ? "text-primary" : ""}`}>
+            Description
+          </CardTitle>
+        </CardHeader>
         {isEditing && (
           <Button
             className="absolute right-0 mx-2 text-primary"
