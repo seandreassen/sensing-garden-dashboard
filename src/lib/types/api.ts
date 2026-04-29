@@ -267,6 +267,19 @@ interface GetHeartbeatsParameters {
   device_id?: string;
 }
 
+interface DetectableTaxaResponse {
+  model_id: string;
+  source?: string;
+  labels?: {
+    class_index: number;
+    name: string;
+  }[];
+}
+
+interface GetDetectableTaxaParameters {
+  model_id?: string;
+}
+
 export type {
   Location,
   Environment,
@@ -301,4 +314,6 @@ export type {
   GetObservationCountParameters,
   HeartbeatsResponse,
   GetHeartbeatsParameters,
+  DetectableTaxaResponse,
+  GetDetectableTaxaParameters,
 };
