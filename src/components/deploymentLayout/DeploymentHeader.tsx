@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeftIcon, PlusIcon } from "lucide-react";
 
+import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSelector";
 import { Logo } from "@/components/landingPage/Logo";
 import { Button } from "@/components/ui/Button";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -44,12 +45,15 @@ function Header() {
 
         <Separator orientation="vertical" />
 
-        <Link to="/" className={cn(buttonVariants({ variant: "nav", size: "none" }), "gap-1.5")}>
-          <ArrowLeftIcon className="size-4" />
-          Deployment overview
-        </Link>
+        <div className="flex items-center gap-10">
+          <Link to="/" className={cn(buttonVariants({ variant: "nav", size: "none" }), "gap-1.5")}>
+            <ArrowLeftIcon className="size-4" />
+            Deployment overview
+          </Link>
+          <DeploymentSelector />
+        </div>
 
-        <div className="ml-auto flex items-center">
+        <div className="ml-auto">
           <Button
             onClick={handleCreate}
             disabled={createDeployment.isPending}

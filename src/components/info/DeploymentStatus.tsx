@@ -1,4 +1,4 @@
-import { Badge } from "@/components/landingPage/Badge";
+import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
 
 interface DeploymentStatusProps {

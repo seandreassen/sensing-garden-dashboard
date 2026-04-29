@@ -1,13 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { MapPinIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/Badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import type { Deployment } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
-
-import { Badge } from "./Badge";
 
 interface DeploymentCardProps {
   deployment: Deployment;

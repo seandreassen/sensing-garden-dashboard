@@ -1,3 +1,5 @@
+// oxlint-disable eslint/max-lines -- All API types, hard to read yes but better than all separate files still maybe
+
 interface Location {
   lat: number;
   long: number;
@@ -242,6 +244,29 @@ interface GetObservationCountParameters {
   selected_taxa?: string[];
 }
 
+interface Heartbeat {
+  uptime_seconds: number;
+  storage_total_bytes: number;
+  storage_free_bytes: number;
+  cpu_temperature_celsius: number;
+  device_id: string;
+  dot_status: {
+    last_modified: Date;
+    dot_id: string;
+  }[];
+  timestamp: Date;
+}
+
+interface HeartbeatsResponse {
+  items: Heartbeat[];
+  count: number;
+}
+
+interface GetHeartbeatsParameters {
+  start_time?: string;
+  device_id?: string;
+}
+
 interface DetectableTaxaResponse {
   model_id: string;
   source?: string;
@@ -287,6 +312,8 @@ export type {
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
+  HeartbeatsResponse,
+  GetHeartbeatsParameters,
   DetectableTaxaResponse,
   GetDetectableTaxaParameters,
 };
