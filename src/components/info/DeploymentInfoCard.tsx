@@ -1,3 +1,4 @@
+import { DeploymentStatus } from "@/components/info/DeploymentStatus";
 import { Description } from "@/components/info/Description";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { useDeployment } from "@/lib/hooks/useDeployment";
@@ -22,12 +23,16 @@ function DeploymentInfoCard() {
     );
   }
 
+  const startTime = data?.deployment.start_time;
+  const endTime = data?.deployment.end_time;
+
   return (
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-lg">
           Deployment Information for: {data?.deployment.name}
         </CardTitle>
+        {startTime && <DeploymentStatus startTime={startTime} endTime={endTime} />}
       </CardHeader>
       <CardContent>
         <Description

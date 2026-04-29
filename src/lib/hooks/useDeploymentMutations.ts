@@ -69,11 +69,18 @@ function useDeleteDeployment() {
   });
 }
 
-// --- Combined save hook for the edit page ---
-
+async function pushFetch(url: string, options: RequestInit, label?: string) {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const message =
+      body?.message ?? body?.error ?? `${label ?? options.method} failed: ${res.status}`;
+    throw new Error(message);
+  }
+  return res;
+}
 function useDeploymentMutations(deploymentId: string) {
   const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async ({
       name,
@@ -105,11 +112,15 @@ function useDeploymentMutations(deploymentId: string) {
 
       if (Object.keys(deploymentPatch).length > 0) {
         mutationRequests.push(
-          fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}`, {
-            method: "PATCH",
-            headers: JSON_HEADERS,
-            body: JSON.stringify(deploymentPatch),
-          }),
+          pushFetch(
+            `${env.VITE_API_BASE_URL}/deployments/${deploymentId}`,
+            {
+              method: "PATCH",
+              headers: JSON_HEADERS,
+              body: JSON.stringify(deploymentPatch),
+            },
+            "Update deployment",
+          ),
         );
       }
 
@@ -119,15 +130,19 @@ function useDeploymentMutations(deploymentId: string) {
       for (const device of devices) {
         if (!initialIds.has(device.device_id)) {
           mutationRequests.push(
-            fetch(`${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`, {
-              method: "POST",
-              headers: JSON_HEADERS,
-              body: JSON.stringify({
-                device_id: device.device_id,
-                name: device.name,
-                location: device.location,
-              }),
-            }),
+            pushFetch(
+              `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices`,
+              {
+                method: "POST",
+                headers: JSON_HEADERS,
+                body: JSON.stringify({
+                  device_id: device.device_id,
+                  name: device.name,
+                  location: device.location,
+                }),
+              },
+              "Add devices",
+            ),
           );
         } else {
           const initial = initialDevices.find((d) => d.device_id === device.device_id);
@@ -137,13 +152,14 @@ function useDeploymentMutations(deploymentId: string) {
               JSON.stringify(device.location) !== JSON.stringify(initial.location))
           ) {
             mutationRequests.push(
-              fetch(
+              pushFetch(
                 `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${device.device_id}`,
                 {
                   method: "PATCH",
                   headers: JSON_HEADERS,
                   body: JSON.stringify({ name: device.name, location: device.location }),
                 },
+                "Update devices",
               ),
             );
           }
@@ -153,12 +169,13 @@ function useDeploymentMutations(deploymentId: string) {
       for (const initial of initialDevices) {
         if (!currentIds.has(initial.device_id)) {
           mutationRequests.push(
-            fetch(
+            pushFetch(
               `${env.VITE_API_BASE_URL}/deployments/${deploymentId}/devices/${initial.device_id}`,
               {
                 method: "DELETE",
                 headers: getHeaders(),
               },
+              "Remove devices",
             ),
           );
         }
