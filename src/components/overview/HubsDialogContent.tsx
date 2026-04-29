@@ -26,7 +26,7 @@ function HubsDialogContent({ deploymentId }: HubsDialogContentProps) {
       <DialogHeader className="flex flex-row items-center gap-3">
         <RadioIcon className="size-6 text-primary" />
         <div className="flex flex-col gap-1">
-          <DialogTitle className="font-bold">Active Hubs</DialogTitle>
+          <DialogTitle className="font-bold">Hubs</DialogTitle>
           <DialogDescription>Network status for devices</DialogDescription>
         </div>
       </DialogHeader>

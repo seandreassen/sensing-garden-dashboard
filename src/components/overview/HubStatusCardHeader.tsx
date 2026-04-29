@@ -13,7 +13,7 @@ interface HubStatusCardHeaderProps {
 function HubStatusCardHeader({ hub, active }: HubStatusCardHeaderProps) {
   return (
     <CardHeader>
-      <div className="flex items-center justify-between">
+      <div className="flex min-w-0 items-center justify-between">
         <div className="flex gap-3">
           <Badge
             className={cn(
@@ -26,7 +26,9 @@ function HubStatusCardHeader({ hub, active }: HubStatusCardHeaderProps) {
             <RadioIcon className="size-5" />
           </Badge>
           <div className="flex flex-col gap-2">
-            <CardTitle className="text-sm">Hub: {hub.name ?? hub.device_id}</CardTitle>
+            <CardTitle className="w-32 truncate text-sm">
+              Hub: {hub.name ?? hub.device_id}
+            </CardTitle>
             <Badge
               className={cn(
                 "flex w-fit items-center gap-2 px-2 py-1",
@@ -42,9 +44,9 @@ function HubStatusCardHeader({ hub, active }: HubStatusCardHeaderProps) {
             </Badge>
           </div>
         </div>
-        <div className="flex flex-col text-right">
+        <div className="flex min-w-0 flex-col text-right">
           <span className="text-muted-foreground">ID</span>
-          <span>{hub.device_id}</span>
+          <span className="truncate">{hub.device_id}</span>
         </div>
       </div>
     </CardHeader>

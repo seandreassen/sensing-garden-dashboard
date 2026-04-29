@@ -26,7 +26,7 @@ function HubsCard({ deploymentId }: HubsCardProps) {
             <RadioIcon className="size-5 text-primary" />
             <ChevronRightIcon id="highlight-on-select" className="size-5 text-muted-foreground" />
           </div>
-          <CardTitle className="text-sm text-muted-foreground uppercase">Active hubs</CardTitle>
+          <CardTitle className="text-sm text-muted-foreground uppercase">Hubs</CardTitle>
         </CardHeader>
         <CardContent className="h-full">
           <HubsCount deploymentId={deploymentId} />

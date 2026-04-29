@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { ChevronDownIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -8,34 +9,28 @@ import {
 } from "@/components/ui/Dropdown";
 import { useDeployments } from "@/lib/hooks/useDeployments";
 import { cn } from "@/lib/utils";
+import { Route } from "@/routes/deployment/$deploymentId/_filterLayout";
 
-interface DeploymentSelectorProps {
-  deploymentId: string;
-}
-
-function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
+function DeploymentSelector() {
+  const { deploymentId } = Route.useParams();
   const { data: deployments } = useDeployments();
   const navigate = useNavigate();
 
   const activeDeployments =
-    deployments?.filter((deployment) => !deployment.end_time || deployment.end_time > new Date()) ??
-    [];
+    deployments?.filter((d) => !d.end_time || d.end_time > new Date()) ?? [];
 
   const currentDeployment = activeDeployments.find((d) => d.deployment_id === deploymentId);
 
   return (
-    <nav className="flex items-center border-b bg-background px-6 py-3">
-      <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:bg-primary/20">
-          <span>{currentDeployment?.name ?? "Select deployment"}</span>
-
-          <span className="text-xs opacity-70">▼</span>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent className="w-64 p-1">
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1 text-sm text-primary hover:bg-primary/20">
+        <span>{currentDeployment?.name ?? "Select deployment"}</span>
+        <ChevronDownIcon className="size-3.5 opacity-70" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-64 p-2">
+        <nav>
           {activeDeployments.map((deployment) => {
             const isActive = deployment.deployment_id === deploymentId;
-
             return (
               <DropdownMenuItem key={deployment.deployment_id}>
                 <button
@@ -46,7 +41,7 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
                     })
                   }
                   className={cn(
-                    "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
+                    "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-left text-sm transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted",
@@ -58,9 +53,9 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
               </DropdownMenuItem>
             );
           })}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </nav>
+        </nav>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

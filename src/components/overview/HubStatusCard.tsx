@@ -34,7 +34,7 @@ function HubStatusCard({ deploymentId, hub }: HubStatusCardProps) {
   });
 
   return (
-    <Card className="h-40">
+    <Card className="">
       <HubStatusCardHeader
         hub={hub}
         active={
@@ -54,7 +54,7 @@ function HubStatusCard({ deploymentId, hub }: HubStatusCardProps) {
               <span>
                 {data?.items[0]?.timestamp
                   ? `${formatDistanceToNow(data.items[0].timestamp)} ago`
-                  : "—"}
+                  : "-"}
               </span>
             </div>
             <div className="flex justify-between">
