@@ -242,6 +242,19 @@ interface GetObservationCountParameters {
   selected_taxa?: string[];
 }
 
+interface DetectableTaxaResponse {
+  model_id: string;
+  source?: string;
+  labels?: {
+    class_index: number;
+    name: string;
+  }[];
+}
+
+interface GetDetectableTaxaParameters {
+  model_id?: string;
+}
+
 export type {
   Location,
   Environment,
@@ -274,4 +287,6 @@ export type {
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
+  DetectableTaxaResponse,
+  GetDetectableTaxaParameters,
 };

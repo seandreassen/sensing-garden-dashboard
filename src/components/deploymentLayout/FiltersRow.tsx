@@ -14,7 +14,7 @@ function FiltersRow({ deploymentId }: FiltersRowProps) {
       <DateRangeFilter />
       <HubFilter deploymentId={deploymentId} />
       <TaxonomyFilter />
-      <TaxaMultiSelect />
+      <TaxaMultiSelect deploymentId={deploymentId} />
       <ConfidenceFilter />
     </div>
   );
