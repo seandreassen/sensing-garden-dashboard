@@ -45,13 +45,15 @@ function Header() {
 
         <Separator orientation="vertical" />
 
-        <Link to="/" className={cn(buttonVariants({ variant: "nav", size: "none" }), "gap-1.5")}>
-          <ArrowLeftIcon className="size-4" />
-          Deployment overview
-        </Link>
-
-        <div className="ml-auto flex items-center gap-6">
+        <div className="flex items-center gap-10">
+          <Link to="/" className={cn(buttonVariants({ variant: "nav", size: "none" }), "gap-1.5")}>
+            <ArrowLeftIcon className="size-4" />
+            Deployment overview
+          </Link>
           <DeploymentSelector />
+        </div>
+
+        <div className="ml-auto">
           <Button
             onClick={handleCreate}
             disabled={createDeployment.isPending}

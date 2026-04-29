@@ -23,7 +23,7 @@ function DeploymentSelector() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1 text-sm text-primary hover:bg-primary/20">
+      <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md border bg-primary/10 px-2.5 py-1.25 text-sm text-primary hover:bg-primary/20">
         <span>{currentDeployment?.name ?? "Select deployment"}</span>
         <ChevronDownIcon className="size-3.5 opacity-70" />
       </DropdownMenuTrigger>
