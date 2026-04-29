@@ -109,6 +109,7 @@ function AirQualityIndicesChart<T extends TimeSeriesDataKey>({
             fontSize: "13px",
           }}
           labelFormatter={(label) => new Date(label).toLocaleString()}
+          formatter={(value) => (typeof value === "number" ? value.toFixed(2) : value)}
         />
         <Legend wrapperStyle={{ fontSize: "13px" }} iconType="line" />
         {activeMetrics.map((metric) => (
