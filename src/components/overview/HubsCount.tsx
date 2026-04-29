@@ -1,11 +1,11 @@
 import { Spinner } from "@/components/ui/Spinner";
 import { useDeployment } from "@/lib/hooks/useDeployment";
 
-interface TotalInsectCountProps {
+interface HubsCountProps {
   deploymentId: string;
 }
 
-function HubsCount({ deploymentId }: TotalInsectCountProps) {
+function HubsCount({ deploymentId }: HubsCountProps) {
   const { data, isError, isLoading, error } = useDeployment({
     deployment_id: deploymentId,
   });

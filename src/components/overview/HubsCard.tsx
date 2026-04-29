@@ -1,9 +1,10 @@
 import { ChevronRightIcon, RadioIcon } from "lucide-react";
 
 import { HubsCount } from "@/components/overview/HubsCount";
+import { HubsDialogContent } from "@/components/overview/HubsDialogContent";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/Dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/Dialog";
 import { cn } from "@/lib/utils";
 
 interface HubsCardProps {
@@ -31,7 +32,7 @@ function HubsCard({ deploymentId }: HubsCardProps) {
           <HubsCount deploymentId={deploymentId} />
         </CardContent>
       </Card>
-      <DialogContent />
+      <HubsDialogContent deploymentId={deploymentId} />
     </Dialog>
   );
 }
