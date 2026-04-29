@@ -26,9 +26,7 @@ function DeploymentSelector({ deploymentId }: DeploymentSelectorProps) {
   return (
     <nav className="flex items-center border-b bg-background px-6 py-3">
       <DropdownMenu>
-        <DropdownMenuTrigger
-          className="flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:bg-primary/20"
-        >
+        <DropdownMenuTrigger className="flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:bg-primary/20">
           <span>{currentDeployment?.name ?? "Select deployment"}</span>
 
           <span className="text-xs opacity-70">▼</span>
