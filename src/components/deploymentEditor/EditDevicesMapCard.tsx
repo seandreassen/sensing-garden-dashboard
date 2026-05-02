@@ -7,7 +7,7 @@ import { NewDeviceRow } from "@/components/deploymentEditor/NewDeviceRow";
 import { MapWithDrop } from "@/components/map/MapWithDrop";
 import { PinIcon } from "@/components/map/PinIcon";
 import { Button } from "@/components/ui/Button";
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { env } from "@/env";
 import type { Location, DeploymentDevice, Device } from "@/lib/types/api";
 
@@ -76,12 +76,20 @@ function EditDevicesMapCard({
 
   return (
     <Card className="flex-1">
-      <div className="flex items-center justify-between px-4">
-        <CardTitle className={isDirty ? "text-primary" : ""}>Devices</CardTitle>
-        <Button variant="outline" size="icon" onClick={() => setAdding(true)}>
-          <PlusIcon className="h-4 w-4" />
-        </Button>
-      </div>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className={isDirty ? "text-primary" : ""}>Devices</CardTitle>
+            <p className="opacity-50">
+              Drag the pin from the device list to the map to place the device
+            </p>
+          </div>
+
+          <Button variant="outline" size="icon" onClick={() => setAdding(true)}>
+            <PlusIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardHeader>
       <div className="flex flex-col gap-2 px-4 pb-4">
         <div className="flex h-48 flex-col gap-2 overflow-y-auto">
           {adding && (
