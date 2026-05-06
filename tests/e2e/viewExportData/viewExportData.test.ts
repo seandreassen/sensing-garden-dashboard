@@ -172,7 +172,7 @@ test("exports filtered observation data as json", async ({ page }) => {
   const fileContents = await readFile(downloadPath, "utf8");
   const parsed = JSON.parse(fileContents);
 
-  expect(fileContents).toMatchSnapshot("exported-observations.json");
+  expect(fileContents.split("\r\n").join("\n")).toMatchSnapshot("exported-observations.json");
 
   expect(parsed).toEqual([
     {
