@@ -36,7 +36,7 @@ function ExportData({ deploymentId }: ExportDataProps) {
     min_confidence: minConfidence,
     taxonomy_level: taxonomyLevel,
     selected_taxa: selectedTaxa,
-    limit: 10,
+    limit: 1000,
   });
 
   const [downloadCSV, setDownloadCSV] = useState(true);

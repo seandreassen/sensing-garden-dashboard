@@ -2,12 +2,9 @@ import { createFileRoute, Outlet, stripSearchParams } from "@tanstack/react-rout
 import { zodValidator } from "@tanstack/zod-adapter";
 
 import { Header } from "@/components/deploymentLayout/DeploymentHeader";
-import { DeploymentSelector } from "@/components/deploymentLayout/DeploymentSelector";
 import { FiltersRow } from "@/components/deploymentLayout/FiltersRow";
 import { TabSelector } from "@/components/deploymentLayout/TabSelector";
 import { Separator } from "@/components/ui/Separator";
-import { useScrollDirection } from "@/lib/hooks/useScrollDirection";
-import { cn } from "@/lib/utils";
 import { filtersDefault, filtersSchema } from "@/lib/utils/filters";
 
 export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout")({
@@ -18,31 +15,13 @@ export const Route = createFileRoute("/deployment/$deploymentId/_filterLayout")(
   component: LayoutComponent,
 });
 
-function CollapsibleNav({ deploymentId }: { deploymentId: string }) {
-  return (
-    <div className="overflow-hidden">
-      <DeploymentSelector deploymentId={deploymentId} />
-    </div>
-  );
-}
-
 function LayoutComponent() {
   const { deploymentId } = Route.useParams();
-  const { scrolled } = useScrollDirection();
 
   return (
     <>
       <Header />
       <div className="sticky top-14 z-50 flex flex-col bg-card backdrop-blur-lg">
-        <div
-          className={cn(
-            "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",
-            scrolled ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100",
-          )}
-        >
-          <CollapsibleNav deploymentId={deploymentId} />
-        </div>
-
         <Separator />
         <FiltersRow deploymentId={deploymentId} />
         <Separator />

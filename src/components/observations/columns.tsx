@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDownIcon, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 
-import { ConfidenceProgressBar } from "@/components/observations/ConfidenceProgessBar";
+import { ConfidenceProgressBar } from "@/components/observations/ConfidenceProgressBar";
 import { Button } from "@/components/ui/Button";
 import type { Observation } from "@/lib/types/api";
 import { cn } from "@/lib/utils";

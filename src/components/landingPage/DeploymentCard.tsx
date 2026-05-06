@@ -1,20 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { MapPinIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/Badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Separator } from "@/components/ui/Separator";
 import type { Deployment } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 
-import { Badge } from "./Badge";
-
 interface DeploymentCardProps {
   deployment: Deployment;
 }
 
 function DeploymentCard({ deployment }: DeploymentCardProps) {
-  const { name, deployment_id, start_time, end_time, location_name } = deployment;
+  const { name, deployment_id, start_time, end_time, location_name, hub_count } = deployment;
   const active = !end_time || end_time > new Date();
 
   return (
@@ -55,7 +54,7 @@ function DeploymentCard({ deployment }: DeploymentCardProps) {
               <span className="text-muted-foreground/50">ID</span>
               <p className="text-muted-foreground">{deployment_id}</p>
             </Badge>
-            <p className="text-sm text-muted-foreground">X hubs</p>
+            <p className="text-sm text-muted-foreground">{hub_count ?? "0"} hubs</p>
           </div>
 
           <Separator />

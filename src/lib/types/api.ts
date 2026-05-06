@@ -1,3 +1,5 @@
+// oxlint-disable eslint/max-lines -- All API types, hard to read yes but better than all separate files still maybe
+
 interface Location {
   lat: number;
   long: number;
@@ -57,6 +59,16 @@ interface DeploymentDevice {
 }
 
 type UpdateDeploymentDevice = Omit<DeploymentDevice, "device_id">;
+
+interface Device {
+  created: Date;
+  device_id: string;
+}
+
+// Device refers to the devices returned by the /devices API endpoint while deploymentDevices refer to devices in the context of being connected to a hub
+interface DevicesResponse {
+  items: Device[];
+}
 
 interface CreateDeploymentBody {
   name?: string;
@@ -232,6 +244,42 @@ interface GetObservationCountParameters {
   selected_taxa?: string[];
 }
 
+interface Heartbeat {
+  uptime_seconds: number;
+  storage_total_bytes: number;
+  storage_free_bytes: number;
+  cpu_temperature_celsius: number;
+  device_id: string;
+  dot_status: {
+    last_modified: Date;
+    dot_id: string;
+  }[];
+  timestamp: Date;
+}
+
+interface HeartbeatsResponse {
+  items: Heartbeat[];
+  count: number;
+}
+
+interface GetHeartbeatsParameters {
+  start_time?: string;
+  device_id?: string;
+}
+
+interface DetectableTaxaResponse {
+  model_id: string;
+  source?: string;
+  labels?: {
+    class_index: number;
+    name: string;
+  }[];
+}
+
+interface GetDetectableTaxaParameters {
+  model_id?: string;
+}
+
 export type {
   Location,
   Environment,
@@ -240,6 +288,8 @@ export type {
   Deployment,
   DeploymentDevice,
   UpdateDeploymentDevice,
+  Device,
+  DevicesResponse,
   CreateDeploymentBody,
   UpdateDeploymentBody,
   SaveDeploymentArgs,
@@ -262,4 +312,8 @@ export type {
   ObservationCountResponse,
   GetObservationsParameters,
   GetObservationCountParameters,
+  HeartbeatsResponse,
+  GetHeartbeatsParameters,
+  DetectableTaxaResponse,
+  GetDetectableTaxaParameters,
 };
