@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-06-18T15:14:00.000Z",
+    "device_id": "device-1",
+    "species": "Tyria jacobaeae",
+    "species_confidence": 0.98
+  },
+  {
+    "timestamp": "2025-06-18T15:14:00.000Z",
+    "device_id": "device-1",
+    "species": "Vespa crabro",
+    "species_confidence": 0.99
+  },
+  {
+    "timestamp": "2025-06-18T15:14:00.000Z",
+    "device_id": "device-1",
+    "species": "Vespa crabro",
+    "species_confidence": 0.99
+  }
+]
