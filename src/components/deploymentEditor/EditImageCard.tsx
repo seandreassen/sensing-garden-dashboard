@@ -1,8 +1,8 @@
 import { PencilIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-import { Card, CardTitle } from "@/components/ui/Card";
-
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 function EditImageCard({
   initialUrl = "",
   onChange,
@@ -10,6 +10,17 @@ function EditImageCard({
   initialUrl?: string;
   onChange?: (value: string) => void;
 }) {
+  const MAX_IMAGE_SIZE = 100 * 1024 * 1024; // 100MB
+  const ACCEPTED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
+    "image/bmp",
+    "image/tiff",
+  ];
   const [src, setSrc] = useState<string>(initialUrl);
   const isDirty: boolean = src !== initialUrl;
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,6 +34,20 @@ function EditImageCard({
     if (!file) {
       return;
     }
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      toast.warning("Invalid file type", {
+        description: `Accepted: ${ACCEPTED_IMAGE_TYPES.map((t) => t.split("/")[1]).join(", ")}`,
+        position: "top-center",
+      });
+      return;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.warning("File too large", {
+        description: "Image must be under 100MB",
+        position: "top-center",
+      });
+      return;
+    }
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       const result = reader.result as string;
@@ -34,7 +59,9 @@ function EditImageCard({
 
   return (
     <Card className="flex-1">
-      <CardTitle className={`px-4 text-center ${isDirty ? "text-primary" : ""}`}>Image</CardTitle>
+      <CardHeader>
+        <CardTitle className={`${isDirty ? "text-primary" : ""}`}>Image</CardTitle>
+      </CardHeader>
       <div className="flex flex-1 flex-col gap-3 px-4">
         <button
           type="button"

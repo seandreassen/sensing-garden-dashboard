@@ -61,6 +61,7 @@ function GoogleMaps({ deploymentId, allowDragAndDrop = false }: GoogleMapsProps)
             <MapWithDrop
               locations={locations}
               setLocations={setLocations}
+              markerLabels={data?.devices.map((device) => device.name ?? device.device_id)}
               center={data?.deployment.location}
               allowDragAndDrop={allowDragAndDrop}
             />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
@@ -48,9 +48,9 @@ function EditDateRangeCard({
 
   return (
     <Card>
-      <CardTitle className={`px-4 text-center ${isDirty ? "text-primary" : ""}`}>
-        Date Range
-      </CardTitle>
+      <CardHeader>
+        <CardTitle className={`${isDirty ? "text-primary" : ""}`}>Date Range</CardTitle>
+      </CardHeader>
       <div className="flex flex-col gap-3 px-4 pt-1">
         <div className="flex flex-col gap-1">
           <label htmlFor="start-date" className={labelClass}>
@@ -59,6 +59,7 @@ function EditDateRangeCard({
           <Input
             id="start-date"
             type="date"
+            required
             value={startDate}
             onChange={handleStartChange}
             className={inputClass}

@@ -24,7 +24,7 @@ function RouteComponent() {
       <div className="col-span-2 overflow-hidden lg:col-span-1 lg:h-89 lg:min-w-1/3 lg:flex-1 lg:shrink-0">
         <DeviceCard />
       </div>
-      <div className="col-span-2 mb-4 lg:h-100 lg:basis-full">
+      <div className="col-span-2 mb-4 lg:h-130 lg:basis-full xl:h-150">
         <GoogleMapsCard />
       </div>
     </div>

@@ -73,7 +73,7 @@ function EnvironmentalConditionsChart({ timeSeries, metrics }: EnvironmentalCond
           humidity: data.humidity[i],
         }))}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
         <XAxis
           dataKey="time"
           type="number"
@@ -120,6 +120,7 @@ function EnvironmentalConditionsChart({ timeSeries, metrics }: EnvironmentalCond
             fontSize: "13px",
           }}
           labelFormatter={(label) => new Date(label).toLocaleString()}
+          formatter={(value) => (typeof value === "number" ? value.toFixed(2) : value)}
         />
         <Legend wrapperStyle={{ fontSize: "13px" }} iconType="line" />
         {activeMetrics.map((metric) => (

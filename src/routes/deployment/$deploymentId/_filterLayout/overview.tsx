@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { HubsCard } from "@/components/overview/HubsCard";
 import { ObservationsCard } from "@/components/overview/ObservationsCard";
 import { SpeciesRichnessCard } from "@/components/overview/SpeciesRichnessCard";
 import { TopTaxaCard } from "@/components/overview/TopTaxaCard";
@@ -19,6 +20,7 @@ function RouteComponent() {
       <div className="flex gap-5">
         <TotalInsectCountCard deploymentId={deploymentId} />
         <SpeciesRichnessCard deploymentId={deploymentId} />
+        <HubsCard deploymentId={deploymentId} />
       </div>
       <div className="grid grid-cols-3 gap-6">
         <ObservationsCard deploymentId={deploymentId} className="col-span-2" />

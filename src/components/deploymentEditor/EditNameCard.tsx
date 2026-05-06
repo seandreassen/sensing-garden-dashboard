@@ -2,7 +2,7 @@ import { PencilIcon } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { Card, CardTitle } from "@/components/ui/Card";
+import { Card, CardTitle, CardHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { useDirtyValueTracker } from "@/lib/hooks/useDirtyValueTracker";
 
@@ -31,24 +31,33 @@ function EditNameCard({
         setValue(e.target.value);
         onChange?.(e.target.value);
       }}
-      onBlur={() => setIsEditing(false)}
+      onBlur={() => {
+        setIsEditing(false);
+        if (!value) {
+          setValue(initialValue);
+        } else {
+          setValue(value);
+        }
+      }}
       onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
-      className="w-full border-none bg-accent px-2 py-0 text-center outline-none"
+      className="w-full border-none bg-accent px-2 py-0 text-left outline-none"
     />
   ) : (
     <Button
-      className={`w-full justify-center ${isDirty ? "text-primary" : ""}`}
+      className={`w-full justify-start ${isDirty ? "text-primary" : ""}`}
       variant="outline"
       onClick={() => setIsEditing(true)}
     >
-      {value || "Click to edit"}
+      {value || initialValue}
       <PencilIcon />
     </Button>
   );
 
   return (
     <Card>
-      <CardTitle className={`text-center ${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
+      <CardHeader>
+        <CardTitle className={`${isDirty ? "text-primary" : ""}`}>Name</CardTitle>
+      </CardHeader>
       <div className="flex h-10 items-center px-3">{inputField}</div>
     </Card>
   );

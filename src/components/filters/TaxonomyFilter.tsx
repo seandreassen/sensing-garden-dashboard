@@ -29,7 +29,11 @@ function TaxonomyFilter() {
       </Label>
       <Select
         value={taxonomyLevel}
-        onValueChange={(value) => updateFilters({ taxonomyLevel: value ?? undefined })}
+        onValueChange={(value) => {
+          if (value !== taxonomyLevel) {
+            updateFilters({ taxonomyLevel: value ?? undefined, selectedTaxa: [] });
+          }
+        }}
       >
         <SelectTrigger id="filter-taxonomy-level" className={filterSelectClass}>
           <SelectValue placeholder="Select Taxonomy Level">
