@@ -48,6 +48,7 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
 - `tests/`: Tests
   - `component/`: Component tests
   - `e2e/`: End-to-end tests
+  - `unit/`: Unit tests
 
 ## Tech Stack
 
