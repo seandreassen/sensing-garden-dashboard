@@ -6,7 +6,7 @@ const deployment = {
   deployment_id: "dep-123",
   name: "Spring Garden Survey",
   description: "A test deployment",
-  start_time: "2024-03-12",
+  start_time: "2024-03-11",
   end_time: null,
   model_id: "model-1",
   location_name: "Test Location",
