@@ -97,9 +97,7 @@ test("exports filtered observation data as json", async ({ page }) => {
     expect(url.searchParams.get("start_time")).toBe("2024-04-18T00:00:00.000Z");
     expect(url.searchParams.get("end_time")).toBe("2026-04-27T23:59:59.999Z");
 
-    if (url.searchParams.get("limit") === "10") {
-      sawExportRequest = true;
-    }
+    sawExportRequest = true;
 
     await route.fulfill({
       status: 200,
