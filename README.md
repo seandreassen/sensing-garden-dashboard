@@ -77,7 +77,7 @@ Sensing Garden Dashboard is a web application designed to make the outputs of Fl
 
 The project includes both component and end-to-end tests
 
-- **Component/unit tests:** Run `pnpm test:component` to run all Vitest tests
+- **Component/unit tests:** Run `pnpm test:component`/`pnpm test:unit` to run Vitest tests
 - **E2E tests:**
   - Run `pnpm exec playwright install` to install browsers for Playwright.
   - Run `test:e2e` to run all playwright tests in real browser environment
