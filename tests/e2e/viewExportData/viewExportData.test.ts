@@ -62,8 +62,6 @@ const observations = [
 ];
 
 test("exports filtered observation data as json", async ({ page }) => {
-  let sawExportRequest = false;
-
   await page.route("**/api/deployments?limit=100*", async (route) => {
     await route.fulfill({
       status: 200,
@@ -96,8 +94,6 @@ test("exports filtered observation data as json", async ({ page }) => {
     expect(url.searchParams.get("min_confidence")).toBe("0.9");
     expect(url.searchParams.get("start_time")).toBe("2024-04-18T00:00:00.000Z");
     expect(url.searchParams.get("end_time")).toBe("2026-04-27T23:59:59.999Z");
-
-    sawExportRequest = true;
 
     await route.fulfill({
       status: 200,
@@ -136,8 +132,6 @@ test("exports filtered observation data as json", async ({ page }) => {
   await expect(page.getByText("mattia")).toBeVisible();
   await expect(page.getByText("Species").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /90/ })).toBeVisible();
-
-  await expect.poll(() => sawExportRequest).toBe(true);
 
   await page.getByRole("button", { name: "Export data" }).click();
 

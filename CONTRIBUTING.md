@@ -27,7 +27,7 @@ We use different commands for different test types:
 
 - `pnpm test:unit`: Runs pure unit tests in `tests/unit/`
 - `pnpm test:component`: Runs component tests in `tests/component/`
-- `pnpm test:e2e --update-snapshots`: Updates snapshots and runs end-to-end tests in `tests/e2e/`
+- `pnpm test:e2e`: Runs end-to-end tests in `tests/e2e/`
 - `pnpm test`: Runs unit tests, component tests, and e2e tests
 - `pnpm coverage`: Generates and serves a coverage report
 
