@@ -8,7 +8,7 @@ const deployment = {
   deployment_id: "dep-123",
   name: "Everything Deployment!",
   description: "A test deployment",
-  start_time: "2024-03-12",
+  start_time: "2024-03-11",
   end_time: null,
   model_id: "model-1",
   location_name: "Test Location",
