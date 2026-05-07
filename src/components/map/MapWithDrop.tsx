@@ -150,6 +150,7 @@ function MapWithDrop({
   return (
     <div
       ref={mapDivRef}
+      data-testid="map-drop-zone"
       className="h-full min-h-125 w-full"
       onDragOver={allowDragAndDrop || onDropLocation ? (e) => e.preventDefault() : undefined}
       onDrop={allowDragAndDrop || onDropLocation ? handleDrop : undefined}
