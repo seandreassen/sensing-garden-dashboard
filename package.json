@@ -18,7 +18,7 @@
     "preview": "vite preview",
     "test": "vitest && pnpm test:e2e",
     "test:component": "vitest tests/component",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --update-snapshots",
     "test:unit": "vitest tests/unit"
   },
   "dependencies": {
